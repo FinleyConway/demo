@@ -12,12 +12,10 @@ int main() {
     while (true) {
         path_finding.update();
 
-        auto opt_path = path_finding.try_get_result(id);
+        auto path = path_finding.try_get_result(id);
 
-        if (opt_path.has_value()) {
-            for (const auto& cell : *opt_path) {
-                std::cout << cell.x << ", " << cell.y << "\n";
-            }
+        for (const auto& cell : path) {
+            std::cout << cell.x << ", " << cell.y << "\n";
         }
     }
 }

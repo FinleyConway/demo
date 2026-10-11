@@ -23,7 +23,7 @@ namespace demo {
         };
 
     public:
-        explicit path_finder(const demo::grid<int, 10UL, 10UL>& world) :
+        explicit path_finder(const grid<int, 10UL, 10UL>& world) :
             m_world(world) 
         {
         }
@@ -58,18 +58,18 @@ namespace demo {
             return id;
         }        
 
-        std::optional<std::vector<cell>> try_get_result(path_request_id id) {
+        std::vector<cell> try_get_result(path_request_id id) {
             std::lock_guard lock(m_mutex);
 
             // find and return path if path has been completed
             auto it = m_completed.find(id);
-            if (it == m_completed.end()) return std::nullopt;
+            if (it == m_completed.end()) return {};
 
             std::vector<cell> path = std::move(it->second);
 
             m_completed.erase(it);
 
-            return std::make_optional(path);
+            return path;
         }
 
     private:
@@ -96,7 +96,7 @@ namespace demo {
         }
 
     private:
-        const demo::grid<int, 10UL, 10UL>& m_world;
+        const grid<int, 10UL, 10UL>& m_world;
 
         path_request_id m_next_id = 0;
 
