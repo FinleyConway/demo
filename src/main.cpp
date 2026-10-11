@@ -1,9 +1,8 @@
 #include <iostream>
 
 #include "grid.hpp"
-#include "grid_pathing.hpp"
 
-#include "worker_pool.hpp"
+#include "path_finder.hpp"
 
 struct tile {};
 
@@ -11,6 +10,8 @@ void do_work() {
     for (size_t i = 0; i < 10; i++) {
         std::cout << "hello" << i << std::endl;;
     }
+
+    std::this_thread::sleep_for(std::chrono::seconds(1));
 }
 
 void on_finish() {
@@ -25,14 +26,5 @@ int main() {
     //     std::cout << cell.x << ", " << cell.y << "\n";
     // }
 
-    demo::worker_pool pool;
-
-    pool.add_task(do_work, on_finish);
-    pool.add_task(do_work, on_finish);
-    pool.add_task(do_work, on_finish);
-
-
-    for (auto i = 0; i < 10; i++) {
-        std::cout << "main thread\n";
-    }
+    demo::path_finder path_finding;
 }
