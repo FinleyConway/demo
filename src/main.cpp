@@ -1,30 +1,23 @@
 #include <iostream>
 
 #include "grid.hpp"
-
 #include "path_finder.hpp"
 
-struct tile {};
-
-void do_work() {
-    for (size_t i = 0; i < 10; i++) {
-        std::cout << "hello" << i << std::endl;;
-    }
-
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-}
-
-void on_finish() {
-    std::cout << "work finished" << std::endl;;
-}
-
 int main() {
-    // demo::grid<int, 10, 10> grid;
-    // auto p = demo::grid_pathing<10, 10>::search(grid, demo::cell{0, 0}, demo::cell{9, 9});
+    demo::grid<int, 10, 10> grid;
+    demo::path_finder path_finding(grid);
 
-    // for (const auto& cell : p) {
-    //     std::cout << cell.x << ", " << cell.y << "\n";
-    // }
+    demo::path_request_id id = path_finding.request(demo::cell{0, 0}, demo::cell{9, 9});
 
-    demo::path_finder path_finding;
+    while (true) {
+        path_finding.update();
+
+        auto opt_path = path_finding.try_get_result(id);
+
+        if (opt_path.has_value()) {
+            for (const auto& cell : *opt_path) {
+                std::cout << cell.x << ", " << cell.y << "\n";
+            }
+        }
+    }
 }
