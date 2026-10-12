@@ -1,7 +1,6 @@
 #pragma once
 
 #include <mutex>
-#include <queue>
 #include <vector>
 #include <cstdint>
 #include <utility>
@@ -29,30 +28,21 @@ namespace demo {
         }
 
     public:
-        // dont really like the idea of the main thread handling of creating new workers
-        void update() { 
-            // poll for any requests made this frame
-            while (!m_requests.empty()) {
-                const auto& req = m_requests.front();
-
-                // try to start a task or break if this frame has no tasks available
-                if (!try_start_task(req.request_id, req.start, req.end)) {
-                    break; 
-                }
-
-                m_requests.pop();
-            }
-        }
-
         path_request_id request(const cell& start, const cell& end) {
             // try to start a path
-            const path_request_id id = m_next_id++;
-            const bool task_created = try_start_task(id, start, end);
+            //? maybe add a lock here if multiple threads access request
+            const path_request_id id = m_next_id++; 
 
-            // wait if all workers are unavailable
-            if (!task_created) {
-                m_requests.emplace(id, start, end);
-            }
+            m_pool.add_task(
+                [this, start, end]() {
+                    return grid_pathing<10, 10>::search(
+                        m_world, start, end
+                    );
+                },
+                [this, id](std::vector<cell>&& path) {
+                    on_search_finish(id, std::move(path));
+                }
+            );
 
             // return reference id to poll completed tasks
             return id;
@@ -73,19 +63,6 @@ namespace demo {
         }
 
     private:
-        bool try_start_task(path_request_id id, const cell& start, const cell& end) {
-            const bool task_created = m_pool.add_task(
-                [this, start, end]() {
-                    return grid_pathing<10, 10>::search(m_world, start, end);
-                },
-                [this, id](std::vector<cell>&& path) {
-                    on_search_finish(id, std::move(path));
-                }
-            );
-
-            return task_created;
-        }
-
         void on_search_finish(path_request_id id, std::vector<cell>&& path) {
             std::lock_guard lock(m_mutex);
                     
@@ -101,9 +78,8 @@ namespace demo {
         path_request_id m_next_id = 0;
 
         std::mutex m_mutex;
-        std::queue<path_request> m_requests;
         std::unordered_map<path_request_id, std::vector<cell>> m_completed;
         
-        worker_pool<std::vector<cell>> m_pool;
+        worker_pool m_pool;
     };
 }
