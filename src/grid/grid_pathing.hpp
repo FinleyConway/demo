@@ -91,7 +91,7 @@ namespace demo {
                 if (!neighbour.has_value()) continue;
 
                 // 0 means walkable
-                if (m_world.at(*neighbour) != 0) continue;
+                if (m_world.get(*neighbour) != 0) continue;
 
                 auto& next_node = m_nodes[*neighbour];
                 const size_t tentative_g = current_g + 1;

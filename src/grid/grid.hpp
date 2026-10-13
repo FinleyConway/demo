@@ -1,10 +1,12 @@
 #pragma once
 
 #include <array>
+#include <vector>
 #include <cassert>
 #include <cstddef>
 #include <utility>
 #include <optional>
+#include <functional>
 
 #include "point.hpp"
 #include "grid/cell.hpp"
@@ -14,18 +16,24 @@ namespace demo {
     class grid {
     public:
         constexpr T& at(const cell& c) {
+            on_grid_change(c);
+
             return m_data[to_index(c)];
         }
 
-        constexpr const T& at(const cell& c) const {
+        constexpr const T& get(const cell& c) const {
             return m_data[to_index(c)];
         }
 
         constexpr void set(const cell& c, const T& data) {
+            on_grid_change(c);
+
             m_data[to_index(c)] = data;
         }
 
         constexpr void set(const cell& c, T&& data) {
+            on_grid_change(c);
+
             m_data[to_index(c)] = std::move(data);
         }
 
@@ -47,6 +55,10 @@ namespace demo {
                     ? std::optional<cell>{{c.x - 1, c.y}}
                     : std::nullopt   // left
             }};
+        }
+
+        void subscribe_grid_change(std::function<void(const cell&)> cb) {
+            m_on_change.emplace_back(std::move(cb));
         }
 
         static constexpr bool in_bounds(const cell& c) {
@@ -75,6 +87,12 @@ namespace demo {
         }
 
     private:
+        void on_grid_change(const cell& cell) {
+            for (auto& cb : m_on_change) {
+                cb(cell);
+            }
+        }
+    
         static constexpr size_t to_index(const cell& c) {
             assert(in_bounds(c) && "Out of bounds!");
 
@@ -83,5 +101,6 @@ namespace demo {
 
     private:
         std::array<T, TWidth * THeight> m_data{};
+        std::vector<std::function<void(const cell&)>> m_on_change;
     };
 }

@@ -15,7 +15,7 @@ int main() {
 
     demo::grid<int, cols, rows> grid;
     demo::path_finder path_finding(grid);
-    demo::entity_movement movement(path_finding);
+    demo::entity_movement movement(grid, path_finding);
 
     movement.set_world_position({
         static_cast<float>(offset_x),
@@ -102,7 +102,7 @@ int main() {
 
         for (int y = 0; y < rows; ++y) {
             for (int x = 0; x < cols; ++x) {
-                int value = grid.at({x, y});
+                int value = grid.get({x, y});
 
                 if (value > 0) {
                     DrawText(
@@ -123,6 +123,8 @@ int main() {
             { cell_size - 2, cell_size - 2 },
             RED
         );
+
+        DrawFPS(0,0);
 
         EndDrawing();
     }

@@ -7,9 +7,12 @@
 namespace demo {
     class entity_movement {
     public:
-        explicit entity_movement(path_finder& path_finder) :
+        explicit entity_movement(auto& grid, path_finder& path_finder) :
             m_path_finder(path_finder) 
         {
+            grid.subscribe_grid_change([this](const cell& cell) {
+                on_grid_change(cell);
+            });
         } 
 
     public:
@@ -26,6 +29,7 @@ namespace demo {
             m_time_elapsed = 0.0f;
             m_start_world_pos = m_world_pos;
             m_current_path.clear();
+            m_cell_target = target;
 
             m_path_request = m_path_finder.request(cell_position(), target);
         }
@@ -43,6 +47,19 @@ namespace demo {
         }
 
     private:
+        void on_grid_change(const cell& updated_cell) {
+            // maybe be a bit slow if freq
+            // want to get it working first
+            for (const auto& cell : m_current_path) { 
+                if (updated_cell == cell) {
+                    // request a new path
+                    set_target_cell(m_cell_target);
+
+                    return;
+                }
+            }
+        }
+        
         void move_to_cell(float dt) {
             // no path
             if (m_current_path.empty()) return;
@@ -68,10 +85,11 @@ namespace demo {
         path_request m_path_request;
         std::vector<cell> m_current_path;
 
+        cell m_cell_target;
         point m_world_pos;
         point m_start_world_pos;
         float m_time_elapsed = 0.0f;
-        float m_time_to_cell = 0.5f;
+        float m_time_to_cell = 0.15f;
 
         const float c_cell_size = 40.0f; // temp
     };  
