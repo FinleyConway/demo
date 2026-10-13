@@ -12,10 +12,16 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY
     "${CMAKE_BINARY_DIR}/${BINARY_DIR}"
 )
 
+add_subdirectory(vendors/raylib)
+
 add_executable(demo
     src/main.cpp
 )
 
 target_include_directories(demo PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src # provide explicit cleaner headers
+)
+
+target_link_libraries(demo PUBLIC
+    raylib
 )
