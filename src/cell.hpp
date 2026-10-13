@@ -8,7 +8,7 @@ namespace demo {
         size_t x = 0;
         size_t y = 0;
 
-        constexpr bool equals(const cell& other) const {
+        constexpr bool operator==(const cell& other) const {
             return x == other.x && y == other.y;
         } 
     };

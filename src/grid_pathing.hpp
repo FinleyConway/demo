@@ -5,6 +5,7 @@
 #include <vector>
 #include <optional>
 #include <algorithm>
+#include <unordered_map>
 
 #include "grid.hpp"
 
@@ -48,20 +49,13 @@ namespace demo {
     public:
         std::vector<cell> start(const cell& start, const cell& end) {
             if (!m_world.in_bounds(start) || !m_world.in_bounds(end)) return {};
-            if (start.equals(end)) return {};
+            if (start == end) return {};
 
-            // use greater to make the smallest f_cost come first
-            std::priority_queue<
-                entry,
-                std::vector<entry>,
-                std::greater<>
-            > open;
+            init_start_node(start, end);
 
-            init_start_node(open, start, end);
-
-            while (!open.empty()) {
-                const auto current = open.top().next;
-                open.pop();
+            while (!m_open.empty()) {
+                const auto current = m_open.top().next;
+                m_open.pop();
 
                 auto& node = m_nodes.at(current);
 
@@ -70,27 +64,27 @@ namespace demo {
                 node.closed = true;
 
                 // build path once reach end
-                if (current.equals(end)) {    
+                if (current == end) {    
                     return build_path(start, end);
                 }
 
-                evaluate_neighbours(open, current, end);
+                evaluate_neighbours(current, end);
             }
 
             // no path exists
             return {};
         }
 
-        void init_start_node(auto& open, const cell& start, const cell& end) {
-            auto& first = m_nodes.at(start);
+        void init_start_node(const cell& start, const cell& end) {
+            auto& first = m_nodes[start];
 
             first.g_cost = 0;
-            first.h_cost = m_nodes.manhattan_distance(start, end);
+            first.h_cost = m_world.manhattan_distance(start, end);
 
-            open.push({first.f_cost(), start});
+            m_open.push({ first.f_cost(), start });
         }
 
-        void evaluate_neighbours(auto& open, const cell& current, const cell& end) {
+        void evaluate_neighbours(const cell& current, const cell& end) {
             const size_t current_g = m_nodes.at(current).g_cost;
 
             for (const auto& neighbour : m_world.vonn_neighbours(current)) {
@@ -99,15 +93,15 @@ namespace demo {
                 // 0 means walkable
                 if (m_world.at(*neighbour) != 0) continue;
 
-                auto& next_node = m_nodes.at(*neighbour);
+                auto& next_node = m_nodes[*neighbour];
                 const size_t tentative_g = current_g + 1;
 
                 if (tentative_g <= next_node.g_cost) {
                     next_node.g_cost = tentative_g;
-                    next_node.h_cost = m_nodes.manhattan_distance(*neighbour, end);
+                    next_node.h_cost = m_world.manhattan_distance(*neighbour, end);
                     next_node.parent = current;
 
-                    open.push({next_node.f_cost(), *neighbour});
+                    m_open.push({ next_node.f_cost(), *neighbour });
                 }
             }
         }
@@ -116,7 +110,7 @@ namespace demo {
             std::vector<cell> path;
             cell current = goal;
 
-            while (!current.equals(start)) {
+            while (current != start) {
                 path.emplace_back(current);
 
                 const auto& node = m_nodes.at(current);
@@ -141,6 +135,7 @@ namespace demo {
 
     private:
         const grid<int, TWidth, THeight>& m_world;
-        grid<path_node, TWidth, THeight> m_nodes;
+        std::unordered_map<cell, path_node> m_nodes;
+        std::priority_queue<entry, std::vector<entry>, std::greater<>> m_open;
     };
 }
