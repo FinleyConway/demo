@@ -6,21 +6,37 @@
 #include <utility>
 #include <unordered_map>
 
-#include "cell.hpp"
 #include "worker_pool.hpp"
-#include "grid_pathing.hpp"
+
+#include "grid/cell.hpp"
+#include "grid/grid_pathing.hpp"
 
 namespace demo {
     using path_request_id = uint64_t;
 
-    class path_finder {
+    class path_request {
+    public:
+        path_request() = default;
+    
+    public:
+        bool path_found() const {
+            return m_ready;
+        }
+        
     private:
-        struct path_request {
-            path_request_id request_id = 0;
-            cell start;
-            cell end;
-        };
+        explicit path_request(path_request_id id) :
+            m_id(id)
+        {
+        }
 
+    private:
+        friend class path_finder;
+
+        path_request_id m_id = 0;
+        bool m_ready = false;
+    };
+
+    class path_finder {
     public:
         explicit path_finder(const grid<int, 10UL, 10UL>& world) :
             m_world(world) 
@@ -28,7 +44,7 @@ namespace demo {
         }
 
     public:
-        path_request_id request(const cell& start, const cell& end) {
+        path_request request(const cell& start, const cell& end) {
             // try to start a path
             //? maybe add a lock here if multiple threads access request
             const path_request_id id = m_next_id++; 
@@ -45,19 +61,23 @@ namespace demo {
             );
 
             // return reference id to poll completed tasks
-            return id;
+            return path_request(id);
         }        
 
-        std::vector<cell> try_get_result(path_request_id id) {
+        std::vector<cell> try_get_result(path_request& request) {
             std::lock_guard lock(m_mutex);
 
+            if (request.m_ready) return {};
+
             // find and return path if path has been completed
-            auto it = m_completed.find(id);
+            auto it = m_completed.find(request.m_id);
             if (it == m_completed.end()) return {};
 
             std::vector<cell> path = std::move(it->second);
 
             m_completed.erase(it);
+
+            request.m_ready = true;
 
             return path;
         }

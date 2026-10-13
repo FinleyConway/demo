@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <unordered_map>
 
-#include "grid.hpp"
+#include "grid/grid.hpp"
 
 // https://www.redblobgames.com/pathfinding/a-star/introduction.html
 

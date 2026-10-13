@@ -6,10 +6,11 @@
 #include <utility>
 #include <optional>
 
-#include "cell.hpp"
+#include "point.hpp"
+#include "grid/cell.hpp"
 
 namespace demo {
-    template<typename T, size_t TWidth, size_t THeight>
+    template<typename T = int, size_t TWidth = 0, size_t THeight = 0>
     class grid {
     public:
         constexpr T& at(const cell& c) {
@@ -57,6 +58,20 @@ namespace demo {
             const size_t dy = a.y > b.y ? a.y - b.y : b.y - a.y;
 
             return dx + dy;
+        }
+
+        static constexpr point cell_to_point(const cell& cell, float cell_size) {
+            return {
+                (cell.x * cell_size),
+                (cell.y * cell_size)
+            };
+        }
+
+        static constexpr cell point_to_cell(const point& world_pos, float cell_size) {
+            return {
+                static_cast<size_t>(std::floor(world_pos.x / cell_size)),
+                static_cast<size_t>(std::floor(world_pos.y / cell_size))
+            };
         }
 
     private:
