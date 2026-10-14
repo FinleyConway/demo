@@ -5,9 +5,9 @@
 #include "components/path_finder.hpp"
 
 namespace demo {
-    class entity_movement {
+    class auto_navigator {
     public:
-        entity_movement(world_grid& grid, path_finder& path_finder) :
+        auto_navigator(world_grid& grid, path_finder& path_finder) :
             m_world_grid(grid), 
             m_path_finder(path_finder) 
         {
