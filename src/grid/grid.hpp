@@ -12,9 +12,21 @@
 #include "grid/cell.hpp"
 
 namespace demo {
-    template<typename T = int, size_t TWidth = 0, size_t THeight = 0>
+    template<typename T = int, size_t TWidth = 0, size_t THeight = 0, uint32_t TCellSize = 0>
     class grid {
     public:
+        constexpr size_t width() const {
+            return TWidth;
+        }
+
+        constexpr size_t height() const {
+            return THeight;
+        }
+
+        constexpr uint32_t cell_size() const {
+            return TCellSize;
+        }
+
         constexpr T& at(const cell& c) {
             on_grid_change(c);
 
@@ -72,17 +84,17 @@ namespace demo {
             return dx + dy;
         }
 
-        static constexpr point cell_to_point(const cell& cell, float cell_size) {
+        static constexpr point cell_to_point(const cell& cell) {
             return {
-                (cell.x * cell_size),
-                (cell.y * cell_size)
+                (cell.x * static_cast<float>(TCellSize)),
+                (cell.y * static_cast<float>(TCellSize))
             };
         }
 
-        static constexpr cell point_to_cell(const point& world_pos, float cell_size) {
+        static constexpr cell point_to_cell(const point& world_pos) {
             return {
-                static_cast<size_t>(std::floor(world_pos.x / cell_size)),
-                static_cast<size_t>(std::floor(world_pos.y / cell_size))
+                static_cast<size_t>(std::floor(world_pos.x / TCellSize)),
+                static_cast<size_t>(std::floor(world_pos.y / TCellSize))
             };
         }
 

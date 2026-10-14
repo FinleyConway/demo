@@ -2,12 +2,13 @@
 
 #include "point.hpp"
 
-#include "grid/path_finder.hpp"
+#include "components/path_finder.hpp"
 
 namespace demo {
     class entity_movement {
     public:
-        explicit entity_movement(auto& grid, path_finder& path_finder) :
+        entity_movement(world_grid& grid, path_finder& path_finder) :
+            m_world_grid(grid), 
             m_path_finder(path_finder) 
         {
             grid.subscribe_grid_change([this](const cell& cell) {
@@ -39,7 +40,7 @@ namespace demo {
         }
 
         cell cell_position() const {
-            return grid<>::point_to_cell(m_world_pos, c_cell_size);
+            return m_world_grid.point_to_cell(m_world_pos);
         }
 
         const point& world_position() const {
@@ -65,7 +66,7 @@ namespace demo {
             if (m_current_path.empty()) return;
 
             cell next_cell = m_current_path.back(); // path is in reverse
-            point next_world_pos = grid<>::cell_to_point(next_cell, c_cell_size);
+            point next_world_pos = m_world_grid.cell_to_point(next_cell);
 
             if (m_time_elapsed < m_time_to_cell) {
                 m_world_pos = m_start_world_pos.lerp_to(next_world_pos, m_time_elapsed / m_time_to_cell);
@@ -81,6 +82,8 @@ namespace demo {
         }
 
     private:
+        const world_grid& m_world_grid;
+
         path_finder& m_path_finder;
         path_request m_path_request;
         std::vector<cell> m_current_path;
@@ -90,7 +93,5 @@ namespace demo {
         point m_start_world_pos;
         float m_time_elapsed = 0.0f;
         float m_time_to_cell = 0.15f;
-
-        const float c_cell_size = 40.0f; // temp
     };  
 }

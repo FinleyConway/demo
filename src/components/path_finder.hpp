@@ -6,6 +6,7 @@
 #include <utility>
 #include <unordered_map>
 
+#include "world.hpp"
 #include "worker_pool.hpp"
 
 #include "grid/cell.hpp"
@@ -38,8 +39,8 @@ namespace demo {
 
     class path_finder {
     public:
-        explicit path_finder(const grid<int, 10UL, 10UL>& world) :
-            m_world(world) 
+        explicit path_finder(const world_grid& world_grid) :
+            m_world_grid(world_grid) 
         {
         }
 
@@ -51,8 +52,8 @@ namespace demo {
 
             m_pool.add_task(
                 [this, start, end]() {
-                    return grid_pathing<10, 10>::search(
-                        m_world, start, end
+                    return grid_pathing::search(
+                        m_world_grid, start, end
                     );
                 },
                 [this, id](std::vector<cell>&& path) {
@@ -93,7 +94,7 @@ namespace demo {
         }
 
     private:
-        const grid<int, 10UL, 10UL>& m_world;
+        const world_grid& m_world_grid;
 
         path_request_id m_next_id = 0;
 
