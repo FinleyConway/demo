@@ -1,16 +1,14 @@
 #pragma once
 
 #include <array>
-#include <vector>
 #include <cstdint>
 #include <cassert>
 #include <cstddef>
-#include <utility>
 #include <optional>
-#include <functional>
+#include <unordered_set>
 
-#include "point.hpp"
-#include "grid/cell.hpp"
+#include "grid/position/cell.hpp"
+#include "grid/position/point.hpp"
 
 namespace demo {
     template<typename T = int, size_t TWidth = 0, size_t THeight = 0, uint32_t TCellSize = 0>
@@ -29,7 +27,7 @@ namespace demo {
         }
 
         constexpr T& at(const cell& c) {
-            on_grid_change(c);
+            m_changed_cells.emplace(c);
 
             return m_data[to_index(c)];
         }
@@ -39,15 +37,8 @@ namespace demo {
         }
 
         constexpr void set(const cell& c, const T& data) {
-            on_grid_change(c);
-
+            m_changed_cells.emplace(c);            
             m_data[to_index(c)] = data;
-        }
-
-        constexpr void set(const cell& c, T&& data) {
-            on_grid_change(c);
-
-            m_data[to_index(c)] = std::move(data);
         }
 
         constexpr std::array<std::optional<cell>, 4> vonn_neighbours(const cell& c) const {
@@ -70,8 +61,15 @@ namespace demo {
             }};
         }
 
-        void subscribe_grid_change(std::function<void(const cell&)> cb) {
-            m_on_change.emplace_back(std::move(cb));
+        constexpr bool has_changed() const {
+            return !m_changed_cells.empty();
+        }
+
+        constexpr std::unordered_set<cell> consume_changed_cells() {
+            std::unordered_set<cell> changed;
+            changed.swap(m_changed_cells);
+            
+            return changed;
         }
 
         static constexpr bool in_bounds(const cell& c) {
@@ -100,12 +98,6 @@ namespace demo {
         }
 
     private:
-        void on_grid_change(const cell& cell) {
-            for (auto& cb : m_on_change) {
-                cb(cell);
-            }
-        }
-    
         static constexpr size_t to_index(const cell& c) {
             assert(in_bounds(c) && "Out of bounds!");
 
@@ -113,7 +105,7 @@ namespace demo {
         }
 
     private:
-        std::array<T, TWidth * THeight> m_data{};
-        std::vector<std::function<void(const cell&)>> m_on_change;
+        std::array<T, TWidth * THeight> m_data{};  
+        std::unordered_set<cell> m_changed_cells;
     };
 }

@@ -6,11 +6,11 @@
 #include <utility>
 #include <unordered_map>
 
-#include "world_grid.hpp"
 #include "worker_pool.hpp"
 
-#include "grid/cell.hpp"
-#include "grid/grid_pathing.hpp"
+#include "grid/world_grid.hpp"
+#include "grid/position/cell.hpp"
+#include "grid/pathing/grid_pathing.hpp"
 
 namespace demo {
     using path_request_id = uint64_t;
@@ -40,7 +40,7 @@ namespace demo {
     class path_finder {
     public:
         explicit path_finder(const world_grid& world_grid) :
-            m_world_grid(world_grid) 
+            c_world_grid(world_grid) 
         {
         }
 
@@ -53,7 +53,7 @@ namespace demo {
             m_pool.add_task(
                 [this, start, end]() {
                     return grid_pathing::search(
-                        m_world_grid, start, end
+                        c_world_grid, start, end
                     );
                 },
                 [this, id](std::vector<cell>&& path) {
@@ -94,13 +94,11 @@ namespace demo {
         }
 
     private:
-        const world_grid& m_world_grid;
-
-        path_request_id m_next_id = 0;
+        const world_grid& c_world_grid;
 
         std::mutex m_mutex;
+        path_request_id m_next_id = 0;
         std::unordered_map<path_request_id, std::vector<cell>> m_completed;
-        
         worker_pool m_pool;
     };
 }

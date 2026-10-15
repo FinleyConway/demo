@@ -6,7 +6,8 @@
 #include <optional>
 #include <unordered_map>
 
-#include "world_grid.hpp"
+#include "grid/world_grid.hpp"
+#include "grid/position/cell.hpp"
 
 // https://www.redblobgames.com/pathfinding/a-star/introduction.html
 
@@ -40,9 +41,9 @@ namespace demo {
             return pathfinder.start(start, end);
         }
 
-    public:
+    private:
         std::vector<cell> start(const cell& start, const cell& end) {
-            if (!m_world_grid.in_bounds(start) || !m_world_grid.in_bounds(end)) return {};
+            if (!c_world_grid.in_bounds(start) || !c_world_grid.in_bounds(end)) return {};
             if (start == end) return {};
 
             init_start_node(start, end);
@@ -73,7 +74,7 @@ namespace demo {
             path_node& first = m_nodes[start];
 
             first.g_cost = 0;
-            first.h_cost = m_world_grid.manhattan_distance(start, end);
+            first.h_cost = c_world_grid.manhattan_distance(start, end);
 
             m_open.push({ first.f_cost(), start });
         }
@@ -81,17 +82,17 @@ namespace demo {
         void evaluate_neighbours(const cell& current, const cell& end) {
             const size_t current_g = m_nodes.at(current).g_cost;
 
-            for (const auto& neighbour : m_world_grid.vonn_neighbours(current)) {
+            for (const auto& neighbour : c_world_grid.vonn_neighbours(current)) {
                 if (!neighbour.has_value()) continue;
 
-                if (!m_world_grid.get(*neighbour).walkable) continue;
+                if (!c_world_grid.get(*neighbour).walkable) continue;
 
                 path_node& next_node = m_nodes[*neighbour];
                 const size_t tentative_g = current_g + 1;
 
                 if (tentative_g <= next_node.g_cost) {
                     next_node.g_cost = tentative_g;
-                    next_node.h_cost = m_world_grid.manhattan_distance(*neighbour, end);
+                    next_node.h_cost = c_world_grid.manhattan_distance(*neighbour, end);
                     next_node.parent = current;
 
                     m_open.push({ next_node.f_cost(), *neighbour });
@@ -122,12 +123,13 @@ namespace demo {
 
     private:
         explicit grid_pathing(const world_grid& world_grid) :
-            m_world_grid(world_grid) 
+            c_world_grid(world_grid) 
         {
         } 
 
     private:
-        const world_grid& m_world_grid;
+        const world_grid& c_world_grid;
+        
         std::unordered_map<cell, path_node> m_nodes;
         std::priority_queue<entry, std::vector<entry>, std::greater<>> m_open;
     };

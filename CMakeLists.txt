@@ -13,6 +13,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY
 )
 
 add_subdirectory(vendors/raylib)
+add_subdirectory(vendors/entt)
 
 add_executable(demo
     src/main.cpp
@@ -24,4 +25,5 @@ target_include_directories(demo PUBLIC
 
 target_link_libraries(demo PUBLIC
     raylib
+    EnTT::EnTT
 )
