@@ -6,7 +6,7 @@
 #include <utility>
 #include <unordered_map>
 
-#include "world.hpp"
+#include "world_grid.hpp"
 #include "worker_pool.hpp"
 
 #include "grid/cell.hpp"

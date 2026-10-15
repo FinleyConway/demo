@@ -4,11 +4,9 @@
 #include <limits>
 #include <vector>
 #include <optional>
-#include <algorithm>
 #include <unordered_map>
 
-#include "world.hpp"
-#include "grid/grid.hpp"
+#include "world_grid.hpp"
 
 // https://www.redblobgames.com/pathfinding/a-star/introduction.html
 
@@ -50,10 +48,10 @@ namespace demo {
             init_start_node(start, end);
 
             while (!m_open.empty()) {
-                const auto current = m_open.top().next;
+                const cell current = m_open.top().next;
                 m_open.pop();
 
-                auto& node = m_nodes.at(current);
+                path_node& node = m_nodes.at(current);
 
                 if (node.closed) continue;
 
@@ -72,7 +70,7 @@ namespace demo {
         }
 
         void init_start_node(const cell& start, const cell& end) {
-            auto& first = m_nodes[start];
+            path_node& first = m_nodes[start];
 
             first.g_cost = 0;
             first.h_cost = m_world_grid.manhattan_distance(start, end);
@@ -88,7 +86,7 @@ namespace demo {
 
                 if (!m_world_grid.get(*neighbour).walkable) continue;
 
-                auto& next_node = m_nodes[*neighbour];
+                path_node& next_node = m_nodes[*neighbour];
                 const size_t tentative_g = current_g + 1;
 
                 if (tentative_g <= next_node.g_cost) {
@@ -108,7 +106,7 @@ namespace demo {
             while (current != start) {
                 path.emplace_back(current);
 
-                const auto& node = m_nodes.at(current);
+                const path_node& node = m_nodes.at(current);
 
                 if (!node.parent.has_value()) return {};
 
@@ -117,8 +115,8 @@ namespace demo {
 
             path.emplace_back(start);
 
-            // std::reverse(path.begin(), path.end());
-
+            // i should return an object that handles the next path
+            // rather then providing a backwards cell?
             return path;
         }
 

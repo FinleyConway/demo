@@ -1,8 +1,6 @@
 #pragma once
 
 #include <cstddef>
-#include <utility>
-#include <typeindex> // std::hash
 
 namespace demo {
     struct cell {

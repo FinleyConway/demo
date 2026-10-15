@@ -9,7 +9,7 @@ namespace demo {
         float y = 0.0f;
 
         constexpr point lerp_to(const point& target, float time) const {
-            float clamp_time = std::clamp(time, 0.0f, 1.0f);
+            const float clamp_time = std::clamp(time, 0.0f, 1.0f);
 
             return {
                 std::lerp(x, target.x, clamp_time),

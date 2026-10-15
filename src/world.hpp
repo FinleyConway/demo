@@ -1,12 +1,7 @@
 #pragma once
 
 #include "world_grid.hpp"
-
-#include "grid/grid.hpp"
-
 #include "entity/enemy.hpp"
-
-#include "components/auto_navigator.hpp"
 #include "components/path_finder.hpp"
 
 namespace demo {
