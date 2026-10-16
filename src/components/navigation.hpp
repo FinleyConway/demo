@@ -6,7 +6,7 @@
 #include "grid/position/point.hpp"
 #include "grid/pathing/path_finder.hpp"
 
-namespace demo {
+namespace demo::ecs {
     struct auto_navigation {}; // tag
 
     struct navigation_target {

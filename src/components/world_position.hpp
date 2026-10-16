@@ -2,7 +2,7 @@
 
 #include "grid/position/point.hpp"
 
-namespace demo {
+namespace demo::ecs {
     struct world_position {
         point value;
     };

@@ -1,20 +1,20 @@
 #pragma once
 
-#include <iostream>
-
 #include <raylib.h>
 #include <entt/entt.hpp>
 
 #include "components/world_position.hpp"
 #include "grid/world_grid.hpp"
 
-#include "systems/navigation_system.hpp"
+#include "systems/auto_nav_move.hpp"
+#include "systems/auto_nav_requester.hpp"
 
 namespace demo {
     class world {
     public:
         world() :
-            m_nav_system(m_grid, m_registry)
+            m_nav_request(m_grid, m_registry),
+            m_nav_move(m_grid, m_registry)
         {
             m_temp_entity = create_navigatable();
         }
@@ -27,32 +27,31 @@ namespace demo {
                 mouse.x < m_grid.width() * m_grid.cell_size() &&
                 mouse.y < m_grid.height() * m_grid.cell_size();
 
-            int mouse_x = -1;
-            int mouse_y = -1;
+            size_t mouse_x = 0;
+            size_t mouse_y = 0;
 
             if (mouse_inside) {
-                mouse_x = static_cast<int>(
+                mouse_x = static_cast<size_t>(
                     mouse.x / m_grid.cell_size()
                 );
-                mouse_y = static_cast<int>(
+                mouse_y = static_cast<size_t>(
                     mouse.y / m_grid.cell_size()
                 );
             }
 
-            std::cout << mouse_x << ", " << mouse_y << std::endl;
-
             if (mouse_inside && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                m_nav_system.set_target(m_temp_entity, { mouse_x, mouse_y });
+                ecs::auto_nav_requester::set_target(m_registry, m_temp_entity, { mouse_x, mouse_y });
             }
 
-            m_nav_system.update(dt);
+            m_nav_request.update(dt);
+            m_nav_move.update(dt);
         }
 
         void draw() {
-            auto view = m_registry.view<world_position>();
+            auto view = m_registry.view<ecs::world_position>();
 
             for (auto entity : view) {
-                const auto& pos = m_registry.get<world_position>(entity);
+                const auto& pos = m_registry.get<ecs::world_position>(entity);
 
                 DrawRectangle(
                     pos.value.x, pos.value.y, 
@@ -66,12 +65,12 @@ namespace demo {
         entt::entity create_navigatable() {
             const auto entity = m_registry.create();
 
-            m_registry.emplace<auto_navigation>(entity);
-            m_registry.emplace<world_position>(entity);
-            m_registry.emplace<navigation_target>(entity);
-            m_registry.emplace<navigation_path>(entity);
-            m_registry.emplace<navigation_motion>(entity);
-            m_registry.emplace<navigation_request_state>(entity);
+            m_registry.emplace<ecs::auto_navigation>(entity);
+            m_registry.emplace<ecs::world_position>(entity);
+            m_registry.emplace<ecs::navigation_target>(entity);
+            m_registry.emplace<ecs::navigation_path>(entity);
+            m_registry.emplace<ecs::navigation_motion>(entity);
+            m_registry.emplace<ecs::navigation_request_state>(entity);
 
             return entity;
         }
@@ -82,6 +81,8 @@ namespace demo {
 
     private:
         entt::entity m_temp_entity;
-        navigation_system m_nav_system;
+        
+        ecs::auto_nav_requester m_nav_request;
+        ecs::auto_nav_move m_nav_move;
     };
 }
