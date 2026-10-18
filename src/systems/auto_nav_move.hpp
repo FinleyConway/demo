@@ -5,7 +5,7 @@
 #include "grid/world_grid.hpp"
 
 #include "components/navigation.hpp"
-#include "components/world_position.hpp"
+#include "components/positional.hpp"
 
 namespace demo::ecs {
     class auto_nav_move {
@@ -25,29 +25,32 @@ namespace demo::ecs {
             >();
 
             for (auto [e, world_position, nav_path, nav_mov] : view.each()) {
-                move_to_cell(world_position, nav_path, nav_mov, dt);
+                move_to_cell(e, world_position, nav_path, nav_mov, dt);
             }
         }
 
     private:
-        void move_to_cell(world_position& pos, navigation_path& path, navigation_motion& motion, float dt) {
+        void move_to_cell(entt::entity e, world_position& pos, navigation_path& path, navigation_motion& motion, float dt) {
             // no path
             if (path.cells.empty()) return;
 
             const cell next_cell = path.cells.back(); // path is in reverse
             const point next_world_pos = c_grid.cell_to_point(next_cell);
+            point new_position;
 
             if (motion.elapsed < motion.time_per_cell) {
-                pos.value = motion.start_position.lerp_to(next_world_pos, motion.elapsed / motion.time_per_cell);
+                new_position = motion.start_position.lerp_to(next_world_pos, motion.elapsed / motion.time_per_cell);
                 motion.elapsed += dt;
             }
             else {
-                pos.value = next_world_pos;
+                new_position = next_world_pos;
                 motion.start_position = next_world_pos;
 
                 motion.elapsed = 0.0f;
                 path.cells.pop_back();
             }
+
+            pos.set(new_position, m_registry, e);
         }
 
     private:

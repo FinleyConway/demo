@@ -3,8 +3,9 @@
 #include <raylib.h>
 #include <entt/entt.hpp>
 
-#include "components/world_position.hpp"
 #include "grid/world_grid.hpp"
+
+#include "components/positional.hpp"
 
 #include "systems/auto_nav_move.hpp"
 #include "systems/auto_nav_requester.hpp"
@@ -51,10 +52,10 @@ namespace demo {
             auto view = m_registry.view<ecs::world_position>();
 
             for (auto entity : view) {
-                const auto& pos = m_registry.get<ecs::world_position>(entity);
+                const auto& pos = m_registry.get<ecs::world_position>(entity).get();
 
                 DrawRectangle(
-                    pos.value.x, pos.value.y, 
+                    pos.x, pos.y, 
                     m_grid.cell_size(), m_grid.cell_size(), 
                     RED
                 );

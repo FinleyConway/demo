@@ -7,7 +7,7 @@
 #include "grid/pathing/path_finder.hpp"
 
 #include "components/navigation.hpp"
-#include "components/world_position.hpp"
+#include "components/positional.hpp"
 
 namespace demo::ecs {
     class auto_nav_requester {
@@ -83,10 +83,10 @@ namespace demo::ecs {
             path.cells.clear();
 
             motion.elapsed = 0.0f;
-            motion.start_position = pos.value;
+            motion.start_position = pos.get();
 
             request.request = m_path_finder.request(
-                m_grid.point_to_cell(pos.value),
+                m_grid.point_to_cell(pos.get()),
                 target.value
             );
         }

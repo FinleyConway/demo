@@ -16,5 +16,9 @@ namespace demo {
                 std::lerp(y, target.y, clamp_time)
             };
         }
+
+        constexpr bool operator==(const point& other) const {
+            return x == other.x && y == other.y;
+        }
     };
 }
