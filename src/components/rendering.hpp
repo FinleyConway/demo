@@ -2,10 +2,12 @@
 
 #include <raylib.h>
 
+#include "math/rect.hpp"
+#include "resource/texture.hpp"
+
 namespace demo::ecs {
     struct sprite {
-        Texture2D texture; // maybe have a handle for ownership?
-        Rectangle source;
-        Color tint = WHITE;
+        const texture* texture = nullptr;
+        rect_int source;
     };
 }
