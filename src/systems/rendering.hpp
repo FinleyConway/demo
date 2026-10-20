@@ -13,7 +13,7 @@
 namespace demo::ecs {
     class rendering {
     public:
-        rendering(entt::registry& registry) :
+        explicit rendering(entt::registry& registry) :
             m_registry(registry)
         {
         }

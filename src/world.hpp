@@ -3,6 +3,7 @@
 #include <raylib.h>
 #include <entt/entt.hpp>
 
+#include "components/animation.hpp"
 #include "components/rendering.hpp"
 #include "grid/world_grid.hpp"
 
@@ -10,6 +11,7 @@
 
 #include "systems/auto_nav_move.hpp"
 #include "systems/auto_nav_requester.hpp"
+#include "systems/animation.hpp"
 #include "systems/rendering.hpp"
 
 #include "resource/test_assets.hpp"
@@ -20,7 +22,8 @@ namespace demo {
         world() :
             m_nav_request(m_grid, m_registry),
             m_nav_move(m_grid, m_registry),
-            m_rendering(m_registry)
+            m_rendering(m_registry),
+            m_animation(m_registry)
         {
             m_temp_entity = create_navigatable();
         }
@@ -55,6 +58,9 @@ namespace demo {
 
             m_nav_request.update(dt);
             m_nav_move.update(dt);
+
+
+            m_animation.update(std::chrono::duration<float>(dt));
         }
 
         void draw() {
@@ -69,6 +75,9 @@ namespace demo {
             m_registry.emplace<ecs::world_position>(entity);
             m_registry.emplace<ecs::sprite>(entity, ecs::sprite {
                 &test_asset.source, { 0, 0, 40, 40 }
+            });
+            m_registry.emplace<ecs::animator>(entity, ecs::animator {
+                .clip = &test_asset.walking
             });
 
             m_registry.emplace<ecs::auto_navigation>(entity);
@@ -89,6 +98,8 @@ namespace demo {
         
         ecs::auto_nav_requester m_nav_request;
         ecs::auto_nav_move m_nav_move;
+
+        ecs::animation m_animation;
         ecs::rendering m_rendering;
 
         test_assets test_asset;

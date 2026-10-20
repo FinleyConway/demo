@@ -1,8 +1,9 @@
 #pragma once
 
+#include <chrono>
 #include <cstddef>
 
-#include "resource/animation_clip.hpp"
+#include "resource/types/animation_clip.hpp"
 
 namespace demo::ecs {
     struct animator {
@@ -10,7 +11,7 @@ namespace demo::ecs {
 
         size_t current_frame = 0;
         
-        float time = 0.0f;
+        std::chrono::milliseconds time;
         float speed = 1.0f;
     };
 }

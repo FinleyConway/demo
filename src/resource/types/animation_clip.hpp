@@ -1,5 +1,6 @@
 #pragma once
 
+#include <bits/chrono.h>
 #include <chrono>
 #include <cassert>
 #include <vector>
@@ -10,6 +11,14 @@ namespace demo {
     struct animation_frame {
         rect_int source;
         std::chrono::milliseconds duration;
+
+        animation_frame(const rect_int source, std::chrono::milliseconds duration) :
+            source(source),
+            duration(duration)
+        {
+            assert(duration > std::chrono::milliseconds(0) &&
+                "Frame is 0 or less duration");
+        }
     };
     
     enum class loop_mode {
