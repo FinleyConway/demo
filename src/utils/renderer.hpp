@@ -3,9 +3,8 @@
 #include <raylib.h>
 
 #include "math/rect.hpp"
+#include "math/point.hpp"
 #include "resource/texture.hpp"
-
-#include "grid/position/point.hpp"
 
 namespace demo {
     class renderer {

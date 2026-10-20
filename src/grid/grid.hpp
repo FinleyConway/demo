@@ -7,8 +7,8 @@
 #include <optional>
 #include <unordered_set>
 
-#include "grid/position/cell.hpp"
-#include "grid/position/point.hpp"
+#include "grid/cell.hpp"
+#include "math/point.hpp"
 
 namespace demo {
     template<typename T = int, size_t TWidth = 0, size_t THeight = 0, uint32_t TCellSize = 0>

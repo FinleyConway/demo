@@ -8,8 +8,8 @@
 
 #include "utils/worker_pool.hpp"
 
+#include "grid/cell.hpp"
 #include "grid/world_grid.hpp"
-#include "grid/position/cell.hpp"
 #include "grid/pathing/grid_pathing.hpp"
 
 namespace demo {

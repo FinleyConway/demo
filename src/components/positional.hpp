@@ -2,7 +2,7 @@
 
 #include <entt/entt.hpp>
 
-#include "grid/position/point.hpp"
+#include "math/point.hpp"
 
 namespace demo::ecs {
     struct static_entity {};

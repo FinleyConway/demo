@@ -2,8 +2,8 @@
 
 #include <vector>
 
-#include "grid/position/cell.hpp"
-#include "grid/position/point.hpp"
+#include "grid/cell.hpp"
+#include "math/point.hpp"
 #include "grid/pathing/path_finder.hpp"
 
 namespace demo::ecs {
