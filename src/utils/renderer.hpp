@@ -4,7 +4,7 @@
 
 #include "math/rect.hpp"
 #include "math/point.hpp"
-#include "resource/texture.hpp"
+#include "resource/types//texture.hpp"
 
 namespace demo {
     class renderer {

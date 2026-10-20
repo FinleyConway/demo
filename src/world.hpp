@@ -12,6 +12,8 @@
 #include "systems/auto_nav_requester.hpp"
 #include "systems/rendering.hpp"
 
+#include "resource/test_assets.hpp"
+
 namespace demo {
     class world {
     public:
@@ -66,7 +68,7 @@ namespace demo {
             //m_registry.emplace<ecs::static_entity>(entity);
             m_registry.emplace<ecs::world_position>(entity);
             m_registry.emplace<ecs::sprite>(entity, ecs::sprite {
-                nullptr, { 0, 0, 40, 40 }
+                &test_asset.source, { 0, 0, 40, 40 }
             });
 
             m_registry.emplace<ecs::auto_navigation>(entity);
@@ -88,5 +90,7 @@ namespace demo {
         ecs::auto_nav_requester m_nav_request;
         ecs::auto_nav_move m_nav_move;
         ecs::rendering m_rendering;
+
+        test_assets test_asset;
     };
 }
