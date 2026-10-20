@@ -62,7 +62,7 @@ namespace demo {
 
         template<typename Fn>
         void query(const aabb& bounds, Fn&& fn) {
-            std::unordered_set<T> unique;
+            std::unordered_set<T> unique; // hash and alloc cost might be iffy due to hot path
             
             get_region_cells(bounds, [&](spatial_cell cell) {
                 // does the cell exist?

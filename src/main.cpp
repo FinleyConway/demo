@@ -8,6 +8,8 @@ int main() {
 
     demo::world world;
 
+    world.start();
+
     while (!WindowShouldClose()) {
         world.update(GetFrameTime());
 

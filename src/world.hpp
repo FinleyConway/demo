@@ -3,24 +3,31 @@
 #include <raylib.h>
 #include <entt/entt.hpp>
 
+#include "components/rendering.hpp"
 #include "grid/world_grid.hpp"
 
 #include "components/positional.hpp"
 
 #include "systems/auto_nav_move.hpp"
 #include "systems/auto_nav_requester.hpp"
+#include "systems/rendering.hpp"
 
 namespace demo {
     class world {
     public:
         world() :
             m_nav_request(m_grid, m_registry),
-            m_nav_move(m_grid, m_registry)
+            m_nav_move(m_grid, m_registry),
+            m_rendering(m_registry)
         {
             m_temp_entity = create_navigatable();
         }
 
     public:
+        void start() {
+            m_rendering.init();
+        }
+
         void update(float dt) {
             Vector2 mouse = GetMousePosition();
 
@@ -49,25 +56,20 @@ namespace demo {
         }
 
         void draw() {
-            auto view = m_registry.view<ecs::world_position>();
-
-            for (auto entity : view) {
-                const auto& pos = m_registry.get<ecs::world_position>(entity).get();
-
-                DrawRectangle(
-                    pos.x, pos.y, 
-                    m_grid.cell_size(), m_grid.cell_size(), 
-                    RED
-                );
-            }
+            m_rendering.render();
         }
     
     private:
         entt::entity create_navigatable() {
             const auto entity = m_registry.create();
 
-            m_registry.emplace<ecs::auto_navigation>(entity);
+            //m_registry.emplace<ecs::static_entity>(entity);
             m_registry.emplace<ecs::world_position>(entity);
+            m_registry.emplace<ecs::sprite>(entity, ecs::sprite {
+                nullptr, { 0, 0, 40, 40 }
+            });
+
+            m_registry.emplace<ecs::auto_navigation>(entity);
             m_registry.emplace<ecs::navigation_target>(entity);
             m_registry.emplace<ecs::navigation_path>(entity);
             m_registry.emplace<ecs::navigation_motion>(entity);
@@ -85,5 +87,6 @@ namespace demo {
         
         ecs::auto_nav_requester m_nav_request;
         ecs::auto_nav_move m_nav_move;
+        ecs::rendering m_rendering;
     };
 }

@@ -7,7 +7,7 @@
 
 namespace demo::ecs {
     struct sprite {
-        const texture* texture = nullptr;
+        const texture* tex = nullptr;
         rect_int source;
     };
 }
