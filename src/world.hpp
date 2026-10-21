@@ -1,6 +1,5 @@
 #pragma once
 
-#include <raylib.h>
 #include <entt/entt.hpp>
 
 #include "utils/camera.hpp"
@@ -26,37 +25,15 @@ namespace demo {
             m_rendering(m_registry, m_main_camera),
             m_animation(m_registry)
         {
-            m_temp_entity = create_navigatable();
+            create_navigatable();
         }
 
     public:
         void update(float dt) {
-            Vector2 mouse = GetMousePosition();
-
-            bool mouse_inside =
-                mouse.x < m_grid.width() * m_grid.cell_size() &&
-                mouse.y < m_grid.height() * m_grid.cell_size();
-
-            size_t mouse_x = 0;
-            size_t mouse_y = 0;
-
-            if (mouse_inside) {
-                mouse_x = static_cast<size_t>(
-                    mouse.x / m_grid.cell_size()
-                );
-                mouse_y = static_cast<size_t>(
-                    mouse.y / m_grid.cell_size()
-                );
-            }
-
-            if (mouse_inside && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                ecs::auto_nav_requester::set_target(m_registry, m_temp_entity, { mouse_x, mouse_y });
-            }
-
             m_nav_request.update(dt);
             m_nav_move.update(dt);
 
-
+            // internals
             m_animation.update(std::chrono::duration<float>(dt));
         }
 
@@ -87,14 +64,12 @@ namespace demo {
         }
 
     private:
+        entt::registry m_registry;
+
         world_grid m_grid;
         camera m_main_camera;
 
-        entt::registry m_registry;
-
     private:
-        entt::entity m_temp_entity;
-        
         ecs::auto_nav_requester m_nav_request;
         ecs::auto_nav_move m_nav_move;
 
