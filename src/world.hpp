@@ -14,6 +14,8 @@
 #include "ecs/systems/animation.hpp"
 #include "ecs/systems/rendering.hpp"
 
+#include "ecs/entity/zombie.hpp"
+
 #include "resource/test_assets.hpp"
 
 namespace demo {
@@ -25,7 +27,7 @@ namespace demo {
             m_rendering(m_registry, m_main_camera),
             m_animation(m_registry)
         {
-            create_navigatable();
+            ecs::zombie::create(m_registry, m_test_asset);
         }
 
     public:
@@ -39,28 +41,6 @@ namespace demo {
 
         void draw() {
             m_rendering.render();
-        }
-    
-    private:
-        entt::entity create_navigatable() {
-            const auto entity = m_registry.create();
-
-            //m_registry.emplace<ecs::static_entity>(entity);
-            m_registry.emplace<ecs::world_position>(entity);
-            m_registry.emplace<ecs::sprite>(entity, ecs::sprite {
-                &test_asset.source, { 0, 0, 40, 40 }
-            });
-            m_registry.emplace<ecs::animator>(entity, ecs::animator {
-                .clip = &test_asset.walking
-            });
-
-            m_registry.emplace<ecs::auto_navigation>(entity);
-            m_registry.emplace<ecs::navigation_target>(entity);
-            m_registry.emplace<ecs::navigation_path>(entity);
-            m_registry.emplace<ecs::navigation_motion>(entity);
-            m_registry.emplace<ecs::navigation_request_state>(entity);
-
-            return entity;
         }
 
     private:
@@ -76,6 +56,6 @@ namespace demo {
         ecs::animation m_animation;
         ecs::rendering m_rendering;
 
-        test_assets test_asset;
+        test_assets m_test_asset;
     };
 }
