@@ -4,11 +4,18 @@
 
 #include "math/rect.hpp"
 #include "math/point.hpp"
-#include "resource/types//texture.hpp"
+#include "utils/camera.hpp"
+#include "resource/types/texture.hpp"
 
 namespace demo {
     class renderer {
     public:
+        template<typename Fn>
+        static void draw_in_camera(camera& camera, const point& offset, Fn&& fn) {
+            camera.set_offset(offset);
+            camera.draw_inside(fn);
+        }
+
         static void draw_sprite(const point& position, const texture* texture, const rect_int& source, Color tint = WHITE) {
             const Rectangle sprite_source = {
                 .x      = static_cast<float>(source.x), 

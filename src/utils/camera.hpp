@@ -70,8 +70,11 @@ namespace demo {
         }
         
     private:
-        void set_offset(Vector2 offset) {
-            m_camera.offset = offset;
+        void set_offset(const point& offset) {
+            m_camera.offset = {
+                .x = offset.x,
+                .y = offset.y
+            };
         }
 
         template<typename Fn>

@@ -23,7 +23,7 @@ namespace demo {
         world() :
             m_nav_request(m_grid, m_registry),
             m_nav_move(m_grid, m_registry),
-            m_rendering(m_registry),
+            m_rendering(m_registry, m_main_camera),
             m_animation(m_registry)
         {
             m_temp_entity = create_navigatable();

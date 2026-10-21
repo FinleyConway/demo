@@ -4,6 +4,7 @@
 
 #include <entt/entt.hpp>
 
+#include "utils/camera.hpp"
 #include "utils/renderer.hpp"
 #include "grid/spatial_grid.hpp"
 
@@ -13,8 +14,9 @@
 namespace demo::ecs {
     class rendering {
     public:
-        explicit rendering(entt::registry& registry) :
-            m_registry(registry)
+        explicit rendering(entt::registry& registry, camera& main_camera) :
+            m_registry(registry),
+            m_main_camera(main_camera)
         {
             m_registry.on_construct<sprite>().connect<&rendering::on_rendering_added>(*this);
             m_registry.on_destroy<sprite>().connect<&rendering::on_rendering_remove>(*this);
@@ -23,17 +25,29 @@ namespace demo::ecs {
         void render() {
             update_dynamic_entities();
 
-            aabb camera_bounds { 0, 0, 800, 450 }; // need to sort out camera
+            const point camera_position = m_main_camera.get_position();
+            const point camera_offset = {
+                .x = GetScreenWidth() / (2.0f * m_main_camera.get_zoom()),
+                .y = GetScreenHeight() / (2.0f * m_main_camera.get_zoom()),
+            };
+            const aabb camera_bounds { 
+                camera_position.x - camera_offset.x, 
+                camera_position.y - camera_offset.y, 
+                camera_position.x + camera_offset.x, 
+                camera_position.y + camera_offset.y, 
+            }; 
 
-            m_spatial_grid.query(camera_bounds, [&](entt::entity entity) {
-                auto& position = m_registry.get<world_position>(entity);
-                auto& render_data = m_registry.get<sprite>(entity);
+            renderer::draw_in_camera(m_main_camera, camera_offset, [&]() {
+                m_spatial_grid.query(camera_bounds, [&](entt::entity entity) {
+                    const auto& position = m_registry.get<world_position>(entity);
+                    const auto& render_data = m_registry.get<sprite>(entity);
 
-                renderer::draw_sprite(
-                    position.get(), 
-                    render_data.tex, 
-                    render_data.source
-                );
+                    renderer::draw_sprite(
+                        position.get(), 
+                        render_data.tex, 
+                        render_data.source
+                    );
+                });
             });
         }   
 
@@ -42,8 +56,8 @@ namespace demo::ecs {
             assert((registry.all_of<world_position, sprite>(entity)
                 && "Sprite component was constructed before world_position"));
 
-            auto& position = registry.get<world_position>(entity);
-            auto& render_data = registry.get<sprite>(entity);
+            const auto& position = registry.get<world_position>(entity);
+            const auto& render_data = registry.get<sprite>(entity);
             
             m_spatial_grid.insert(entity, make_bounds(position, render_data));
         }
@@ -80,6 +94,7 @@ namespace demo::ecs {
 
     private:
         entt::registry& m_registry;
+        camera& m_main_camera;
 
         static constexpr uint16_t c_cell_size = 32;
         spatial_grid<entt::entity, c_cell_size> m_spatial_grid;
