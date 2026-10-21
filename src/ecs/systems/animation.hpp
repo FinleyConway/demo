@@ -2,8 +2,8 @@
 
 #include <entt/entt.hpp>
 
-#include "components/rendering.hpp"
-#include "components/animation.hpp"
+#include "ecs/components/rendering.hpp"
+#include "ecs/components/animation.hpp"
 
 namespace demo::ecs {
     class animation {

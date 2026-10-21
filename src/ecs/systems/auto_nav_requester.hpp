@@ -2,12 +2,11 @@
 
 #include <entt/entt.hpp>
 
-#include "entt/entity/fwd.hpp"
 #include "grid/world_grid.hpp"
 #include "grid/pathing/path_finder.hpp"
 
-#include "components/navigation.hpp"
-#include "components/positional.hpp"
+#include "ecs/components/navigation.hpp"
+#include "ecs/components/positional.hpp"
 
 namespace demo::ecs {
     class auto_nav_requester {

@@ -7,8 +7,8 @@
 #include "utils/renderer.hpp"
 #include "grid/spatial_grid.hpp"
 
-#include "components/positional.hpp"
-#include "components/rendering.hpp"
+#include "ecs/components/positional.hpp"
+#include "ecs/components/rendering.hpp"
 
 namespace demo::ecs {
     class rendering {

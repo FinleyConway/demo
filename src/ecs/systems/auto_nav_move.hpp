@@ -4,8 +4,8 @@
 
 #include "grid/world_grid.hpp"
 
-#include "components/navigation.hpp"
-#include "components/positional.hpp"
+#include "ecs/components/navigation.hpp"
+#include "ecs/components/positional.hpp"
 
 namespace demo::ecs {
     class auto_nav_move {

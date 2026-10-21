@@ -1,7 +1,5 @@
 #pragma once
 
-#include <raylib.h>
-
 #include "math/rect.hpp"
 #include "resource/types/texture.hpp"
 

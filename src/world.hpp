@@ -3,16 +3,16 @@
 #include <raylib.h>
 #include <entt/entt.hpp>
 
-#include "components/animation.hpp"
-#include "components/rendering.hpp"
 #include "grid/world_grid.hpp"
 
-#include "components/positional.hpp"
+#include "ecs/components/animation.hpp"
+#include "ecs/components/rendering.hpp"
+#include "ecs/components/positional.hpp"
 
-#include "systems/auto_nav_move.hpp"
-#include "systems/auto_nav_requester.hpp"
-#include "systems/animation.hpp"
-#include "systems/rendering.hpp"
+#include "ecs/systems/auto_nav_move.hpp"
+#include "ecs/systems/auto_nav_requester.hpp"
+#include "ecs/systems/animation.hpp"
+#include "ecs/systems/rendering.hpp"
 
 #include "resource/test_assets.hpp"
 
