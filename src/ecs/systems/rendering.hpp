@@ -16,21 +16,6 @@ namespace demo::ecs {
         explicit rendering(entt::registry& registry) :
             m_registry(registry)
         {
-        }
-
-        void init() {
-            // get all rendering entities
-            auto view = m_registry.view<
-                world_position,
-                sprite
-            >();
-
-            // place them in the grid
-            for (auto [e, pos, sprite] : view.each()) {
-                m_spatial_grid.insert(e, make_bounds(pos, sprite));
-            }
-
-            // create an event hook for further creation/deletion of entities
             m_registry.on_construct<sprite>().connect<&rendering::on_rendering_added>(*this);
             m_registry.on_destroy<sprite>().connect<&rendering::on_rendering_remove>(*this);
         }

@@ -29,10 +29,6 @@ namespace demo {
         }
 
     public:
-        void start() {
-            m_rendering.init();
-        }
-
         void update(float dt) {
             Vector2 mouse = GetMousePosition();
 
