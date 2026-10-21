@@ -5,10 +5,7 @@
 #include "utils/camera.hpp"
 #include "grid/world_grid.hpp"
 
-#include "ecs/components/animation.hpp"
-#include "ecs/components/rendering.hpp"
-#include "ecs/components/positional.hpp"
-
+#include "ecs/systems/test_grid_selector.hpp"
 #include "ecs/systems/auto_nav_move.hpp"
 #include "ecs/systems/auto_nav_requester.hpp"
 #include "ecs/systems/animation.hpp"
@@ -22,6 +19,7 @@ namespace demo {
     class world {
     public:
         world() :
+            m_test(m_registry, m_grid, m_main_camera),
             m_nav_request(m_grid, m_registry),
             m_nav_move(m_grid, m_registry),
             m_rendering(m_registry, m_main_camera),
@@ -32,6 +30,8 @@ namespace demo {
 
     public:
         void update(float dt) {
+            m_test.update(dt);
+
             m_nav_request.update(dt);
             m_nav_move.update(dt);
 
@@ -50,6 +50,8 @@ namespace demo {
         camera m_main_camera;
 
     private:
+        ecs::test_grid_selector m_test;
+
         ecs::auto_nav_requester m_nav_request;
         ecs::auto_nav_move m_nav_move;
 
