@@ -3,6 +3,7 @@
 #include <raylib.h>
 #include <entt/entt.hpp>
 
+#include "utils/camera.hpp"
 #include "grid/world_grid.hpp"
 
 #include "ecs/components/animation.hpp"
@@ -87,6 +88,8 @@ namespace demo {
 
     private:
         world_grid m_grid;
+        camera m_main_camera;
+
         entt::registry m_registry;
 
     private:
