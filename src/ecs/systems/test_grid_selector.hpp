@@ -1,8 +1,8 @@
 #pragma once
 
-#include <raylib.h>
 #include <entt/entt.hpp>
 
+#include "utils/input.hpp"
 #include "utils/camera.hpp"
 #include "grid/world_grid.hpp"
 
@@ -23,32 +23,25 @@ namespace demo::ecs {
             auto view = m_registry.view<auto_navigation>();
             
             for (auto [e] : view.each()) {
-                Vector2 mouse = GetMousePosition();
-                point world_position = c_main_camera.screen_to_world({
-                    .x =  mouse.x,
-                    .y = mouse.y
-                });
+                const cell grid_pos = mouse_to_cell();                
 
-                bool mouse_inside =
-                    world_position.x < c_grid.width() * c_grid.cell_size() &&
-                    world_position.y < c_grid.height() * c_grid.cell_size();
+                // mouse not in grid within this frame
+                if (!c_grid.in_bounds(grid_pos)) return;
 
-                size_t mouse_x = 0;
-                size_t mouse_y = 0;
-
-                if (mouse_inside) {
-                    mouse_x = static_cast<size_t>(
-                        world_position.x / c_grid.cell_size()
-                    );
-                    mouse_y = static_cast<size_t>(
-                        world_position.y / c_grid.cell_size()
-                    );
-                }
-
-                if (mouse_inside && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-                    ecs::auto_nav_requester::set_target(m_registry, e, { mouse_x, mouse_y });
+                // send a navigation request on mouse click
+                if (input::mouse_button_pressed(input::mouse::left)) {
+                    // maybe this should be nav target component rather then system
+                    auto_nav_requester::set_target(m_registry, e, grid_pos);
                 }
             }
+        }
+
+        cell mouse_to_cell() const {
+            const point world_position = c_main_camera.screen_to_world(
+                input::mouse_position()
+            );
+
+            return c_grid.point_to_cell(world_position);
         }
 
     private:
