@@ -27,26 +27,21 @@ namespace demo::ecs {
         void render() {
             update_dynamic_entities();
 
-            const point camera_position = m_main_camera.get_position();
+            const aabb camera_bounds = make_world_bounds();
+
             const point camera_offset = {
                 .x = GetScreenWidth() / (2.0f * m_main_camera.get_zoom()),
                 .y = GetScreenHeight() / (2.0f * m_main_camera.get_zoom()),
             };
-            const aabb camera_bounds { 
-                camera_position.x - camera_offset.x, 
-                camera_position.y - camera_offset.y, 
-                camera_position.x + camera_offset.x, 
-                camera_position.y + camera_offset.y, 
-            }; 
 
             renderer::draw_in_camera(m_main_camera, camera_offset, [&]() {
-                m_spatial_grid.query(camera_bounds, [&](entt::entity entity) {
-                    draw_grid();
+                draw_grid();
 
+                m_spatial_grid.query(camera_bounds, [&](entt::entity entity) {
                     draw_sprite(entity);
                 });
             });
-        }   
+        }
 
     private:
         void on_rendering_added(entt::registry& registry, entt::entity entity) {
@@ -86,6 +81,25 @@ namespace demo::ecs {
             return {
                 lower_bounds,
                 upper_bounds
+            };
+        }
+
+        constexpr aabb make_world_bounds() {
+            const point top_left = m_main_camera.screen_to_world({
+                .x = 0.0f,
+                .y = 0.0f,
+            });
+
+            const point bottom_right = m_main_camera.screen_to_world({
+                .x = static_cast<float>(GetScreenWidth()),
+                .y = static_cast<float>(GetScreenHeight()),
+            });
+
+            return {
+                std::min(top_left.x, bottom_right.x),
+                std::min(top_left.y, bottom_right.y),
+                std::max(top_left.x, bottom_right.x),
+                std::max(top_left.y, bottom_right.y),
             };
         }
 

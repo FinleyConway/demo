@@ -29,7 +29,7 @@ namespace demo::ecs {
                 if (!c_grid.in_bounds(grid_pos)) return;
 
                 // send a navigation request on mouse click
-                if (input::mouse_button_pressed(input::mouse::left)) {
+                if (input::mouse_button_pressed(input::mouse::middle)) {
                     // maybe this should be nav target component rather then system
                     auto_nav_requester::set_target(m_registry, e, grid_pos);
                 }
