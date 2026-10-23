@@ -19,6 +19,12 @@ add_executable(demo
     src/main.cpp
 )
 
+if (MSVC)
+    add_compile_options(/W4)
+else()
+    add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
 target_include_directories(demo PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/src # provide explicit cleaner headers
 )
