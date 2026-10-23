@@ -11,7 +11,12 @@ namespace demo::ecs {
         static void add_components(entt::registry& registry, entt::entity entity) {
             registry.emplace<world_position>(entity);
 
-            registry.emplace<sprite>(entity);
+            registry.emplace<sprite>(entity, sprite {
+                .source = {
+                    .w = 32,
+                    .h = 32,
+                }
+            });
 
             registry.emplace<defence_pillar>(entity);
         }

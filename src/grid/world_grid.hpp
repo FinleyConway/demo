@@ -6,12 +6,18 @@
 
 namespace demo {
     struct tile {
-        entt::entity entity = entt::null;
+    public:
+        void set_entity(entt::entity entity) {
+            m_entity = entity;
+        }
 
         bool empty() const {
-            return entity == entt::null;
+            return m_entity == entt::null;
         }
+    
+    private:
+        entt::entity m_entity = entt::null;
     };
     
-    using world_grid = grid<tile, 25, 25, 32>;
+    using world_grid = grid<tile, 30, 30, 32>;
 }

@@ -4,12 +4,14 @@
 #include "grid/world_grid.hpp"
 
 #include "ecs/entity/main_camera.hpp"
+#include "ecs/entity/pillar.hpp"
 #include "ecs/entity/zombie.hpp"
 
 #include "ecs/systems/auto_nav_move.hpp"
 #include "ecs/systems/auto_nav_requester.hpp"
 #include "ecs/systems/camera_movement.hpp"
 #include "ecs/systems/test_grid_selector.hpp"
+#include "ecs/systems/place_pillar.hpp"
 
 #include "resource/test_assets.hpp"
 
@@ -30,6 +32,7 @@ int main() {
     world.add_system<demo::ecs::test_grid_selector>();
     world.add_system<demo::ecs::auto_nav_requester>();
     world.add_system<demo::ecs::auto_nav_move>();
+    world.add_system<demo::ecs::place_pillar>();
 
     // register hooks
     world.on_hooks();
@@ -37,6 +40,7 @@ int main() {
     // add entities
     world.add_entity<demo::ecs::main_camera>();
     world.add_entity<demo::ecs::zombie>(test_assets);
+    world.add_entity<demo::ecs::pillar>();
 
     world.start();
 
