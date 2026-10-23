@@ -85,7 +85,7 @@ namespace demo {
             for (const auto& neighbour : c_world_grid.vonn_neighbours(current)) {
                 if (!neighbour.has_value()) continue;
 
-                if (!c_world_grid.get(*neighbour).walkable) continue;
+                if (!c_world_grid.get(*neighbour).empty()) continue;
 
                 path_node& next_node = m_nodes[*neighbour];
                 const size_t tentative_g = current_g + 1;
