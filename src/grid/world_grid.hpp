@@ -7,5 +7,5 @@ namespace demo {
         bool walkable = true;
     };
     
-    using world_grid = grid<tile, 100, 100, 32>;
+    using world_grid = grid<tile, 25, 25, 32>;
 }

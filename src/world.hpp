@@ -24,7 +24,7 @@ namespace demo {
             m_test(m_registry, m_grid, m_main_camera),
             m_nav_request(m_grid, m_registry),
             m_nav_move(m_grid, m_registry),
-            m_cam_movement(m_registry, m_main_camera),
+            m_cam_movement(m_registry, m_main_camera, m_grid),
             m_rendering(m_registry, m_main_camera, m_grid),
             m_animation(m_registry)
         {
