@@ -2,39 +2,39 @@
 
 #include <cassert>
 
-#include <entt/entt.hpp>
+#include "ecs/systems/system_base.hpp"
+
+#include "ecs/components/positional.hpp"
+#include "ecs/components/rendering.hpp"
 
 #include "utils/camera.hpp"
 #include "utils/renderer.hpp"
 #include "grid/world_grid.hpp"
 #include "grid/spatial_grid.hpp"
 
-#include "ecs/components/positional.hpp"
-#include "ecs/components/rendering.hpp"
-
 namespace demo::ecs {
-    class rendering {
+    class rendering : public system_base {
     public:
-        rendering(entt::registry& registry, camera& main_camera, const world_grid& grid) :
-            m_registry(registry),
-            m_main_camera(main_camera),
-            c_grid(grid)
-        {
-            m_registry.on_construct<sprite>().connect<&rendering::on_rendering_added>(*this);
-            m_registry.on_destroy<sprite>().connect<&rendering::on_rendering_remove>(*this);
+        using system_base::system_base;
+
+        void on_hook() override {
+            registry().on_construct<sprite>().connect<&rendering::on_rendering_added>(*this);
+            registry().on_destroy<sprite>().connect<&rendering::on_rendering_remove>(*this);
         }
 
         void render() {
             update_dynamic_entities();
 
-            const aabb camera_bounds = make_world_bounds();
+            camera& main_camera = context<camera>();
 
+            const float camera_zoom = main_camera.get_zoom();
+            const aabb camera_bounds = make_world_bounds(main_camera);
             const point camera_offset = {
-                .x = GetScreenWidth() / (2.0f * m_main_camera.get_zoom()),
-                .y = GetScreenHeight() / (2.0f * m_main_camera.get_zoom()),
+                .x = GetScreenWidth() / (2.0f * camera_zoom),
+                .y = GetScreenHeight() / (2.0f * camera_zoom),
             };
 
-            renderer::draw_in_camera(m_main_camera, camera_offset, [&]() {
+            renderer::draw_in_camera(main_camera, camera_offset, [&]() {
                 draw_grid();
 
                 m_spatial_grid.query(camera_bounds, [&](entt::entity entity) {
@@ -59,7 +59,7 @@ namespace demo::ecs {
         }
 
         void update_dynamic_entities() {
-            auto view = m_registry.view<
+            auto view = registry().view<
                 dirty_position,
                 world_position,
                 sprite
@@ -67,7 +67,7 @@ namespace demo::ecs {
 
             for (auto [e, pos, sprite] : view.each()) {
                 m_spatial_grid.relocate(e, make_bounds(pos, sprite));
-                m_registry.remove<dirty_position>(e);
+                registry().remove<dirty_position>(e);
             }
         }
 
@@ -84,13 +84,13 @@ namespace demo::ecs {
             };
         }
 
-        constexpr aabb make_world_bounds() {
-            const point top_left = m_main_camera.screen_to_world({
+        constexpr aabb make_world_bounds(const camera& main_camera) {
+            const point top_left = main_camera.screen_to_world({
                 .x = 0.0f,
                 .y = 0.0f,
             });
 
-            const point bottom_right = m_main_camera.screen_to_world({
+            const point bottom_right = main_camera.screen_to_world({
                 .x = static_cast<float>(GetScreenWidth()),
                 .y = static_cast<float>(GetScreenHeight()),
             });
@@ -104,13 +104,15 @@ namespace demo::ecs {
         }
 
         void draw_grid() {
-            const size_t cellSize = c_grid.cell_size();
+            const world_grid& grid = context<world_grid>();
+
+            const size_t cellSize = grid.cell_size();
 
             const int offsetX = 0;
             const int offsetY = 0;
 
-            for (size_t row = 0; row < c_grid.height(); row++) {
-                for (size_t col = 0; col < c_grid.width(); col++) {
+            for (size_t row = 0; row < grid.height(); row++) {
+                for (size_t col = 0; col < grid.width(); col++) {
 
                     // temp rendering for grid for now
                     Color tileColor = ((row + col) % 2 == 0)
@@ -128,8 +130,8 @@ namespace demo::ecs {
         }
 
         void draw_sprite(entt::entity entity) const {
-            const auto& position = m_registry.get<world_position>(entity);
-            const auto& render_data = m_registry.get<sprite>(entity);
+            const auto& position = registry().get<world_position>(entity);
+            const auto& render_data = registry().get<sprite>(entity);
 
             renderer::draw_sprite(
                 position.get(), 
@@ -139,10 +141,6 @@ namespace demo::ecs {
         }
 
     private:
-        entt::registry& m_registry;
-        camera& m_main_camera;
-        const world_grid& c_grid;
-
         static constexpr uint16_t c_cell_size = 32;
         spatial_grid<entt::entity, c_cell_size> m_spatial_grid;
     };

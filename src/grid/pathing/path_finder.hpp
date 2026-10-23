@@ -39,13 +39,13 @@ namespace demo {
 
     class path_finder {
     public:
-        explicit path_finder(const world_grid& world_grid) :
-            c_world_grid(world_grid) 
-        {
-        }
+        void add_grid_context(const world_grid& world_grid) {
+            c_world_grid = &world_grid;
+        }   
 
-    public:
         path_request request(const cell& start, const cell& end) {
+            assert(c_world_grid != nullptr && "No grid context was given");
+
             // try to start a path
             //? maybe add a lock here if multiple threads access request
             const path_request_id id = m_next_id++; 
@@ -53,7 +53,7 @@ namespace demo {
             m_pool.add_task(
                 [this, start, end]() {
                     return grid_pathing::search(
-                        c_world_grid, start, end
+                        *c_world_grid, start, end
                     );
                 },
                 [this, id](std::vector<cell>&& path) {
@@ -94,7 +94,7 @@ namespace demo {
         }
 
     private:
-        const world_grid& c_world_grid;
+        const world_grid* c_world_grid;
 
         std::mutex m_mutex;
         path_request_id m_next_id = 0;

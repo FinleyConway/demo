@@ -1,21 +1,17 @@
 #pragma once
 
-#include <entt/entt.hpp>
+#include "ecs/systems/system_base.hpp"
 
 #include "ecs/components/rendering.hpp"
 #include "ecs/components/animation.hpp"
 
 namespace demo::ecs {
-    class animation {
+    class animation : public system_base {
     public:
-        explicit animation(entt::registry& registry) :
-            m_registry(registry)
-        {
-        }
+        using system_base::system_base;
     
-    public:
         void update(std::chrono::duration<float> dt) {
-            auto view = m_registry.view<animator, sprite>();
+            auto view = registry().view<animator, sprite>();
 
             for (auto [e, anim, sprite] : view.each()) {
                 update_animation(anim, sprite, dt);
@@ -65,8 +61,5 @@ namespace demo::ecs {
                 anim.time = std::chrono::milliseconds(0);
             }
         }
-
-    private:
-        entt::registry& m_registry;
     };
 }
