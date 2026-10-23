@@ -4,7 +4,6 @@
 #include "ecs/systems/system_base.hpp"
 
 #include "ecs/components/navigation.hpp"
-#include "ecs/systems/auto_nav_requester.hpp"
 
 #include "utils/input.hpp"
 #include "utils/camera.hpp"
@@ -30,7 +29,7 @@ namespace demo::ecs {
                 // send a navigation request on mouse click
                 if (input::mouse_button_pressed(input::mouse::middle)) {
                     // maybe this should be nav target component rather then system
-                    auto_nav_requester::set_target(registry(), e, grid_pos);
+                    navigation_target::set_target(registry(), e, grid_pos);
                 }
             }
         }

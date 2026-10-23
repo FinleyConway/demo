@@ -46,20 +46,6 @@ namespace demo::ecs {
                 }
             } 
         }
-        
-        // TODO: Move to navigation_target
-        static bool set_target(entt::registry& registry, entt::entity entity, const cell& target) {
-            if (!has_required_components(registry, entity)) return false;
-            
-            registry.patch<navigation_target>(
-                entity,
-                [&target](navigation_target& component) {
-                    component.value = target;
-                }
-            );
-
-            return true;
-        }
 
     private:
         static bool has_required_components(entt::registry& registry, entt::entity entity) {
@@ -103,7 +89,7 @@ namespace demo::ecs {
                 // request a new path
                 const auto& target = registry().get<navigation_target>(entity);
 
-                set_target(registry(), entity, target.value);
+                navigation_target::set_target(registry(), entity, target.value);
             }
         }
 
