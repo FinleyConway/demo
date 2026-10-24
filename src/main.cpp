@@ -7,8 +7,8 @@
 #include "ecs/entity/pillar.hpp"
 #include "ecs/entity/zombie.hpp"
 
-#include "ecs/systems/auto_nav_move.hpp"
-#include "ecs/systems/auto_nav_requester.hpp"
+#include "ecs/systems/navigation/auto_nav_move.hpp"
+#include "ecs/systems/navigation/auto_nav_requester.hpp"
 #include "ecs/systems/camera_movement.hpp"
 #include "ecs/systems/test_grid_selector.hpp"
 #include "ecs/systems/place_pillar.hpp"

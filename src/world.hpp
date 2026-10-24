@@ -8,8 +8,8 @@
 
 #include "ecs/entity/entity.hpp"
 
-#include "ecs/systems/animation.hpp"
-#include "ecs/systems/rendering.hpp"
+#include "ecs/systems/internal/animation.hpp"
+#include "ecs/systems/internal/rendering.hpp"
 #include "ecs/systems/system_base.hpp"
 
 namespace demo {
