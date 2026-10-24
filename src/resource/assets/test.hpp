@@ -3,15 +3,15 @@
 #include "resource/types/texture.hpp"
 #include "resource/types/animation_clip.hpp"
 
-namespace demo {
+namespace demo::assets {
     using namespace std::chrono_literals;
 
-    struct test_assets {
+    struct test {
         texture source;
         animation_clip idle;
         animation_clip walking;
 
-        test_assets() :
+        test() :
             source("/var/home/finley/Projects/Git/demo/test_assets/zombie_stickman.png"),
             idle(
                 {

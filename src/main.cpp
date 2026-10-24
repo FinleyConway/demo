@@ -5,7 +5,6 @@
 
 #include "ecs/entity/main_camera.hpp"
 #include "ecs/entity/pillar.hpp"
-#include "ecs/entity/zombie.hpp"
 
 #include "ecs/systems/navigation/auto_nav_move.hpp"
 #include "ecs/systems/navigation/auto_nav_requester.hpp"
@@ -13,7 +12,7 @@
 #include "ecs/systems/test_grid_selector.hpp"
 #include "ecs/systems/place_pillar.hpp"
 
-#include "resource/test_assets.hpp"
+#include "utils/asset_context.hpp"
 
 int main() {
     InitWindow(800, 450, "Grid Pathfinding");
@@ -21,10 +20,9 @@ int main() {
 
     demo::world world;
 
-    demo::test_assets test_assets;
-
     // add context
     world.add_context<demo::world_grid>();
+    world.add_context<demo::asset_context>();
 
     // add systems
     world.add_system<demo::ecs::camera_movement>();
@@ -38,7 +36,6 @@ int main() {
 
     // add entities
     world.add_entity<demo::ecs::main_camera>();
-    world.add_entity<demo::ecs::zombie>(test_assets);
     world.add_entity<demo::ecs::pillar>();
 
     world.start();

@@ -1,10 +1,13 @@
 #pragma once
 
+#include "ecs/entity/zombie.hpp"
 
 #include "ecs/systems/system_base.hpp"
 
+#include "ecs/components/positional.hpp"
 #include "ecs/components/navigation.hpp"
 
+#include "utils/asset_context.hpp"
 #include "utils/input.hpp"
 #include "utils/camera.hpp"
 #include "grid/world_grid.hpp"
@@ -15,22 +18,18 @@ namespace demo::ecs {
         using system_base::system_base;
 
         void update(float dt) {
-            auto view = registry().view<auto_navigation>();
-            
-            for (auto [e] : view.each()) {
-                const camera& main_camera = context<camera>();
-                const world_grid& grid = context<world_grid>();
+            const camera& main_camera = context<camera>();
+            const world_grid& grid = context<world_grid>();
 
-                const cell grid_pos = mouse_to_cell(main_camera, grid);                
+            const cell grid_pos = mouse_to_cell(main_camera, grid);    
 
-                // mouse not in grid within this frame
-                if (!grid.in_bounds(grid_pos)) return;
+            if (input::mouse_button_pressed(input::mouse::middle)) {
+                auto zombie = zombie::create(registry(), context<asset_context>());
 
-                // send a navigation request on mouse click
-                if (input::mouse_button_pressed(input::mouse::middle)) {
-                    // maybe this should be nav target component rather then system
-                    navigation_target::set_target(registry(), e, grid_pos);
-                }
+                auto& pos = registry().get<world_position>(zombie);
+                pos.set(grid.cell_to_point(grid_pos), registry(), zombie);
+
+                navigation_target::set_target(registry(), zombie, { 14, 15 });
             }
         }
 
