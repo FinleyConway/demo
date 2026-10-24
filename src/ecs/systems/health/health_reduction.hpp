@@ -1,0 +1,28 @@
+#pragma once
+
+#include "ecs/systems/system_base.hpp"
+
+#include "ecs/components/health.hpp"
+
+namespace demo::ecs {
+    class health_reduction : public system_base {
+    public:
+        using system_base::system_base;
+
+        void update(float dt) override {
+            auto view = registry().view<health, take_damage>();
+
+            for (auto [e, health, damage] : view.each()) {
+                health.current_health -= damage.amount;
+
+                if (health.current_health <= 0.0f) {
+                    health.current_health = 0.0f;
+
+                    registry().emplace<killed>(e);
+                }
+
+                registry().remove<take_damage>(e);
+            }
+        }
+    };
+}
