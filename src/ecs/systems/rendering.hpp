@@ -106,26 +106,42 @@ namespace demo::ecs {
         void draw_grid() {
             const world_grid& grid = context<world_grid>();
 
-            const size_t cellSize = grid.cell_size();
+            // const size_t cellSize = grid.cell_size();
 
-            const int offsetX = 0;
-            const int offsetY = 0;
+            // const int offsetX = 0;
+            // const int offsetY = 0;
 
-            for (size_t row = 0; row < grid.height(); row++) {
-                for (size_t col = 0; col < grid.width(); col++) {
+            // for (size_t row = 0; row < grid.height(); row++) {
+            //     for (size_t col = 0; col < grid.width(); col++) {
 
-                    // temp rendering for grid for now
-                    Color tileColor = ((row + col) % 2 == 0)
+            //         // temp rendering for grid for now
+            //         Color tileColor = ((row + col) % 2 == 0)
+            //             ? (Color){ 80, 160, 70, 255 }
+            //             : (Color){ 100, 190, 80, 255 };
+
+            //         int x = offsetX + static_cast<int>(col * cellSize);
+            //         int y = offsetY + static_cast<int>(row * cellSize);
+            //         int size = static_cast<int>(cellSize);
+
+            //         DrawRectangle(x, y, size, size, tileColor);
+            //         DrawRectangleLines(x, y, size, size, (Color){ 40, 100, 40, 255 });
+            //     }
+            // }
+
+            //std::vector<cell> cells = grid.cells_in_radius({ 15, 15 }, 4.5f);
+            std::vector<cell> cells = grid.cells_in_sector({ 15, 15 }, 90, 90, 4.5f);
+
+            for (const auto& cell : cells) {
+                Color tileColor = ((cell.x + cell.y) % 2 == 0)
                         ? (Color){ 80, 160, 70, 255 }
                         : (Color){ 100, 190, 80, 255 };
 
-                    int x = offsetX + static_cast<int>(col * cellSize);
-                    int y = offsetY + static_cast<int>(row * cellSize);
-                    int size = static_cast<int>(cellSize);
+                int size = static_cast<int>(grid.cell_size());
+                int x = static_cast<int>(cell.x * size);
+                int y = static_cast<int>(cell.y * size);
 
-                    DrawRectangle(x, y, size, size, tileColor);
-                    DrawRectangleLines(x, y, size, size, (Color){ 40, 100, 40, 255 });
-                }
+                DrawRectangle(x, y, size, size, tileColor);
+                DrawRectangleLines(x, y, size, size, (Color){ 40, 100, 40, 255 });
             }
         }
 
