@@ -3,6 +3,8 @@
 #include <vector>
 #include <cstdint>
 
+#include <entt/entt.hpp>
+
 #include "grid/cell.hpp"
 
 namespace demo::ecs {
@@ -23,6 +25,19 @@ namespace demo::ecs {
 
     struct attack_area_turn {
         uint16_t angle = 0;
+    };
+
+    struct turret_search {
+        entt::entity target = entt::null;
+        cell target_cell;
+
+        float attack_intervals = 1.0f;
+        float attack_time = 0.0f;
+    };
+
+    struct turret_attack {
+        entt::entity protential_target = entt::null;
+        cell target_cell;
     };
 
     // maybe different attack types?

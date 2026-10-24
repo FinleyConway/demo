@@ -11,6 +11,10 @@ namespace demo {
             m_entity = entity;
         }
 
+        entt::entity get_entity() const {
+            return m_entity;
+        }
+
         bool empty() const {
             return m_entity == entt::null;
         }
