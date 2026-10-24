@@ -107,8 +107,7 @@ namespace demo {
                 const float dy = static_cast<float>(c.y) - centre.y;
 
                 const float cell_angle = std::atan2(dy, dx) * 180.0f / std::numbers::pi_v<float>;
-
-                float difference = std::fmod(cell_angle - angle + 540.0f, 360.0f) - 180.0f;
+                const float difference = std::fmod(cell_angle - angle + 540.0f, 360.0f) - 180.0f;
 
                 return std::abs(difference) > width / 2.0f;
             });
