@@ -20,7 +20,6 @@ int main() {
     SetTargetFPS(60);
 
     demo::world world;
-    demo::world_grid world_grid;
 
     demo::test_assets test_assets;
 
