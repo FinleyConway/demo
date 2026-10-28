@@ -6,6 +6,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_SCAN_FOR_MODULES OFF) # hush clangd
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# build flags
+option(ENABLE_DEBUGGING "Enable logging and asserting" ON)
+
 # set build dir
 set(BINARY_DIR "demo")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY
@@ -23,6 +26,10 @@ if (MSVC)
     add_compile_options(/W4)
 else()
     add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+if (ENABLE_DEBUGGING)
+    target_compile_definitions(demo PRIVATE ENABLE_DEBUGGING)
 endif()
 
 target_include_directories(demo PUBLIC

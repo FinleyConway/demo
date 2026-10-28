@@ -14,7 +14,12 @@
 
 #include "utils/asset_context.hpp"
 
+#include "utils/debugging.hpp"
+
 int main() {
+    LOG_INFO("You're gonna assert!!!!!");
+    ASSERT(false, "ohoh");
+
     InitWindow(800, 450, "Grid Pathfinding");
     SetTargetFPS(60);
 
