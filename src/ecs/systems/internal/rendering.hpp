@@ -1,7 +1,5 @@
 #pragma once
 
-#include <cassert>
-
 #include "ecs/systems/system_base.hpp"
 
 #include "ecs/components/positional.hpp"
@@ -9,6 +7,7 @@
 
 #include "utils/camera.hpp"
 #include "utils/renderer.hpp"
+#include "utils/debugging.hpp"
 #include "grid/world_grid.hpp"
 #include "grid/spatial_grid.hpp"
 
@@ -45,8 +44,8 @@ namespace demo::ecs {
 
     private:
         void on_rendering_added(entt::registry& registry, entt::entity entity) {
-            assert((registry.all_of<world_position, sprite>(entity)
-                && "Sprite component was constructed before world_position"));
+            ASSERT((registry.all_of<world_position, sprite>(entity)),
+                "Sprite component was constructed before world_position");
 
             const auto& position = registry.get<world_position>(entity);
             const auto& render_data = registry.get<sprite>(entity);

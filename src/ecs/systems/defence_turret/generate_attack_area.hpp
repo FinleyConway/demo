@@ -7,6 +7,8 @@
 
 #include "grid/world_grid.hpp"
 
+#include "utils/debugging.hpp"
+
 namespace demo::ecs {
     class generate_attack_area : public system_base {
     public:
@@ -28,8 +30,8 @@ namespace demo::ecs {
         void turn_turret(entt::registry& registry, entt::entity entity) {
             auto* area = registry.try_get<attack_area>(entity);
 
-            assert(area != nullptr && "Trying to turn a non turret type");
-            assert(area->shape == attack_shape::sector && "Recieved a turn request by a circle attack turret");
+            ASSERT(area != nullptr, "Trying to turn a non turret type");
+            ASSERT(area->shape == attack_shape::sector, "Recieved a turn request by a circle attack turret");
 
             const world_grid& grid = context<world_grid>();
             const auto& position = registry.get<world_position>(entity);

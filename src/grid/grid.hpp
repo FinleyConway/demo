@@ -3,7 +3,6 @@
 #include <array>
 #include <vector>
 #include <cstdint>
-#include <cassert>
 #include <cstddef>
 #include <optional>
 #include <algorithm>
@@ -11,6 +10,7 @@
 
 #include "grid/cell.hpp"
 #include "math/point.hpp"
+#include "utils/debugging.hpp"
 
 namespace demo {
     template<typename T = int, size_t TWidth = 0, size_t THeight = 0, uint32_t TCellSize = 0>
@@ -150,7 +150,7 @@ namespace demo {
         }
 
         static constexpr size_t to_index(const cell& c) {
-            assert(in_bounds(c) && "Out of bounds!");
+            ASSERT(in_bounds(c), "Out of bounds!");
 
             return c.y * TWidth + c.x;
         }

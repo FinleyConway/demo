@@ -6,6 +6,7 @@
 #include <utility>
 #include <unordered_map>
 
+#include "utils/debugging.hpp"
 #include "utils/worker_pool.hpp"
 
 #include "grid/cell.hpp"
@@ -44,7 +45,7 @@ namespace demo {
         }   
 
         path_request request(const cell& start, const cell& end) {
-            assert(c_world_grid != nullptr && "No grid context was given");
+            ASSERT(c_world_grid != nullptr, "No grid context was given");
 
             // try to start a path
             //? maybe add a lock here if multiple threads access request
