@@ -11,6 +11,7 @@
 #include "ecs/systems/internal/animation.hpp"
 #include "ecs/systems/internal/rendering.hpp"
 #include "ecs/systems/system_base.hpp"
+#include "utils/input.hpp"
 
 namespace demo {
     class world {
@@ -61,6 +62,8 @@ namespace demo {
         }
 
         void update(float dt) {
+            m_input_manager.begin_frame();
+
             for (auto& system : m_systems) {
                 system->update(dt);
             }
@@ -88,5 +91,7 @@ namespace demo {
         std::vector<std::unique_ptr<ecs::system_base>> m_systems;
         ecs::animation m_animation{ m_registry };
         ecs::rendering m_rendering{ m_registry };
+
+        input m_input_manager;
     };
 }
