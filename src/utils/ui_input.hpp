@@ -10,25 +10,34 @@ namespace demo {
 
     public:
         static bool mouse_button_pressed(mouse button) {
-            input::consume_mouse_button(button);    
-
             return IsMouseButtonPressed(input::to_raylib(button));
         }
 
         static bool mouse_button_held(mouse button) {
-            input::consume_mouse_button(button);
-
             return IsMouseButtonDown(input::to_raylib(button));
         }
 
         static float mouse_scroll_delta() {
-            input::consume_mouse_scroll();
-
             return GetMouseWheelMove();
         }
 
         static point mouse_position() {
             return input::mouse_position();
+        }
+
+        static void consume_mouse_input() {
+            input::consume_mouse_button(mouse::left);
+            input::consume_mouse_button(mouse::middle);   
+            input::consume_mouse_button(mouse::right);   
+            input::consume_mouse_scroll();   
+        }
+
+        static void consume_mouse_button(mouse button) {
+            input::consume_mouse_button(button);   
+        }
+
+        static void consume_mouse_scroll() {
+            input::consume_mouse_scroll();
         }
     };
 }
