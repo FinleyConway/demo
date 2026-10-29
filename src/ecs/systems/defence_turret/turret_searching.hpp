@@ -2,10 +2,12 @@
 
 #include "ecs/systems/system_base.hpp"
 
+#include "ecs/components/positional.hpp"
 #include "ecs/components/defence_turret.hpp"
 
 #include "entt/entity/entity.hpp"
 #include "grid/world_grid.hpp"
+#include "utils/debugging.hpp"
 
 namespace demo::ecs {
     class turret_searching : public system_base {
@@ -14,16 +16,19 @@ namespace demo::ecs {
 
         void update(float dt) override {
             auto view = registry().view<
+                world_position,
                 attack_area,
                 turret_search
             >();
 
-            for (auto [e, area, search] : view.each()) {
+            for (auto [e, pos, area, search] : view.each()) {
                 if (!registry().valid(search.target)) {
-                    auto [e, cell] = search_area(area);
+                    auto [e, cell] = search_area(pos, area);
 
                     search.target = e;
                     search.target_cell = cell;
+
+                    LOG_INFO("Target found: %d", e);
                 }
                 
                 attack_entity(e, search, dt);
@@ -31,18 +36,24 @@ namespace demo::ecs {
         }
 
     private:
-        std::pair<entt::entity, cell> search_area(const attack_area& area) {
+        std::pair<entt::entity, cell> search_area(const world_position& pos, const attack_area& area) {
             const world_grid& grid = context<world_grid>();
+            const cell grid_world_pos = grid.point_to_cell(pos.get());
 
             // simple first come first serve atm
-            for (const auto& cell : area.cells) {
-                if (!grid.in_bounds(cell)) continue;
+            for (const auto& c : area.cells) {
+                const cell cell_offset = {
+                    .x = c.x + grid_world_pos.x,
+                    .y = c.y + grid_world_pos.y
+                };
 
-                const auto& tile = grid.get(cell);
+                if (!grid.in_bounds(cell_offset)) continue;
+
+                const auto& tile = grid.get(cell_offset);
 
                 if (!tile.empty()) continue;
 
-                return { tile.get_entity(), cell };
+                return { tile.get_entity(), cell_offset };
             }
 
             return { entt::null, {} };

@@ -20,7 +20,7 @@ namespace demo::ecs {
         uint16_t angle = 0; // sector direction in degrees
         uint16_t width = 0; // sector width in degrees
 
-        std::vector<cell> cells;
+        std::vector<spatial_cell> cells;
     };
 
     struct attack_area_turn {

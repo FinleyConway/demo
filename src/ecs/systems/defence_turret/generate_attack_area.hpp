@@ -5,6 +5,7 @@
 #include "ecs/components/positional.hpp"
 #include "ecs/components/defence_turret.hpp"
 
+#include "grid/cell.hpp"
 #include "grid/world_grid.hpp"
 
 #include "utils/debugging.hpp"
@@ -56,17 +57,13 @@ namespace demo::ecs {
             area.cells = get_cells(grid, position, area);
         }
 
-        std::vector<cell> get_cells(const world_grid& grid, const world_position& pos, const attack_area& area) {
-            // TODO: not sure about this since position is top left?
-            // TODO: might want to consider centre point of origin and have position be world and grid?
-            const cell grid_pos = grid.point_to_cell(pos.get()); 
-            
+        std::vector<spatial_cell> get_cells(const world_grid& grid, const world_position& pos, const attack_area& area) {
             switch (area.shape) {
                 case attack_shape::circle:
-                    return grid.cells_in_radius(grid_pos, area.radius);
+                    return grid.cells_in_radius(area.radius);
 
                 case attack_shape::sector:
-                    return grid.cells_in_sector(grid_pos, area.angle, area.width, area.radius);
+                    return grid.cells_in_sector(area.angle, area.width, area.radius);
 
                 default:
                     return {};

@@ -74,24 +74,18 @@ namespace demo {
             return changed;
         }
 
-        static constexpr std::vector<cell> cells_in_radius(const cell& center, float radius) {
-            std::vector<cell> cells;
+        static constexpr std::vector<spatial_cell> cells_in_radius(float radius) {
+            std::vector<spatial_cell> cells;
 
             if (radius < 0.0f) return cells;
 
-            const auto top    = static_cast<size_t>(std::max(0.0f, std::ceil(center.y - radius)));
-            const auto bottom = static_cast<size_t>(std::floor(center.y + radius));
-            const auto left   = static_cast<size_t>(std::max(0.0f, std::ceil(center.x - radius)));
-            const auto right  = static_cast<size_t>(std::floor(center.x + radius));
+            const int64_t extent = static_cast<int64_t>(std::floor(radius));
+            const float radius_squared = radius * radius;
 
-            if (top > bottom || left > right) return cells;
-
-            for (size_t y = top; y <= bottom; y++) {
-                for (size_t x = left; x <= right; x++) {
-                    cell cell(x, y);
-
-                    if (inside_circle(center, cell, radius)) {
-                        cells.emplace_back(cell);
+            for (int64_t y = -extent; y <= extent; ++y) {
+                for (int64_t x = -extent; x <= extent; ++x) {
+                    if (static_cast<float>(x * x + y * y) <= radius_squared) {
+                        cells.emplace_back(x, y);
                     }
                 }
             }
@@ -99,12 +93,12 @@ namespace demo {
             return cells;
         }
 
-        static constexpr std::vector<cell> cells_in_sector(const cell& centre, uint16_t angle, uint16_t width, float radius) {
-            std::vector<cell> cells = cells_in_radius(centre, radius);
+        static constexpr std::vector<spatial_cell> cells_in_sector(uint16_t angle, uint16_t width, float radius) {
+            std::vector<spatial_cell> cells = cells_in_radius(radius);
 
             std::erase_if(cells, [&](const cell& c) {
-                const float dx = static_cast<float>(c.x) - centre.x;
-                const float dy = static_cast<float>(c.y) - centre.y;
+                const float dx = static_cast<float>(c.x);
+                const float dy = static_cast<float>(c.y);
 
                 const float cell_angle = std::atan2(dy, dx) * 180.0f / std::numbers::pi_v<float>;
                 const float difference = std::fmod(cell_angle - angle + 540.0f, 360.0f) - 180.0f;
@@ -141,14 +135,6 @@ namespace demo {
         }
 
     private:
-        static constexpr bool inside_circle(const cell& centre, const cell& check, float radius) {
-            const float dx = static_cast<float>(centre.x) - check.x;
-            const float dy = static_cast<float>(centre.y) - check.y;
-            const float distance_squared = dx * dx + dy * dy;
-
-            return distance_squared <= radius * radius;
-        }
-
         static constexpr size_t to_index(const cell& c) {
             ASSERT(in_bounds(c), "Out of bounds!");
 
