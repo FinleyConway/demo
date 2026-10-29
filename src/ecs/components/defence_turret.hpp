@@ -42,6 +42,10 @@ namespace demo::ecs {
         cell target_cell;
     };
 
+    struct turret_attack_damage {
+        float value = 0;
+    };
+
     // maybe different attack types?
     // nearest, strongest, first etc
 

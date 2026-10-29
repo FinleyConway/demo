@@ -1,8 +1,5 @@
 #include <raylib.h>
 
-#include "ecs/systems/defence_turret/generate_attack_area.hpp"
-#include "ecs/systems/defence_turret/turret_searching.hpp"
-#include "ecs/systems/test_grid_selector.hpp"
 #include "world.hpp"
 #include "grid/world_grid.hpp"
 
@@ -14,6 +11,13 @@
 #include "ecs/systems/grid_entity_placer.hpp"
 #include "ecs/systems/camera_movement.hpp"
 #include "ecs/systems/place_pillar.hpp"
+#include "ecs/systems/defence_turret/generate_attack_area.hpp"
+#include "ecs/systems/defence_turret/turret_instant_attack.hpp"
+#include "ecs/systems/defence_turret/turret_searching.hpp"
+#include "ecs/systems/test_grid_selector.hpp"
+#include "ecs/systems/health/entity_killed.hpp"
+#include "ecs/systems/health/health_addition.hpp"
+#include "ecs/systems/health/health_reduction.hpp"
 
 #include "utils/asset_context.hpp"
 
@@ -32,12 +36,17 @@ int main() {
 
     world.add_system<demo::ecs::generate_attack_area>();
     world.add_system<demo::ecs::turret_searching>();
+    world.add_system<demo::ecs::turret_instant_attack>();
 
     world.add_system<demo::ecs::grid_entity_placer>();
     world.add_system<demo::ecs::test_grid_selector>();
 
     world.add_system<demo::ecs::auto_nav_requester>();
     world.add_system<demo::ecs::auto_nav_move>();
+
+    world.add_system<demo::ecs::health_addition>();
+    world.add_system<demo::ecs::health_reduction>();
+    world.add_system<demo::ecs::entity_killed>();
 
     world.add_system<demo::ecs::place_pillar>();
 

@@ -36,6 +36,9 @@ namespace demo::ecs {
             registry.emplace<turret_search>(entity, turret_search {
                 .attack_intervals = 0.5f,
             });
+            registry.emplace<turret_attack_damage>(entity, turret_attack_damage {
+                .value = 20
+            });
 
             // health
             registry.emplace<health>(entity, health {

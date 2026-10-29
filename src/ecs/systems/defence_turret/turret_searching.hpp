@@ -26,7 +26,7 @@ namespace demo::ecs {
                 if (!registry().valid(search.target)) {
                     auto [found, cell] = search_area(pos, area);
 
-                    if (found == entt::null) continue;
+                    if (!registry().valid(found)) continue;
 
                     search.target = found;
                     search.target_cell = cell;

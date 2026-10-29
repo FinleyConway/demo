@@ -4,6 +4,8 @@
 
 #include "ecs/components/health.hpp"
 
+#include "utils/debugging.hpp"
+
 namespace demo::ecs {
     class health_reduction : public system_base {
     public:
@@ -14,6 +16,8 @@ namespace demo::ecs {
 
             for (auto [e, health, damage] : view.each()) {
                 health.current_health -= damage.amount;
+
+                LOG_INFO("Current health: %f", health.current_health);
 
                 if (health.current_health <= 0.0f) {
                     health.current_health = 0.0f;

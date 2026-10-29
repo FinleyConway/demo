@@ -6,6 +6,7 @@
 #include "ecs/components/animation.hpp"
 #include "ecs/components/rendering.hpp"
 #include "ecs/components/navigation.hpp"
+#include "ecs/components/health.hpp"
 
 #include "utils/asset_context.hpp"
 
@@ -25,6 +26,9 @@ namespace demo::ecs {
             registry.emplace<navigation_path>(entity);
             registry.emplace<navigation_motion>(entity);
             registry.emplace<navigation_request_state>(entity);
+
+            registry.emplace<health>(entity);
+            
         }
     }; 
 }
