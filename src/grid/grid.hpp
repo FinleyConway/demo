@@ -96,7 +96,7 @@ namespace demo {
         static constexpr std::vector<spatial_cell> cells_in_sector(uint16_t angle, uint16_t width, float radius) {
             std::vector<spatial_cell> cells = cells_in_radius(radius);
 
-            std::erase_if(cells, [&](const cell& c) {
+            std::erase_if(cells, [&](const spatial_cell& c) {
                 const float dx = static_cast<float>(c.x);
                 const float dy = static_cast<float>(c.y);
 

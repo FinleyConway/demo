@@ -25,7 +25,7 @@ namespace demo::ecs {
         const cell cell_pos = mouse_to_cell(main_camera, grid);
 
         // need to store like a grid entity context before creating the actual entity
-        if (!can_place(grid, cell_pos, cell(2, 2))) {
+        if (!can_place(grid, cell_pos, cell(1, 1))) {
             LOG_INFO("Can't place entity here!");
 
             return;

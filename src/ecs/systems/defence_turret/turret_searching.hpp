@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ecs/components/defence_pillar.hpp"
 #include "ecs/systems/system_base.hpp"
 
 #include "ecs/components/positional.hpp"
@@ -23,12 +24,14 @@ namespace demo::ecs {
 
             for (auto [e, pos, area, search] : view.each()) {
                 if (!registry().valid(search.target)) {
-                    auto [e, cell] = search_area(pos, area);
+                    auto [found, cell] = search_area(pos, area);
 
-                    search.target = e;
+                    if (found == entt::null) continue;
+
+                    search.target = found;
                     search.target_cell = cell;
 
-                    LOG_INFO("Target found: %d", e);
+                    LOG_INFO("Target found: %d", found);
                 }
                 
                 attack_entity(e, search, dt);
@@ -51,7 +54,9 @@ namespace demo::ecs {
 
                 const auto& tile = grid.get(cell_offset);
 
-                if (!tile.empty()) continue;
+                // ignore structure you have to protect and other turrets
+                if (tile.empty()) continue;
+                if (registry().any_of<defence_pillar, turret>(tile.get_entity())) continue;
 
                 return { tile.get_entity(), cell_offset };
             }
@@ -59,19 +64,23 @@ namespace demo::ecs {
             return { entt::null, {} };
         }   
 
-        void attack_entity(entt::entity e,turret_search& search, float dt) {
+        void attack_entity(entt::entity e, turret_search& search, float dt) {
             if (!registry().valid(search.target)) return;
 
             search.attack_time += dt;
 
             if (search.attack_time >= search.attack_intervals) {
                 // perform attack
-                registry().emplace<turret_attack>(e, turret_attack {
+                registry().emplace_or_replace<turret_attack>(e, turret_attack {
                     .protential_target = search.target,
                     .target_cell = search.target_cell
                 });
 
+                LOG_INFO("Attacked");
+
                 search.attack_time = 0.0f;
+                search.target = entt::null;
+                search.target_cell = {};
             }
         }
     };

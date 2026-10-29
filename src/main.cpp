@@ -1,5 +1,8 @@
 #include <raylib.h>
 
+#include "ecs/systems/defence_turret/generate_attack_area.hpp"
+#include "ecs/systems/defence_turret/turret_searching.hpp"
+#include "ecs/systems/test_grid_selector.hpp"
 #include "world.hpp"
 #include "grid/world_grid.hpp"
 
@@ -26,9 +29,16 @@ int main() {
 
     // add systems
     world.add_system<demo::ecs::camera_movement>();
+
+    world.add_system<demo::ecs::generate_attack_area>();
+    world.add_system<demo::ecs::turret_searching>();
+
     world.add_system<demo::ecs::grid_entity_placer>();
+    world.add_system<demo::ecs::test_grid_selector>();
+
     world.add_system<demo::ecs::auto_nav_requester>();
     world.add_system<demo::ecs::auto_nav_move>();
+
     world.add_system<demo::ecs::place_pillar>();
 
     // register hooks

@@ -26,26 +26,38 @@ namespace demo::ecs {
 
     private:
         void move_to_cell(entt::entity e, world_position& pos, navigation_path& path, navigation_motion& motion, float dt) {
-            // no path
             if (path.cells.empty()) return;
 
-            const cell next_cell = path.cells.back(); // path is in reverse
-            const point next_world_pos = context<world_grid>().cell_to_point(next_cell);
-            point new_position;
+            world_grid& grid = context<world_grid>();
+
+            const cell next_cell = path.cells.back();
+            const point next_world_pos = grid.cell_to_point(next_cell);
 
             if (motion.elapsed < motion.time_per_cell) {
-                new_position = motion.start_position.lerp_to(next_world_pos, motion.elapsed / motion.time_per_cell);
+                const point new_position = motion.start_position.lerp_to(
+                    next_world_pos,
+                    motion.elapsed / motion.time_per_cell
+                );
+
                 motion.elapsed += dt;
-            }
-            else {
-                new_position = next_world_pos;
-                motion.start_position = next_world_pos;
+                pos.set(new_position, registry(), e);
 
-                motion.elapsed = 0.0f;
-                path.cells.pop_back();
+                return;
             }
 
-            pos.set(new_position, registry(), e);
+            const cell previous_cell = grid.point_to_cell(
+                motion.start_position
+            );
+
+            grid.at(previous_cell).set_entity(entt::null);
+            grid.at(next_cell).set_entity(e);
+
+            pos.set(next_world_pos, registry(), e);
+
+            motion.start_position = next_world_pos;
+            motion.elapsed = 0.0f;
+
+            path.cells.pop_back();
         }
     };
 }

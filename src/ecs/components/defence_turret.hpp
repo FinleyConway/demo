@@ -13,6 +13,8 @@ namespace demo::ecs {
         sector
     };
 
+    struct turret {};
+
     struct attack_area {
         attack_shape shape = attack_shape::circle;
 

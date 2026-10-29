@@ -28,9 +28,10 @@ namespace demo::ecs {
             });
 
             // turret logic
+            registry.emplace<turret>(entity);
             registry.emplace<attack_area>(entity, attack_area {
                 .shape = attack_shape::circle,
-                .radius = 4,
+                .radius = 2.5,
             });
             registry.emplace<turret_search>(entity, turret_search {
                 .attack_intervals = 0.5f,
