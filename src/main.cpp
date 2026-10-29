@@ -8,8 +8,8 @@
 
 #include "ecs/systems/navigation/auto_nav_move.hpp"
 #include "ecs/systems/navigation/auto_nav_requester.hpp"
+#include "ecs/systems/grid_entity_placer.hpp"
 #include "ecs/systems/camera_movement.hpp"
-#include "ecs/systems/test_grid_selector.hpp"
 #include "ecs/systems/place_pillar.hpp"
 
 #include "utils/asset_context.hpp"
@@ -26,7 +26,7 @@ int main() {
 
     // add systems
     world.add_system<demo::ecs::camera_movement>();
-    world.add_system<demo::ecs::test_grid_selector>();
+    world.add_system<demo::ecs::grid_entity_placer>();
     world.add_system<demo::ecs::auto_nav_requester>();
     world.add_system<demo::ecs::auto_nav_move>();
     world.add_system<demo::ecs::place_pillar>();
