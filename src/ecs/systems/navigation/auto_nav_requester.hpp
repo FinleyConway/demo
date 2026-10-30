@@ -4,7 +4,7 @@
 #include "ecs/components/navigation.hpp"
 #include "ecs/components/positional.hpp"
 
-#include "world/grid/world_grid.hpp"
+#include "world/world_grid/world_grid.hpp"
 #include "world/path_finding/path_finder.hpp"
 
 namespace demo::ecs {

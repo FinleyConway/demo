@@ -10,7 +10,7 @@
 #include "core/threading/worker_pool.hpp"
 
 #include "world/grid/cell.hpp"
-#include "world/grid/world_grid.hpp"
+#include "world/world_grid/world_grid.hpp"
 #include "world/path_finding/grid_pathing.hpp"
 
 namespace demo {

@@ -7,8 +7,8 @@
 #include "core/debugging.hpp"
 #include "rendering/camera.hpp"
 #include "rendering/renderer.hpp"
-#include "world/grid/world_grid.hpp"
 #include "world/grid/spatial_grid.hpp"
+#include "world/world_grid/world_grid.hpp"
 
 namespace demo::ecs {
     class rendering : public system_base {

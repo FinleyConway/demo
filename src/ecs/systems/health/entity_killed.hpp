@@ -4,7 +4,7 @@
 #include "ecs/components/positional.hpp"
 #include "ecs/components/health.hpp"
 
-#include "world/grid/world_grid.hpp"
+#include "world/world_grid/world_grid.hpp"
 
 namespace demo::ecs {
     class entity_killed : public system_base {

@@ -7,7 +7,7 @@
 #include "core/debugging.hpp"
 #include "core/input/input.hpp"
 #include "rendering/camera.hpp"
-#include "world/grid/world_grid.hpp"
+#include "world/world_grid/world_grid.hpp"
 
 namespace demo::ecs {
     class grid_entity_placer : public system_base {

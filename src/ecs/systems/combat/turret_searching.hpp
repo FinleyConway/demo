@@ -6,7 +6,7 @@
 #include "ecs/components/defence_turret.hpp"
 
 #include "core/debugging.hpp"
-#include "world/grid/world_grid.hpp"
+#include "world/world_grid/world_grid.hpp"
 
 namespace demo::ecs {
     class turret_searching : public system_base {

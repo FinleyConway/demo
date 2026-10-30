@@ -4,7 +4,7 @@
 #include "ecs/components/positional.hpp"
 #include "ecs/components/defence_pillar.hpp"
 
-#include "world/grid/world_grid.hpp"
+#include "world/world_grid/world_grid.hpp"
 
 namespace demo::ecs {
     class place_pillar : public system_base {

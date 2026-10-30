@@ -18,7 +18,7 @@
 #include "ecs/systems/placement/test_grid_selector.hpp"
 
 #include "world/world.hpp"
-#include "world/grid/world_grid.hpp"
+#include "world/world_grid/world_grid.hpp"
 
 #include "ecs/prefabs/camera/main_camera.hpp"
 #include "ecs/prefabs/defence/pillar.hpp"

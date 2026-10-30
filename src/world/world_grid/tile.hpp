@@ -4,8 +4,6 @@
 
 #include <entt/entt.hpp>
 
-#include "world/grid/grid.hpp"
-
 namespace demo {
     struct tile {
     public:
@@ -53,6 +51,4 @@ namespace demo {
 
         size_t m_navigation_cost = 1;
     };
-    
-    using world_grid = grid<tile, 30, 30, 32>;
 }

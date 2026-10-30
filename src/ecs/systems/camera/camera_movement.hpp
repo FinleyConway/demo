@@ -5,7 +5,7 @@
 
 #include "core/input/input.hpp"
 #include "rendering/camera.hpp"
-#include "world/grid/world_grid.hpp"
+#include "world/world_grid/world_grid.hpp"
 
 namespace demo::ecs {
     class camera_movement : public system_base {
