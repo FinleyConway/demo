@@ -1,14 +1,13 @@
 #pragma once
 
-#include "ecs/systems/system_base.hpp"
-
+#include "ecs/core/system_base.hpp"
 #include "ecs/components/positional.hpp"
 #include "ecs/components/defence_turret.hpp"
 
-#include "grid/cell.hpp"
-#include "grid/world_grid.hpp"
+#include "world/grid/cell.hpp"
+#include "world/grid/world_grid.hpp"
 
-#include "utils/debugging.hpp"
+#include "core/debugging.hpp"
 
 namespace demo::ecs {
     class generate_attack_area : public system_base {

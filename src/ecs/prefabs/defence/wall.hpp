@@ -1,7 +1,6 @@
 #pragma once
 
-#include "ecs/entity/entity.hpp"
-
+#include "ecs/core/entity.hpp"
 #include "ecs/components/health.hpp"
 #include "ecs/components/grid_size.hpp"
 #include "ecs/components/rendering.hpp"

@@ -1,10 +1,9 @@
 #pragma once
 
-#include "ecs/systems/system_base.hpp"
-
+#include "ecs/core/system_base.hpp"
 #include "ecs/components/health.hpp"
 
-#include "utils/debugging.hpp"
+#include "core/debugging.hpp"
 
 namespace demo::ecs {
     class health_reduction : public system_base {

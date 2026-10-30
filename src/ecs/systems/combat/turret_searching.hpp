@@ -1,14 +1,12 @@
 #pragma once
 
-#include "ecs/components/defence_pillar.hpp"
-#include "ecs/systems/system_base.hpp"
-
+#include "ecs/core/system_base.hpp"
 #include "ecs/components/positional.hpp"
+#include "ecs/components/defence_pillar.hpp"
 #include "ecs/components/defence_turret.hpp"
 
-#include "entt/entity/entity.hpp"
-#include "grid/world_grid.hpp"
-#include "utils/debugging.hpp"
+#include "core/debugging.hpp"
+#include "world/grid/world_grid.hpp"
 
 namespace demo::ecs {
     class turret_searching : public system_base {
@@ -53,12 +51,12 @@ namespace demo::ecs {
                 if (!grid.in_bounds(cell_offset)) continue;
 
                 const auto& tile = grid.get(cell_offset);
+                const auto& entities = tile.entities_in_cell();
 
                 // ignore structure you have to protect and other turrets
-                if (tile.empty()) continue;
-                if (registry().any_of<defence_pillar, turret>(tile.get_entity())) continue;
+                if (entities.empty()) continue;
 
-                return { tile.get_entity(), cell_offset };
+                return { entities[0], cell_offset };
             }
 
             return { entt::null, {} };

@@ -4,7 +4,7 @@
 
 #include <entt/entt.hpp>
 
-#include "grid/grid.hpp"
+#include "world/grid/grid.hpp"
 
 namespace demo {
     struct tile {

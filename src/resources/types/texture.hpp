@@ -5,7 +5,7 @@
 
 #include <raylib.h>
 
-#include "resource/types/resource.hpp"
+#include "resources/types/resource.hpp"
 
 namespace demo {
     class texture final : public resource<Texture2D> {

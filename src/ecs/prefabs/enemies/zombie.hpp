@@ -1,14 +1,13 @@
 #pragma once
 
-#include "ecs/entity/entity.hpp"
-
+#include "ecs/core/entity.hpp"
 #include "ecs/components/positional.hpp"
 #include "ecs/components/animation.hpp"
 #include "ecs/components/rendering.hpp"
 #include "ecs/components/navigation.hpp"
 #include "ecs/components/health.hpp"
 
-#include "utils/asset_context.hpp"
+#include "resources/asset_context.hpp"
 
 namespace demo::ecs {
     struct zombie : entity<zombie> {

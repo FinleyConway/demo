@@ -1,7 +1,7 @@
 #pragma once
 
-#include "math/rect.hpp"
-#include "resource/types/texture.hpp"
+#include "core/math/rect.hpp"
+#include "resources/types/texture.hpp"
 
 namespace demo::ecs {
     struct sprite {

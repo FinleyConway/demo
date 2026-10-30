@@ -7,9 +7,9 @@
 #include <optional>
 #include <unordered_set>
 
-#include "grid/cell.hpp"
-#include "math/point.hpp"
-#include "utils/debugging.hpp"
+#include "core/debugging.hpp"
+#include "core/math/point.hpp"
+#include "world/grid/cell.hpp"
 
 namespace demo {
     template<typename T = int, size_t TWidth = 0, size_t THeight = 0, uint32_t TCellSize = 0>

@@ -7,8 +7,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "grid/cell.hpp"
-#include "grid/aabb.hpp"
+#include "world/grid/cell.hpp"
+#include "world/grid/aabb.hpp"
 
 namespace demo {
     template<typename T, uint16_t TCellSize> 

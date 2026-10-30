@@ -1,16 +1,14 @@
 #pragma once
 
-#include "ecs/entity/zombie.hpp"
-
-#include "ecs/systems/system_base.hpp"
-
+#include "ecs/core/system_base.hpp"
+#include "ecs/prefabs/enemies/zombie.hpp"
 #include "ecs/components/positional.hpp"
 #include "ecs/components/navigation.hpp"
 
-#include "utils/asset_context.hpp"
-#include "utils/input.hpp"
-#include "utils/camera.hpp"
-#include "grid/world_grid.hpp"
+#include "core/input/input.hpp"
+#include "rendering/camera.hpp"
+#include "world/grid/world_grid.hpp"
+#include "resources/asset_context.hpp"
 
 namespace demo::ecs {
     class test_grid_selector : public system_base {

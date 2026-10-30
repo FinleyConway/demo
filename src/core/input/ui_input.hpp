@@ -1,6 +1,6 @@
 #pragma once
 
-#include "input.hpp"
+#include "core/input/input.hpp"
 
 namespace demo {
     // consumes input to prevent gameplay input from fighting

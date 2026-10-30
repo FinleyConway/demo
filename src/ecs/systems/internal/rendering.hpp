@@ -1,15 +1,14 @@
 #pragma once
 
-#include "ecs/systems/system_base.hpp"
-
+#include "ecs/core/system_base.hpp"
 #include "ecs/components/positional.hpp"
 #include "ecs/components/rendering.hpp"
 
-#include "utils/camera.hpp"
-#include "utils/renderer.hpp"
-#include "utils/debugging.hpp"
-#include "grid/world_grid.hpp"
-#include "grid/spatial_grid.hpp"
+#include "core/debugging.hpp"
+#include "rendering/camera.hpp"
+#include "rendering/renderer.hpp"
+#include "world/grid/world_grid.hpp"
+#include "world/grid/spatial_grid.hpp"
 
 namespace demo::ecs {
     class rendering : public system_base {

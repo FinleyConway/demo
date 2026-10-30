@@ -1,7 +1,7 @@
 #pragma once
 
-#include "resource/types/texture.hpp"
-#include "resource/types/animation_clip.hpp"
+#include "resources/types/texture.hpp"
+#include "resources/types/animation_clip.hpp"
 
 namespace demo::assets {
     using namespace std::chrono_literals;

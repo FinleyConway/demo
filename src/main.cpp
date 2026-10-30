@@ -1,25 +1,29 @@
 #include <raylib.h>
 
-#include "world.hpp"
-#include "grid/world_grid.hpp"
+#include "ecs/systems/camera/camera_movement.hpp"
 
-#include "ecs/entity/main_camera.hpp"
-#include "ecs/entity/pillar.hpp"
+#include "ecs/systems/combat/generate_attack_area.hpp"
+#include "ecs/systems/combat/turret_instant_attack.hpp"
+#include "ecs/systems/combat/turret_searching.hpp"
 
-#include "ecs/systems/navigation/auto_nav_move.hpp"
-#include "ecs/systems/navigation/auto_nav_requester.hpp"
-#include "ecs/systems/grid_entity_placer.hpp"
-#include "ecs/systems/camera_movement.hpp"
-#include "ecs/systems/place_pillar.hpp"
-#include "ecs/systems/defence_turret/generate_attack_area.hpp"
-#include "ecs/systems/defence_turret/turret_instant_attack.hpp"
-#include "ecs/systems/defence_turret/turret_searching.hpp"
-#include "ecs/systems/test_grid_selector.hpp"
 #include "ecs/systems/health/entity_killed.hpp"
 #include "ecs/systems/health/health_addition.hpp"
 #include "ecs/systems/health/health_reduction.hpp"
 
-#include "utils/asset_context.hpp"
+#include "ecs/systems/navigation/auto_nav_move.hpp"
+#include "ecs/systems/navigation/auto_nav_requester.hpp"
+
+#include "ecs/systems/placement/place_pillar.hpp"
+#include "ecs/systems/placement/grid_entity_placer.hpp"
+#include "ecs/systems/placement/test_grid_selector.hpp"
+
+#include "world/world.hpp"
+#include "world/grid/world_grid.hpp"
+
+#include "ecs/prefabs/camera/main_camera.hpp"
+#include "ecs/prefabs/defence/pillar.hpp"
+
+#include "resources/asset_context.hpp"
 
 int main() {
     InitWindow(800, 450, "Grid Pathfinding");

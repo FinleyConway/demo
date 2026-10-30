@@ -6,12 +6,12 @@
 #include <utility>
 #include <unordered_map>
 
-#include "utils/debugging.hpp"
-#include "utils/worker_pool.hpp"
+#include "core/debugging.hpp"
+#include "core/threading/worker_pool.hpp"
 
-#include "grid/cell.hpp"
-#include "grid/world_grid.hpp"
-#include "grid/pathing/grid_pathing.hpp"
+#include "world/grid/cell.hpp"
+#include "world/grid/world_grid.hpp"
+#include "world/path_finding/grid_pathing.hpp"
 
 namespace demo {
     using path_request_id = uint64_t;

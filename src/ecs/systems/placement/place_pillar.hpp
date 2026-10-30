@@ -1,11 +1,10 @@
 #pragma once
 
-#include "ecs/systems/system_base.hpp"
-
+#include "ecs/core/system_base.hpp"
 #include "ecs/components/positional.hpp"
 #include "ecs/components/defence_pillar.hpp"
 
-#include "grid/world_grid.hpp"
+#include "world/grid/world_grid.hpp"
 
 namespace demo::ecs {
     class place_pillar : public system_base {
@@ -32,7 +31,7 @@ namespace demo::ecs {
                 };
 
                 pos.set(world_position, registry(), e);
-                grid.at(centre_position).set_entity(e);
+                grid.at(centre_position).set_structure(e);
             }
         }
     };

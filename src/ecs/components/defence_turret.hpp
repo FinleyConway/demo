@@ -5,7 +5,7 @@
 
 #include <entt/entt.hpp>
 
-#include "grid/cell.hpp"
+#include "world/grid/cell.hpp"
 
 namespace demo::ecs {
     enum class attack_shape {

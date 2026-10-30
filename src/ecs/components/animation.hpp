@@ -3,7 +3,7 @@
 #include <chrono>
 #include <cstddef>
 
-#include "resource/types/animation_clip.hpp"
+#include "resources/types/animation_clip.hpp"
 
 namespace demo::ecs {
     struct animator {

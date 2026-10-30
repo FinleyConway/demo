@@ -1,11 +1,10 @@
 #pragma once
 
-#include "ecs/systems/system_base.hpp"
-
+#include "ecs/core/system_base.hpp"
 #include "ecs/components/positional.hpp"
 #include "ecs/components/health.hpp"
 
-#include "grid/world_grid.hpp"
+#include "world/grid/world_grid.hpp"
 
 namespace demo::ecs {
     class entity_killed : public system_base {

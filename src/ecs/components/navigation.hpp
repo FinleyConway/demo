@@ -2,9 +2,9 @@
 
 #include <vector>
 
-#include "grid/cell.hpp"
-#include "math/point.hpp"
-#include "grid/pathing/path_finder.hpp"
+#include "core/math/point.hpp"
+#include "world/grid/cell.hpp"
+#include "world/path_finding/path_finder.hpp"
 
 namespace demo::ecs {
     struct auto_navigation {}; // tag

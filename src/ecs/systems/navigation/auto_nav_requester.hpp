@@ -1,12 +1,11 @@
 #pragma once
 
-#include "ecs/systems/system_base.hpp"
-
+#include "ecs/core/system_base.hpp"
 #include "ecs/components/navigation.hpp"
 #include "ecs/components/positional.hpp"
 
-#include "grid/pathing/path_finder.hpp"
-#include "grid/world_grid.hpp"
+#include "world/grid/world_grid.hpp"
+#include "world/path_finding/path_finder.hpp"
 
 namespace demo::ecs {
     class auto_nav_requester : public system_base {
@@ -81,6 +80,8 @@ namespace demo::ecs {
         }
 
         void handle_repathing(entt::entity entity, const std::unordered_set<cell>& changed_cells)  {
+            return; // for now
+
             const auto& path = registry().get<navigation_path>(entity);
 
             for (const auto& c : path.cells) { 

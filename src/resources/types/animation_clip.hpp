@@ -5,7 +5,7 @@
 #include <cassert>
 #include <vector>
 
-#include "math/rect.hpp"
+#include "core/math/rect.hpp"
 
 namespace demo {
     struct animation_frame {

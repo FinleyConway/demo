@@ -1,6 +1,6 @@
 #pragma once
 
-#include "grid/cell.hpp"
+#include "world/grid/cell.hpp"
 
 namespace demo {
     struct grid_size {

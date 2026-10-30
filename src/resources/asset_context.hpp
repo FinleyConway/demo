@@ -1,6 +1,6 @@
 #pragma once
 
-#include "resource/assets/test.hpp"
+#include "resources/assets/test.hpp"
 
 namespace demo {
     struct asset_context {

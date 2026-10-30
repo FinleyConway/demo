@@ -1,15 +1,13 @@
 #pragma once
 
-#include "ecs/systems/system_base.hpp"
-
-#include "ecs/entity/test_turret.hpp"
-
+#include "ecs/core/system_base.hpp"
 #include "ecs/components/grid_data.hpp"
+#include "ecs/prefabs/defence/test_turret.hpp"
 
-#include "grid/world_grid.hpp"
-#include "utils/camera.hpp"
-#include "utils/input.hpp"
-#include "utils/debugging.hpp"
+#include "core/debugging.hpp"
+#include "core/input/input.hpp"
+#include "rendering/camera.hpp"
+#include "world/grid/world_grid.hpp"
 
 namespace demo::ecs {
     class grid_entity_placer : public system_base {
@@ -41,7 +39,7 @@ namespace demo::ecs {
         };
 
         for_each_cell(cell_pos, size, [&](cell current) {
-            grid.at(current).set_entity(entity);
+            grid.at(current).set_structure(entity);
         });
 
         auto& position = registry().get<world_position>(entity);
@@ -63,7 +61,7 @@ namespace demo::ecs {
             bool valid = true;
 
             for_each_cell(position, size, [&](cell current) {
-                if (!grid.in_bounds(current) || !grid.get(current).empty()) {
+                if (!grid.in_bounds(current) || grid.get(current).has_structure(registry())) {
                     valid = false;
                 }
             });

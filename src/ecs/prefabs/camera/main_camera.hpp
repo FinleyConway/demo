@@ -1,7 +1,6 @@
 #pragma once
 
-#include "ecs/entity/entity.hpp"
-
+#include "ecs/core/entity.hpp"
 #include "ecs/components/camera_control.hpp"
 
 namespace demo::ecs {

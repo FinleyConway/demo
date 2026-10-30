@@ -1,6 +1,6 @@
 #pragma once
 
-#include "math/point.hpp"
+#include "core/math/point.hpp"
 
 namespace demo {
     struct aabb {

@@ -1,7 +1,6 @@
 #pragma once
 
-#include "ecs/entity/entity.hpp"
-
+#include "ecs/core/entity.hpp"
 #include "ecs/components/rendering.hpp"
 #include "ecs/components/positional.hpp"
 #include "ecs/components/defence_pillar.hpp"

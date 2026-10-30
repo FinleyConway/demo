@@ -2,10 +2,10 @@
 
 #include <raylib.h>
 
-#include "math/rect.hpp"
-#include "math/point.hpp"
-#include "utils/camera.hpp"
-#include "resource/types/texture.hpp"
+#include "core/math/rect.hpp"
+#include "core/math/point.hpp"
+#include "rendering/camera.hpp"
+#include "resources/types/texture.hpp"
 
 namespace demo {
     class renderer {

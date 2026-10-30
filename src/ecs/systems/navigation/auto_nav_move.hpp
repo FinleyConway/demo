@@ -1,11 +1,10 @@
 #pragma once
 
-#include "ecs/systems/system_base.hpp"
-
+#include "ecs/core/system_base.hpp"
 #include "ecs/components/navigation.hpp"
 #include "ecs/components/positional.hpp"
 
-#include "grid/world_grid.hpp"
+#include "world/grid/world_grid.hpp"
 
 namespace demo::ecs {
     class auto_nav_move : public system_base {
@@ -49,8 +48,8 @@ namespace demo::ecs {
                 motion.start_position
             );
 
-            grid.at(previous_cell).set_entity(entt::null);
-            grid.at(next_cell).set_entity(e);
+            grid.at(previous_cell).remove_entity(e);
+            grid.at(next_cell).add_entity(e);
 
             pos.set(next_world_pos, registry(), e);
 

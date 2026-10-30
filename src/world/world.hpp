@@ -4,14 +4,13 @@
 
 #include <entt/entt.hpp>
 
-#include "utils/camera.hpp"
-
-#include "ecs/entity/entity.hpp"
-
+#include "ecs/core/entity.hpp"
+#include "ecs/core/system_base.hpp"
 #include "ecs/systems/internal/animation.hpp"
 #include "ecs/systems/internal/rendering.hpp"
-#include "ecs/systems/system_base.hpp"
-#include "utils/input.hpp"
+
+#include "core/input/input.hpp"
+#include "rendering/camera.hpp"
 
 namespace demo {
     class world {

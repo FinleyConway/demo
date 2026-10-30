@@ -6,8 +6,8 @@
 #include <optional>
 #include <unordered_map>
 
-#include "grid/cell.hpp"
-#include "grid/world_grid.hpp"
+#include "world/grid/cell.hpp"
+#include "world/grid/world_grid.hpp"
 
 // https://www.redblobgames.com/pathfinding/a-star/introduction.html
 

@@ -1,12 +1,11 @@
 #pragma once
 
-#include "ecs/systems/system_base.hpp"
-
+#include "ecs/core/system_base.hpp"
 #include "ecs/components/camera_control.hpp"
 
-#include "grid/world_grid.hpp"
-#include "utils/camera.hpp"
-#include "utils/input.hpp"
+#include "core/input/input.hpp"
+#include "rendering/camera.hpp"
+#include "world/grid/world_grid.hpp"
 
 namespace demo::ecs {
     class camera_movement : public system_base {
