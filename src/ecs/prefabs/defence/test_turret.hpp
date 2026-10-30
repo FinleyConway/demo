@@ -3,7 +3,7 @@
 #include "ecs/entity/entity.hpp"
 
 #include "ecs/components/health.hpp"
-#include "ecs/components/grid_size.hpp"
+#include "ecs/components/grid_data.hpp"
 #include "ecs/components/rendering.hpp"
 #include "ecs/components/positional.hpp"
 #include "ecs/components/defence_turret.hpp"

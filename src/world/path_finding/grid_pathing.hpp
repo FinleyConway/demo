@@ -29,7 +29,7 @@ namespace demo {
             size_t f_cost = 0;
             cell next;
 
-            bool operator>(const entry& other) const {
+            constexpr bool operator>(const entry& other) const {
                 return f_cost > other.f_cost;
             }
         };
@@ -85,8 +85,6 @@ namespace demo {
             for (const auto& neighbour : c_world_grid.vonn_neighbours(current)) {
                 if (!neighbour.has_value()) continue;
 
-                if (!c_world_grid.get(*neighbour).empty()) continue;
-
                 path_node& next_node = m_nodes[*neighbour];
                 const size_t tentative_g = current_g + 1;
 
@@ -100,7 +98,7 @@ namespace demo {
             }
         }
 
-        std::vector<cell> build_path(cell start, cell goal) const {
+        std::vector<cell> build_path(const cell& start, const cell& goal) const {
             std::vector<cell> path;
             cell current = goal;
 
