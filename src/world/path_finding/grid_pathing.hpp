@@ -79,7 +79,7 @@ namespace demo {
         }
 
         void init_start_node(const cell& start, const cell& end) {
-            path_node& first = m_nodes[start];
+            path_node& first = get_or_create_node(start);
 
             first.g_cost = 0;
             first.h_cost = c_world_grid.manhattan_distance(start, end);
@@ -93,7 +93,7 @@ namespace demo {
             for (const auto& neighbour : c_world_grid.vonn_neighbours(current)) {
                 if (!neighbour.has_value()) continue;
 
-                path_node& next_node = m_nodes[*neighbour];
+                path_node& next_node = get_or_create_node(*neighbour);
 
                 const size_t movement_cost = c_movement_cost.cost_for(
                     c_world_grid.get(*neighbour).get_navigation_type()
@@ -129,6 +129,10 @@ namespace demo {
             // i should return an object that handles the next path
             // rather then providing a backwards cell?
             return path;
+        }
+
+        path_node& get_or_create_node(const cell& position) {
+            return m_nodes.try_emplace(position).first->second;
         }
 
     private:
