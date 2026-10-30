@@ -19,7 +19,7 @@ namespace demo::ecs {
                 world_grid& grid = context<world_grid>();
                 const cell grid_position = grid.point_to_cell(pos.get());
 
-                grid.at(grid_position).set_entity(entt::null);
+                grid.at(grid_position).remove_entity(e);
 
                 registry().destroy(e);
             }

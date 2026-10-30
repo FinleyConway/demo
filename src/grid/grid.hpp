@@ -5,7 +5,6 @@
 #include <cstdint>
 #include <cstddef>
 #include <optional>
-#include <algorithm>
 #include <unordered_set>
 
 #include "grid/cell.hpp"

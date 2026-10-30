@@ -4,7 +4,7 @@
 
 #include "ecs/entity/test_turret.hpp"
 
-#include "ecs/components/grid_size.hpp"
+#include "ecs/components/grid_data.hpp"
 
 #include "grid/world_grid.hpp"
 #include "utils/camera.hpp"
