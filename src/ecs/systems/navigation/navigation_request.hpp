@@ -20,11 +20,12 @@ namespace demo::ecs {
             auto view = registry().view<
                 world_position,
                 navigation_target,
+                navigation_profile,
                 navigation_request_state
             >();
 
             // this only happens if navigation_target is added
-            for (auto [e, pos, target, request_state] : view.each()) {
+            for (auto [e, pos, target, profile, request_state] : view.each()) {
                 const world_grid& grid = context<world_grid>();
                 path_finder& finder = context<path_finder>();
 
@@ -33,7 +34,8 @@ namespace demo::ecs {
 
                 request_state.request = finder.request(
                     start_position,
-                    target.value
+                    target.value,
+                    profile.costs
                 );
 
                 // remove target request

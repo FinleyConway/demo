@@ -4,6 +4,8 @@
 
 #include <entt/entt.hpp>
 
+#include "world/path_finding/movement_profile.hpp"
+
 namespace demo {
     struct tile {
     public:
@@ -19,12 +21,12 @@ namespace demo {
             return registry.valid(m_structure_entity);
         }
     
-        void set_navigation_cost(size_t cost) {
-            m_navigation_cost = cost;
+        void set_navigation_type(navigation_type cost) {
+            m_navigation_type = cost;
         }
 
-        size_t navigation_cost() const {
-            return m_navigation_cost;
+        navigation_type get_navigation_type() const {
+            return m_navigation_type;
         }
 
         const std::vector<entt::entity>& entities_in_cell() const {
@@ -49,6 +51,6 @@ namespace demo {
         entt::entity m_structure_entity = entt::null;
         std::vector<entt::entity> m_entities;
 
-        size_t m_navigation_cost = 1;
+        navigation_type m_navigation_type = navigation_type::none;
     };
 }

@@ -8,10 +8,18 @@
 
 #include "world/grid/cell.hpp"
 #include "world/world_grid/world_grid.hpp"
+#include "world/path_finding/movement_profile.hpp"
 
 // https://www.redblobgames.com/pathfinding/a-star/introduction.html
 
 namespace demo {
+    struct grid_search {
+        const world_grid& grid;
+        const cell& start;
+        const cell& end;
+        const movement_cost& cost;
+    };
+
     class grid_pathing {
     private:
         struct path_node {
@@ -35,10 +43,10 @@ namespace demo {
         };
 
     public:
-        static std::vector<cell> search(const world_grid& world_grid, const cell& start, const cell& end) {
-            grid_pathing pathfinder(world_grid);
+        static std::vector<cell> search(const grid_search& search) {
+            grid_pathing pathfinder(search.grid, search.cost);
 
-            return pathfinder.start(start, end);
+            return pathfinder.start(search.start, search.end);
         }
 
     private:
@@ -86,7 +94,11 @@ namespace demo {
                 if (!neighbour.has_value()) continue;
 
                 path_node& next_node = m_nodes[*neighbour];
-                const size_t tentative_g = current_g + 1;
+
+                const size_t movement_cost = c_movement_cost.cost_for(
+                    c_world_grid.get(*neighbour).get_navigation_type()
+                );
+                const size_t tentative_g = current_g + movement_cost;
 
                 if (tentative_g <= next_node.g_cost) {
                     next_node.g_cost = tentative_g;
@@ -120,13 +132,15 @@ namespace demo {
         }
 
     private:
-        explicit grid_pathing(const world_grid& world_grid) :
-            c_world_grid(world_grid) 
+        explicit grid_pathing(const world_grid& world_grid, const movement_cost& movement_cost) :
+            c_world_grid(world_grid),
+            c_movement_cost(movement_cost)
         {
         } 
 
     private:
         const world_grid& c_world_grid;
+        const movement_cost& c_movement_cost;
         
         std::unordered_map<cell, path_node> m_nodes;
         std::priority_queue<entry, std::vector<entry>, std::greater<>> m_open;

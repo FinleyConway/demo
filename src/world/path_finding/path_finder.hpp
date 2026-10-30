@@ -10,6 +10,7 @@
 #include "core/threading/worker_pool.hpp"
 
 #include "world/grid/cell.hpp"
+#include "world/path_finding/movement_profile.hpp"
 #include "world/world_grid/world_grid.hpp"
 #include "world/path_finding/grid_pathing.hpp"
 
@@ -38,7 +39,7 @@ namespace demo {
             c_world_grid = &world_grid;
         }   
 
-        path_request request(const cell& start, const cell& end) {
+        path_request request(const cell& start, const cell& end, const movement_cost& movement_cost) {
             ASSERT(c_world_grid != nullptr, "No grid context was given");
 
             // try to start a path
@@ -46,10 +47,10 @@ namespace demo {
             const path_request_id id = m_next_id++; 
 
             m_pool.add_task(
-                [this, start, end]() {
-                    return grid_pathing::search(
-                        *c_world_grid, start, end
-                    );
+                [this, start, end, &movement_cost]() {
+                    return grid_pathing::search({
+                        *c_world_grid, start, end, movement_cost
+                });
                 },
                 [this, id](std::vector<cell>&& path) {
                     on_search_finish(id, std::move(path));
