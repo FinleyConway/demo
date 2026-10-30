@@ -5,6 +5,7 @@
 #include "core/math/point.hpp"
 #include "world/grid/cell.hpp"
 #include "world/path_finding/path_finder.hpp"
+#include "world/path_finding/movement_profile.hpp"
 
 namespace demo::ecs {
     struct auto_navigation {}; // tag
@@ -24,6 +25,10 @@ namespace demo::ecs {
 
             return true;
         }
+    };
+
+    struct navigation_profile {
+        movement_cost costs;
     };
 
     struct navigation_path {
