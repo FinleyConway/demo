@@ -20,8 +20,6 @@ namespace demo::ecs {
                 .clip = &ctx.test.walking
             });
 
-            registry.emplace<auto_navigation>(entity);
-            registry.emplace<navigation_target>(entity);
             registry.emplace<navigation_path>(entity);
             registry.emplace<navigation_motion>(entity);
             registry.emplace<navigation_request_state>(entity);

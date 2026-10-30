@@ -20,11 +20,6 @@ namespace demo {
     public:
         path_request() = default;
     
-    public:
-        bool path_found() const {
-            return m_ready;
-        }
-        
     private:
         explicit path_request(path_request_id id) :
             m_id(id)
@@ -35,7 +30,6 @@ namespace demo {
         friend class path_finder;
 
         path_request_id m_id = 0;
-        bool m_ready = false;
     };
 
     class path_finder {
@@ -66,22 +60,18 @@ namespace demo {
             return path_request(id);
         }        
 
-        std::vector<cell> try_get_result(path_request& request) {
+        bool try_get_result(path_request& request, std::vector<cell>& path) {
             std::lock_guard lock(m_mutex);
-
-            if (request.m_ready) return {};
 
             // find and return path if path has been completed
             auto it = m_completed.find(request.m_id);
-            if (it == m_completed.end()) return {};
+            if (it == m_completed.end()) return false;
 
-            std::vector<cell> path = std::move(it->second);
+            path = std::move(it->second);
 
             m_completed.erase(it);
 
-            request.m_ready = true;
-
-            return path;
+            return true;
         }
 
     private:

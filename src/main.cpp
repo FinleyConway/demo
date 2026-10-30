@@ -10,8 +10,9 @@
 #include "ecs/systems/health/health_addition.hpp"
 #include "ecs/systems/health/health_reduction.hpp"
 
-#include "ecs/systems/navigation/auto_nav_move.hpp"
-#include "ecs/systems/navigation/auto_nav_requester.hpp"
+#include "ecs/systems/navigation/navigation_request.hpp"
+#include "ecs/systems/navigation/navigation_results.hpp"
+#include "ecs/systems/navigation//navigation_move.hpp"
 
 #include "ecs/systems/placement/place_pillar.hpp"
 #include "ecs/systems/placement/grid_entity_placer.hpp"
@@ -19,6 +20,7 @@
 
 #include "world/world.hpp"
 #include "world/world_grid/world_grid.hpp"
+#include "world/path_finding/path_finder.hpp"
 
 #include "ecs/prefabs/camera/main_camera.hpp"
 #include "ecs/prefabs/defence/pillar.hpp"
@@ -33,6 +35,7 @@ int main() {
 
     // add context
     world.add_context<demo::world_grid>();
+    world.add_context<demo::path_finder>();
     world.add_context<demo::asset_context>();
 
     // add systems
@@ -45,8 +48,9 @@ int main() {
     world.add_system<demo::ecs::grid_entity_placer>();
     world.add_system<demo::ecs::test_grid_selector>();
 
-    world.add_system<demo::ecs::auto_nav_requester>();
-    world.add_system<demo::ecs::auto_nav_move>();
+    world.add_system<demo::ecs::navigation_request>();
+    world.add_system<demo::ecs::navigation_results>();
+    world.add_system<demo::ecs::navigation_move>();
 
     world.add_system<demo::ecs::health_addition>();
     world.add_system<demo::ecs::health_reduction>();

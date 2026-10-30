@@ -7,9 +7,9 @@
 #include "world/world_grid/world_grid.hpp"
 
 namespace demo::ecs {
-    class auto_nav_move : public system_base {
+    class navigation_move : public system_base {
     public:
-        using system_base::system_base;    
+        using system_base::system_base;
 
         void update(float dt) override {
             auto view = registry().view<

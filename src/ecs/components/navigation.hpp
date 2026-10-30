@@ -8,23 +8,8 @@
 #include "world/path_finding/movement_profile.hpp"
 
 namespace demo::ecs {
-    struct auto_navigation {}; // tag
-
     struct navigation_target {
         cell value;
-
-        static bool set_target(entt::registry& registry, entt::entity entity, const cell& target) {
-            if (!registry.all_of<auto_navigation>(entity)) return false;
-
-            registry.patch<navigation_target>(
-                entity,
-                [&target](navigation_target& component) {
-                    component.value = target;
-                }
-            );
-
-            return true;
-        }
     };
 
     struct navigation_profile {
@@ -34,6 +19,8 @@ namespace demo::ecs {
     struct navigation_path {
         std::vector<cell> cells;
     };
+
+    struct navigation_wait { };
 
     struct navigation_motion {
         point start_position;

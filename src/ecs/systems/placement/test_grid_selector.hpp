@@ -27,7 +27,9 @@ namespace demo::ecs {
                 auto& pos = registry().get<world_position>(zombie);
                 pos.set(grid.cell_to_point(grid_pos), registry(), zombie);
 
-                navigation_target::set_target(registry(), zombie, { 14, 15 });
+                registry().emplace<navigation_target>(zombie, navigation_target {
+                    .value = { 14, 15 }
+                });
             }
         }
 
