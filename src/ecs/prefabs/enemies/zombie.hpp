@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ecs/core/entity.hpp"
+#include "ecs/components/enemy.hpp"
 #include "ecs/components/positional.hpp"
 #include "ecs/components/animation.hpp"
 #include "ecs/components/rendering.hpp"
@@ -31,6 +32,10 @@ namespace demo::ecs {
 
             registry.emplace<health>(entity);
             
+            registry.emplace<enemy_attack>(entity);
+            registry.emplace<enemy_attack_damage>(entity, enemy_attack_damage {
+                .value = 20
+            });
         }
     }; 
 }

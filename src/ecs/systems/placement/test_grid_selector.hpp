@@ -28,7 +28,7 @@ namespace demo::ecs {
                 pos.set(grid.cell_to_point(grid_pos), registry(), zombie);
 
                 registry().emplace<navigation_target>(zombie, navigation_target {
-                    .value = { 14, 15 }
+                    .value = { 15, 15 }
                 });
             }
         }

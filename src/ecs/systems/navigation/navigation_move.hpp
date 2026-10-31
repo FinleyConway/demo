@@ -1,6 +1,8 @@
 #pragma once
 
 #include "ecs/core/system_base.hpp"
+
+#include "ecs/components/enemy.hpp"
 #include "ecs/components/navigation.hpp"
 #include "ecs/components/positional.hpp"
 
@@ -31,6 +33,19 @@ namespace demo::ecs {
 
             const cell next_cell = path.cells.back();
             const point next_world_pos = grid.cell_to_point(next_cell);
+
+            // check if the next cell is free
+            if (grid.get(next_cell).has_structure(registry())) {
+                if (registry().all_of<route_obstruction>(e)) return;
+
+                registry().emplace<route_obstruction>(e, route_obstruction {
+                    .tile = next_cell
+                });
+
+                // dont want the entity to move until the obstruction is cleared
+                return;
+            }
+
 
             if (motion.elapsed < motion.time_per_cell) {
                 const point new_position = motion.start_position.lerp_to(

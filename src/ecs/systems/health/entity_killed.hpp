@@ -18,7 +18,12 @@ namespace demo::ecs {
                 world_grid& grid = context<world_grid>();
                 const cell grid_position = grid.point_to_cell(pos.get());
 
-                grid.at(grid_position).remove_entity(e);
+                if (grid.at(grid_position).has_entity(e)) {
+                    grid.at(grid_position).remove_entity(e);
+                }
+                else {
+                    grid.at(grid_position).set_structure(entt::null);
+                }
 
                 registry().destroy(e);
             }

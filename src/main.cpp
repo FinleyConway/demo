@@ -2,9 +2,11 @@
 
 #include "ecs/systems/camera/camera_movement.hpp"
 
-#include "ecs/systems/combat/generate_attack_area.hpp"
-#include "ecs/systems/combat/turret_instant_attack.hpp"
-#include "ecs/systems/combat/turret_searching.hpp"
+#include "ecs/systems/combat/defence/generate_attack_area.hpp"
+#include "ecs/systems/combat/defence/turret_instant_attack.hpp"
+#include "ecs/systems/combat/defence/turret_searching.hpp"
+
+#include "ecs/systems/combat/enemies/obstruction_clearance.hpp"
 
 #include "ecs/systems/health/entity_killed.hpp"
 #include "ecs/systems/health/health_addition.hpp"
@@ -51,6 +53,8 @@ int main() {
     world.add_system<demo::ecs::navigation_request>();
     world.add_system<demo::ecs::navigation_results>();
     world.add_system<demo::ecs::navigation_move>();
+
+    world.add_system<demo::ecs::obstruction_clearance>();
 
     world.add_system<demo::ecs::health_addition>();
     world.add_system<demo::ecs::health_reduction>();
