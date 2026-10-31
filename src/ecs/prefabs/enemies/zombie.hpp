@@ -20,7 +20,11 @@ namespace demo::ecs {
                 .clip = &ctx.test.walking
             });
 
-            registry.emplace<navigation_profile>(entity);
+            registry.emplace<navigation_profile>(entity, navigation_profile {
+                .costs = {
+                    .wall = 15
+                }
+            });
             registry.emplace<navigation_path>(entity);
             registry.emplace<navigation_motion>(entity);
             registry.emplace<navigation_request_state>(entity);

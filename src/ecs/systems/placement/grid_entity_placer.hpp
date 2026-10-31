@@ -2,11 +2,12 @@
 
 #include "ecs/core/system_base.hpp"
 #include "ecs/components/grid_data.hpp"
-#include "ecs/prefabs/defence/test_turret.hpp"
+#include "ecs/prefabs/defence/wall.hpp"
 
 #include "core/debugging.hpp"
 #include "core/input/input.hpp"
 #include "rendering/camera.hpp"
+#include "world/path_finding/movement_profile.hpp"
 #include "world/world_grid/world_grid.hpp"
 
 namespace demo::ecs {
@@ -29,7 +30,7 @@ namespace demo::ecs {
             return;
         }; 
 
-        auto entity = test_turret::create(registry());
+        auto entity = wall::create(registry());
         const cell& size = registry().get<grid_size>(entity).value;
 
         if (!can_place(grid, cell_pos, size)) {
@@ -40,6 +41,7 @@ namespace demo::ecs {
 
         for_each_cell(cell_pos, size, [&](cell current) {
             grid.at(current).set_structure(entity);
+            grid.at(current).set_navigation_type(navigation_type::wall);
         });
 
         auto& position = registry().get<world_position>(entity);
