@@ -1,13 +1,15 @@
 #pragma once
 
-#include "ecs/core/entity.hpp"
+#include "ecs/core/entity_builder.hpp"
 #include "ecs/components/rendering.hpp"
 #include "ecs/components/positional.hpp"
 #include "ecs/components/defence_pillar.hpp"
 
 namespace demo::ecs {
-    struct pillar : entity<pillar> {
-        static void add_components(entt::registry& registry, entt::entity entity) {
+    struct pillar : entity_builder {
+        void build(entt::registry& registry, const asset_context& ctx) override {
+            auto entity = registry.create();
+            
             registry.emplace<world_position>(entity);
 
             registry.emplace<sprite>(entity, sprite {

@@ -4,7 +4,7 @@
 
 #include <entt/entt.hpp>
 
-#include "ecs/core/entity.hpp"
+#include "ecs/core/entity_builder.hpp"
 #include "ecs/core/prefab.hpp"
 #include "ecs/core/system_base.hpp"
 #include "ecs/core/prefab_manager.hpp"
@@ -40,11 +40,12 @@ namespace demo {
             );
         }
 
-        template<typename T, typename... Args>
-        void add_entity(Args&&... args) {
-            static_assert(std::derived_from<T, ecs::entity<T>>);
+        template<typename T>
+        void add_entity() {
+            static_assert(std::derived_from<T, ecs::entity_builder>);
 
-            T::create(m_registry, std::forward<Args>(args)...);
+            T entity;
+            entity.build(m_registry, m_registry.ctx().get<asset_context>());
         }
 
         template<typename T>
