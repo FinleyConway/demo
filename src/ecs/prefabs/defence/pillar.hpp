@@ -7,7 +7,7 @@
 
 namespace demo::ecs {
     struct pillar : entity_builder {
-        void build(entt::registry& registry, const asset_context& ctx) override {
+        entt::entity build(entt::registry& registry, const asset_context& ctx) override {
             auto entity = registry.create();
             
             registry.emplace<world_position>(entity);
@@ -20,6 +20,8 @@ namespace demo::ecs {
             });
 
             registry.emplace<defence_pillar>(entity);
+
+            return entity;
         }
     };
 }

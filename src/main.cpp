@@ -1,6 +1,6 @@
 #include <raylib.h>
 
-#include "ecs/prefabs/enemies/zombie.hpp"
+#include "ecs/entities/map_controller.hpp"
 #include "ecs/systems/camera/camera_movement.hpp"
 
 #include "ecs/systems/combat/defence/generate_attack_area.hpp"
@@ -21,12 +21,15 @@
 #include "ecs/systems/placement/grid_entity_placer.hpp"
 #include "ecs/systems/placement/test_grid_selector.hpp"
 
+#include "ecs/entities/camera/main_camera.hpp"
+
+#include "ecs/prefabs/defence/pillar.hpp"
+#include "ecs/prefabs/enemies/zombie.hpp"
+#include "ecs/prefabs/defence/wall.hpp"
+
 #include "world/world.hpp"
 #include "world/world_grid/world_grid.hpp"
 #include "world/path_finding/path_finder.hpp"
-
-#include "ecs/prefabs/camera/main_camera.hpp"
-#include "ecs/prefabs/defence/pillar.hpp"
 
 
 int main() {
@@ -41,6 +44,7 @@ int main() {
 
     // create prefabs
     auto test_prefab = world.emplace_prefab<demo::ecs::zombie>();
+    auto wall_prefab = world.emplace_prefab<demo::ecs::wall>();
 
     // add systems
     world.add_system<demo::ecs::camera_movement>();
@@ -70,6 +74,8 @@ int main() {
     // add entities
     world.add_entity<demo::ecs::main_camera>();
     world.add_entity<demo::ecs::pillar>();
+
+    world.add_entity<demo::ecs::map_controller>(wall_prefab);
 
     world.start();
 

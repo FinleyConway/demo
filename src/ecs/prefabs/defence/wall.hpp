@@ -1,14 +1,15 @@
 #pragma once
 
-#include "ecs/core/entity_builder.hpp"
+#include "ecs/core/prefab_builder.hpp"
+
 #include "ecs/components/health.hpp"
 #include "ecs/components/grid_data.hpp"
 #include "ecs/components/rendering.hpp"
 #include "ecs/components/positional.hpp"
 
 namespace demo::ecs {
-    struct wall : entity_builder {
-        void build(entt::registry& registry, const asset_context& ctx) override {
+    struct wall : prefab_builder {
+        entt::entity build(entt::registry& registry, const asset_context& ctx) override {
             auto entity = registry.create();
             
             // positional
@@ -32,6 +33,8 @@ namespace demo::ecs {
                 .current_health = 100,
                 .max_health = 100
             });
+
+            return entity;
         }
     };
 }

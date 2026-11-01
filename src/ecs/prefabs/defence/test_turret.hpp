@@ -9,7 +9,7 @@
 
 namespace demo::ecs {
     struct test_turret : entity_builder {
-        void build(entt::registry& registry, const asset_context& ctx) override {
+        entt::entity build(entt::registry& registry, const asset_context& ctx) override {
             auto entity = registry.create();
 
             // positional
@@ -46,6 +46,8 @@ namespace demo::ecs {
                 .current_health = 100,
                 .max_health = 100
             });
+
+            return entity;
         }
     };
 }

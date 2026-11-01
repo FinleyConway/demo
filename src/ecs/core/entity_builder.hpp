@@ -10,6 +10,6 @@ namespace demo::ecs {
         virtual ~entity_builder() = default;
 
     public:
-        virtual void build(entt::registry& registry, const asset_context& ctx) = 0;
+        virtual entt::entity build(entt::registry& registry, const asset_context& ctx) = 0;
     };
 }

@@ -39,12 +39,13 @@ namespace demo {
             );
         }
 
-        template<typename T>
-        void add_entity() {
+        template<typename T, typename... Args>
+        entt::entity add_entity(Args&&... args) {
             static_assert(std::derived_from<T, ecs::entity_builder>);
 
-            T entity;
-            entity.build(m_registry, m_registry.ctx().get<asset_context>());
+            T entity(std::forward<Args>(args)...);
+
+            return entity.build(m_registry, c_asset_context);
         }
 
         template<typename T>

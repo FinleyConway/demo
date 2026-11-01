@@ -5,10 +5,12 @@
 
 namespace demo::ecs {
     struct main_camera : entity_builder {
-        void build(entt::registry& registry, const asset_context& ctx) override {
+        entt::entity build(entt::registry& registry, const asset_context& ctx) override {
             auto entity = registry.create();
             
             registry.emplace<camera_control>(entity);
+
+            return entity;
         }
     };
 }
