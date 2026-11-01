@@ -21,30 +21,28 @@ namespace demo::ecs {
         entt::entity instantiate() const {
             ASSERT(m_builder != nullptr);
 
-            const auto& ctx = m_registry.ctx().get<asset_context>();
-
-            return m_builder->build(m_registry, ctx);
+            return m_builder->build(m_registry, c_asset_context);
         }
 
     private:
         friend class prefab_manager;
 
         template<typename T>
-        prefab(entt::registry& registry, entt::registry& prefab_registry, std::in_place_type_t<T>) :
+        prefab(entt::registry& registry, const asset_context& ctx, entt::registry& prefab_registry, std::in_place_type_t<T>) :
             m_registry(registry),
             m_prefab_registry(prefab_registry),
+            c_asset_context(ctx),
             m_builder(std::make_unique<T>())
         {
             static_assert(std::derived_from<T, prefab_builder>);
 
-            const auto& ctx = m_registry.ctx().get<asset_context>();
-
-            m_prefab = m_builder->build(prefab_registry, ctx);
+            m_prefab = m_builder->build(prefab_registry, c_asset_context);
         } 
 
     private:
         entt::registry& m_registry;
         entt::registry& m_prefab_registry;
+        const asset_context& c_asset_context;
 
         entt::entity m_prefab = entt::null;
 

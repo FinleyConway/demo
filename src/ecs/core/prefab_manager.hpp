@@ -7,6 +7,7 @@
 #include "core/debugging.hpp"
 #include "ecs/core/prefab.hpp"
 #include "ecs/core/prefab_builder.hpp"
+#include "resources/asset_context.hpp"
 
 namespace demo {
     class world;
@@ -15,8 +16,9 @@ namespace demo {
 namespace demo::ecs {
     class prefab_manager {
     public:
-        explicit prefab_manager(entt::registry& registry) :
-            m_registry(registry) 
+        explicit prefab_manager(entt::registry& registry, const asset_context& ctx) :
+            m_registry(registry),
+            c_asset_context(ctx)
         {
         }
 
@@ -49,7 +51,12 @@ namespace demo::ecs {
 
             auto [it, inserted] = m_prefabs.try_emplace(
                 id,
-                prefab(m_registry, m_prefab_registry, std::in_place_type<T>)
+                prefab(
+                    m_registry,
+                    c_asset_context, 
+                    m_prefab_registry, 
+                    std::in_place_type<T>
+                )
             );
 
             ASSERT(inserted);
@@ -60,6 +67,7 @@ namespace demo::ecs {
     private:
         entt::registry m_prefab_registry;
         entt::registry& m_registry;
+        const asset_context& c_asset_context;
 
         size_t m_next_id = 0;
         std::unordered_map<prefab_id, prefab> m_prefabs;

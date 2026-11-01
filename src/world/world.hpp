@@ -21,8 +21,7 @@ namespace demo {
     public:
         world() {
             add_context<camera>();
-            add_context<asset_context>();
-            add_context<ecs::prefab_manager>(m_registry);
+            add_context<ecs::prefab_manager>(m_registry, c_asset_context);
         }
 
     public:
@@ -106,5 +105,6 @@ namespace demo {
         ecs::rendering m_rendering{ m_registry };
 
         input m_input_manager;
+        const asset_context c_asset_context;
     };
 }
