@@ -1,5 +1,6 @@
 #include <raylib.h>
 
+#include "ecs/prefabs/enemies/zombie.hpp"
 #include "ecs/systems/camera/camera_movement.hpp"
 
 #include "ecs/systems/combat/defence/generate_attack_area.hpp"
@@ -27,7 +28,6 @@
 #include "ecs/prefabs/camera/main_camera.hpp"
 #include "ecs/prefabs/defence/pillar.hpp"
 
-#include "resources/asset_context.hpp"
 
 int main() {
     InitWindow(800, 450, "Grid Pathfinding");
@@ -38,7 +38,9 @@ int main() {
     // add context
     world.add_context<demo::world_grid>();
     world.add_context<demo::path_finder>();
-    world.add_context<demo::asset_context>();
+
+    // create prefabs
+    auto test_prefab = world.emplace_prefab<demo::ecs::zombie>();
 
     // add systems
     world.add_system<demo::ecs::camera_movement>();

@@ -1,13 +1,14 @@
 #pragma once
 
+#include "core/debugging.hpp"
+#include "ecs/components/health.hpp"
+#include "ecs/core/prefab_manager.hpp"
 #include "ecs/core/system_base.hpp"
-#include "ecs/prefabs/enemies/zombie.hpp"
 #include "ecs/components/positional.hpp"
 #include "ecs/components/navigation.hpp"
 
 #include "core/input/input.hpp"
 #include "rendering/camera.hpp"
-#include "resources/asset_context.hpp"
 #include "world/world_grid/world_grid.hpp"
 
 namespace demo::ecs {
@@ -22,7 +23,13 @@ namespace demo::ecs {
             const cell grid_pos = mouse_to_cell(main_camera, grid);    
 
             if (input::mouse_button_pressed(input::mouse::middle)) {
-                auto zombie = zombie::create(registry(), context<asset_context>());
+                const auto& p_mananger = context<prefab_manager>();
+
+                const auto* h = p_mananger.peak<health>(0);
+
+                LOG_INFO("Prefab heath: %f", h->current_health);
+
+                auto zombie = p_mananger.instantiate(0);
 
                 auto& pos = registry().get<world_position>(zombie);
                 pos.set(grid.cell_to_point(grid_pos), registry(), zombie);

@@ -1,6 +1,7 @@
 #pragma once
 
-#include "ecs/core/entity.hpp"
+#include "ecs/core/prefab_builder.hpp"
+
 #include "ecs/components/enemy.hpp"
 #include "ecs/components/positional.hpp"
 #include "ecs/components/animation.hpp"
@@ -11,8 +12,10 @@
 #include "resources/asset_context.hpp"
 
 namespace demo::ecs {
-    struct zombie : entity<zombie> {
-        static void add_components(entt::registry& registry, entt::entity entity, const asset_context& ctx) {
+    struct zombie : prefab_builder {
+        entt::entity build(entt::registry& registry, const asset_context& ctx) override {
+            auto entity = registry.create();
+            
             registry.emplace<world_position>(entity);
             registry.emplace<sprite>(entity, sprite {
                 &ctx.test.source, { 0, 0, 40, 40 }
@@ -36,6 +39,8 @@ namespace demo::ecs {
             registry.emplace<enemy_attack_damage>(entity, enemy_attack_damage {
                 .value = 20
             });
+
+            return entity;
         }
     }; 
 }

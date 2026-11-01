@@ -5,18 +5,24 @@
 #include <entt/entt.hpp>
 
 #include "ecs/core/entity.hpp"
+#include "ecs/core/prefab.hpp"
 #include "ecs/core/system_base.hpp"
+#include "ecs/core/prefab_manager.hpp"
+
 #include "ecs/systems/internal/animation.hpp"
 #include "ecs/systems/internal/rendering.hpp"
 
 #include "core/input/input.hpp"
 #include "rendering/camera.hpp"
+#include "resources/asset_context.hpp"
 
 namespace demo {
     class world {
     public:
         world() {
             add_context<camera>();
+            add_context<asset_context>();
+            add_context<ecs::prefab_manager>(m_registry);
         }
 
     public:
@@ -39,6 +45,13 @@ namespace demo {
             static_assert(std::derived_from<T, ecs::entity<T>>);
 
             T::create(m_registry, std::forward<Args>(args)...);
+        }
+
+        template<typename T>
+        ecs::prefab_id emplace_prefab() {
+            auto& ctx = m_registry.ctx().get<ecs::prefab_manager>();
+
+            return ctx.create<T>();
         }
 
     public:
