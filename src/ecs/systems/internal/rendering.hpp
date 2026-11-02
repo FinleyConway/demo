@@ -82,6 +82,47 @@ namespace demo::ecs {
             };
         }
 
+        constexpr aabb make_bounds(const world_position& pos, const tile_renderer& tile_renderer) const {
+            const auto& tiles = tile_renderer.tiles;
+            const point world_pos = pos.get();
+
+            if (tiles.empty()) return { world_pos, {} };
+
+            auto& grid = context<world_grid>();
+
+            // helper lambda that gives me the world position of that tile
+            auto position = [&](const tile_renderer::tile& tile) -> point {
+                cell cell = tile.position;
+
+                if (tile_renderer.render_mode == tile_renderer::mode::grid) {
+                    cell.x += tile_renderer.grid_origin.x;
+                    cell.y += tile_renderer.grid_origin.y;
+                }
+
+                const point p = grid.cell_to_point(cell);
+
+                return {
+                    world_pos.x + p.x,
+                    world_pos.y + p.y
+                };
+            };
+
+            point min = position(tiles.front());
+            point max = min;
+
+            // produce the bounds from all tiles inside component
+            for (const auto& tile : tiles) {
+                const point world = position(tile);
+
+                min.x = std::min(min.x, world.x);
+                min.y = std::min(min.y, world.y);
+                max.x = std::max(max.x, world.x);
+                max.y = std::max(max.y, world.y);
+            }
+
+            return { min, max };
+        }
+
         constexpr aabb make_world_bounds(const camera& main_camera) {
             const point top_left = main_camera.screen_to_world({
                 .x = 0.0f,
@@ -134,7 +175,8 @@ namespace demo::ecs {
             renderer::draw_sprite(
                 position.get(), 
                 render_data.tex, 
-                render_data.source
+                render_data.source,
+                render_data.tint
             );
         }
 

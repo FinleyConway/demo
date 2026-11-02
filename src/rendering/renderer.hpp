@@ -5,6 +5,7 @@
 #include "core/math/rect.hpp"
 #include "core/math/point.hpp"
 #include "rendering/camera.hpp"
+#include "rendering/colour.hpp"
 #include "resources/types/texture.hpp"
 
 namespace demo {
@@ -16,7 +17,7 @@ namespace demo {
             camera.draw_inside(fn);
         }
 
-        static void draw_sprite(const point& position, const texture* texture, const rect_int& source, Color tint = WHITE) {
+        static void draw_sprite(const point& position, const texture* texture, const rect_int& source, colour tint) {
             const Rectangle sprite_source = {
                 .x      = static_cast<float>(source.x), 
                 .y      = static_cast<float>(source.y),
@@ -27,11 +28,17 @@ namespace demo {
                 .x = position.x,
                 .y = position.y
             };
+            const Color sprite_tint = {
+                .r = tint.r,
+                .g = tint.g,
+                .b = tint.b,
+                .a = tint.a,
+            };
 
             if (texture != nullptr && texture->valid()) {
                 const Texture2D& handle = texture->handle();
                 
-                DrawTextureRec(handle, sprite_source, sprite_position, tint);
+                DrawTextureRec(handle, sprite_source, sprite_position, sprite_tint);
             }
             else {
                 DrawRectangle(
