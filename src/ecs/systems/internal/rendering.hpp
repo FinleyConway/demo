@@ -58,7 +58,12 @@ namespace demo::ecs {
 
             renderer::draw_in_camera(main_camera, camera_offset, [&]() {
                 m_spatial_grid.query(camera_bounds, [&](spatial_id id) {
-
+                    if (id.type == typeid(sprite)) {
+                        draw_sprite(id.entity);
+                    }
+                    else if (id.type == typeid(tile_renderer)) {
+                        draw_grid(id.entity);
+                    }
                 });
             });
         }
@@ -131,29 +136,12 @@ namespace demo::ecs {
 
             auto& grid = context<world_grid>();
 
-            // helper lambda that gives me the world position of that tile
-            auto position = [&](const tile_renderer::tile& tile) -> point {
-                cell cell = tile.position;
-
-                if (tile_renderer.render_mode == tile_renderer::mode::grid) {
-                    cell.x += tile_renderer.grid_origin.x;
-                    cell.y += tile_renderer.grid_origin.y;
-                }
-
-                const point p = grid.cell_to_point(cell);
-
-                return {
-                    world_pos.x + p.x,
-                    world_pos.y + p.y
-                };
-            };
-
-            point min = position(tiles.front());
+            point min = world_pos + grid.cell_to_point(tiles.front().position);
             point max = min;
 
             // produce the bounds from all tiles inside component
             for (const auto& tile : tiles) {
-                const point world = position(tile);
+                const point world = world_pos + grid.cell_to_point(tile.position);
 
                 min.x = std::min(min.x, world.x);
                 min.y = std::min(min.y, world.y);
@@ -191,10 +179,10 @@ namespace demo::ecs {
             if (!render_data.visible) return;
 
             for (const auto& tile : render_data.tiles) {
-                const point world_position = grid.cell_to_point(tile.position);
+                const point tile_position = position.get() + grid.cell_to_point(tile.position);
 
                 renderer::draw_sprite(
-                    world_position, 
+                    tile_position, 
                     render_data.tex, 
                     tile.source,
                     tile.tint

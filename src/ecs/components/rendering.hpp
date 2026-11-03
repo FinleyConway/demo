@@ -17,18 +17,12 @@ namespace demo::ecs {
     };
 
     struct tile_renderer {
-        enum class mode {
-            grid,
-            exact
-        };
-
         struct tile {
             cell position;
             rect_int source;
             colour tint = colour::white;
         };
 
-        mode render_mode = mode::grid;
         const texture* tex = nullptr;
         point grid_origin;
         std::vector<tile> tiles;

@@ -21,6 +21,13 @@ namespace demo {
             return x == other.x && y == other.y;
         }
 
+        constexpr point operator+(const point& other) const {
+            return {
+                .x = x + other.x,
+                .y = y + other.y
+            };
+        }
+
         constexpr point operator-(const point& other) const {
             return {
                 .x = x - other.x,
