@@ -1,5 +1,7 @@
 #pragma once
 
+#include <typeindex> 
+
 #include "ecs/core/system_base.hpp"
 #include "ecs/components/positional.hpp"
 #include "ecs/components/rendering.hpp"
@@ -11,18 +13,35 @@
 #include "world/world_grid/world_grid.hpp"
 
 namespace demo::ecs {
+    struct spatial_id {
+        entt::entity entity;
+        std::type_index type;
+
+        bool operator==(const spatial_id&) const = default;
+    };
+}
+
+template<>
+struct std::hash<demo::ecs::spatial_id> {
+    size_t operator()(const demo::ecs::spatial_id& id) const noexcept {
+        const size_t h1 = std::hash<entt::entity>{}(id.entity);
+        const size_t h2 = id.type.hash_code();
+
+        return h1 ^ (h2 << 1);
+    }
+};
+
+namespace demo::ecs {
     class rendering : public system_base {
     public:
         using system_base::system_base;
 
         void on_hook() override {
-            //! this will conflict since a entity will have two rendering components and 
-            //! will discard the second insertation due to unique in spatial set
             registry().on_construct<sprite>().connect<&rendering::on_sprite_added>(*this);
             registry().on_construct<tile_renderer>().connect<&rendering::on_tile_added>(*this);
 
-            registry().on_destroy<sprite>().connect<&rendering::on_rendering_remove>(*this);
-            registry().on_destroy<tile_renderer>().connect<&rendering::on_rendering_remove>(*this);
+            registry().on_destroy<sprite>().connect<&rendering::on_sprite_remove>(*this);
+            registry().on_destroy<tile_renderer>().connect<&rendering::on_tile_remove>(*this);
         }
 
         void render() {
@@ -38,10 +57,8 @@ namespace demo::ecs {
             };
 
             renderer::draw_in_camera(main_camera, camera_offset, [&]() {
-                draw_grid();
+                m_spatial_grid.query(camera_bounds, [&](spatial_id id) {
 
-                m_spatial_grid.query(camera_bounds, [&](entt::entity entity) {
-                    draw_sprite(entity);
                 });
             });
         }
@@ -53,8 +70,9 @@ namespace demo::ecs {
 
             const auto& position = registry.get<world_position>(entity);
             const auto& render_data = registry.get<sprite>(entity);
+            const aabb sprite_bounds = make_bounds(position, render_data); 
             
-            m_spatial_grid.insert(entity, make_bounds(position, render_data));
+            m_spatial_grid.insert({ entity, typeid(sprite) }, sprite_bounds);
         }
 
         void on_tile_added(entt::registry& registry, entt::entity entity) {
@@ -63,13 +81,18 @@ namespace demo::ecs {
 
             const auto& position = registry.get<world_position>(entity);
             const auto& render_data = registry.get<tile_renderer>(entity);
+            const aabb tile_bounds = make_bounds(position, render_data); 
             
-            m_spatial_grid.insert(entity, make_bounds(position, render_data));
+            m_spatial_grid.insert({ entity, typeid(tile_renderer) }, tile_bounds);
         }
 
 
-        void on_rendering_remove(entt::registry& registry, entt::entity entity) {
-            m_spatial_grid.remove(entity);
+        void on_sprite_remove(entt::registry& registry, entt::entity entity) {
+            m_spatial_grid.remove({ entity, typeid(sprite) });
+        }
+
+        void on_tile_remove(entt::registry& registry, entt::entity entity) {
+            m_spatial_grid.remove({ entity, typeid(tile_renderer) });
         }
 
         void update_dynamic_entities() {
@@ -80,7 +103,9 @@ namespace demo::ecs {
             >(entt::exclude_t<static_entity>());
 
             for (auto [e, pos, sprite] : view.each()) {
-                m_spatial_grid.relocate(e, make_bounds(pos, sprite));
+                const aabb sprite_bounds = make_bounds(pos, sprite);
+
+                m_spatial_grid.relocate({ e, typeid(sprite) }, sprite_bounds);
                 registry().remove<dirty_position>(e);
             }
         }
@@ -193,6 +218,6 @@ namespace demo::ecs {
 
     private:
         static constexpr uint16_t c_cell_size = 32;
-        spatial_grid<entt::entity, c_cell_size> m_spatial_grid;
+        spatial_grid<spatial_id, c_cell_size> m_spatial_grid;
     };
 }
