@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ecs/core/entity_builder.hpp"
+
 #include "ecs/components/camera_control.hpp"
 
 namespace demo::ecs {
@@ -8,6 +9,7 @@ namespace demo::ecs {
         entt::entity build(entt::registry& registry, const asset_context& ctx) override {
             auto entity = registry.create();
             
+            registry.emplace<camera_init>(entity);
             registry.emplace<camera_control>(entity);
 
             return entity;

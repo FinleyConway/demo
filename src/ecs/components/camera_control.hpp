@@ -3,6 +3,8 @@
 #include "core/math/point.hpp"
 
 namespace demo::ecs {
+    struct camera_init {};
+
     struct camera_control {
         point min_bounds;
         point max_bounds;

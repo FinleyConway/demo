@@ -57,7 +57,6 @@ namespace demo {
 
     public:
         void on_hooks() {
-            m_animation.on_hook();
             m_rendering.on_hook();
 
             for (auto& system : m_systems) {
@@ -65,18 +64,16 @@ namespace demo {
             }
         }
 
-        void start() {
-            m_animation.start();
-            m_rendering.start();
-
+        void update(float dt) {
+            // execute newly created entities 
             for (auto& system : m_systems) {
                 system->start();
             }
-        }
 
-        void update(float dt) {
+            // reset input consumption
             m_input_manager.begin_frame();
 
+            // update entities
             for (auto& system : m_systems) {
                 system->update(dt);
             }
@@ -93,9 +90,6 @@ namespace demo {
             for (auto& system : m_systems) {
                 system->end();
             }
-
-            m_animation.end();
-            m_rendering.end();
         }
 
     private:
