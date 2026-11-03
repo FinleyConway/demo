@@ -16,8 +16,13 @@ namespace demo::ecs {
         using system_base::system_base;
 
         void on_hook() override {
-            registry().on_construct<sprite>().connect<&rendering::on_rendering_added>(*this);
+            //! this will conflict since a entity will have two rendering components and 
+            //! will discard the second insertation due to unique in spatial set
+            registry().on_construct<sprite>().connect<&rendering::on_sprite_added>(*this);
+            registry().on_construct<tile_renderer>().connect<&rendering::on_tile_added>(*this);
+
             registry().on_destroy<sprite>().connect<&rendering::on_rendering_remove>(*this);
+            registry().on_destroy<tile_renderer>().connect<&rendering::on_rendering_remove>(*this);
         }
 
         void render() {
@@ -42,7 +47,7 @@ namespace demo::ecs {
         }
 
     private:
-        void on_rendering_added(entt::registry& registry, entt::entity entity) {
+        void on_sprite_added(entt::registry& registry, entt::entity entity) {
             ASSERT((registry.all_of<world_position, sprite>(entity)),
                 "Sprite component was constructed before world_position");
 
@@ -51,6 +56,17 @@ namespace demo::ecs {
             
             m_spatial_grid.insert(entity, make_bounds(position, render_data));
         }
+
+        void on_tile_added(entt::registry& registry, entt::entity entity) {
+            ASSERT((registry.all_of<world_position, tile_renderer>(entity)),
+                "Tile rendering component was constructed before world_position");
+
+            const auto& position = registry.get<world_position>(entity);
+            const auto& render_data = registry.get<tile_renderer>(entity);
+            
+            m_spatial_grid.insert(entity, make_bounds(position, render_data));
+        }
+
 
         void on_rendering_remove(entt::registry& registry, entt::entity entity) {
             m_spatial_grid.remove(entity);
@@ -142,35 +158,30 @@ namespace demo::ecs {
             };
         }
 
-        void draw_grid() {
+        void draw_grid(entt::entity entity) {
             const world_grid& grid = context<world_grid>();
+            const auto& position = registry().get<world_position>(entity);
+            const auto& render_data = registry().get<tile_renderer>(entity);
 
-            const size_t cellSize = grid.cell_size();
+            if (!render_data.visible) return;
 
-            const int offsetX = 0;
-            const int offsetY = 0;
+            for (const auto& tile : render_data.tiles) {
+                const point world_position = grid.cell_to_point(tile.position);
 
-            for (size_t row = 0; row < grid.height(); row++) {
-                for (size_t col = 0; col < grid.width(); col++) {
-
-                    // temp rendering for grid for now
-                    Color tileColor = ((row + col) % 2 == 0)
-                        ? (Color){ 80, 160, 70, 255 }
-                        : (Color){ 100, 190, 80, 255 };
-
-                    int x = offsetX + static_cast<int>(col * cellSize);
-                    int y = offsetY + static_cast<int>(row * cellSize);
-                    int size = static_cast<int>(cellSize);
-
-                    DrawRectangle(x, y, size, size, tileColor);
-                    DrawRectangleLines(x, y, size, size, (Color){ 40, 100, 40, 255 });
-                }
+                renderer::draw_sprite(
+                    world_position, 
+                    render_data.tex, 
+                    tile.source,
+                    tile.tint
+                );
             }
         }
 
         void draw_sprite(entt::entity entity) const {
             const auto& position = registry().get<world_position>(entity);
             const auto& render_data = registry().get<sprite>(entity);
+
+            if (!render_data.visible) return;
 
             renderer::draw_sprite(
                 position.get(), 
