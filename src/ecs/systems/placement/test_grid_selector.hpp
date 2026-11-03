@@ -16,7 +16,7 @@ namespace demo::ecs {
     public:
         using system_base::system_base;
 
-        void update(float dt) {
+        void update(float dt) override {
             const camera& main_camera = context<camera>();
             const world_grid& grid = context<world_grid>();
 

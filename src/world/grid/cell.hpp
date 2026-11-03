@@ -12,6 +12,13 @@ namespace demo {
         constexpr bool operator==(const cell_generic& other) const {
             return x == other.x && y == other.y;
         } 
+
+        cell_generic<T> operator+(const cell_generic<T>& other) const {
+            return {
+                .x = x + other.x,
+                .y = y + other.y
+            };
+        }        
     };
 
     using cell = cell_generic<size_t>;

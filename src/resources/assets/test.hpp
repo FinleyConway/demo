@@ -7,12 +7,14 @@ namespace demo::assets {
     using namespace std::chrono_literals;
 
     struct test {
-        texture source;
+        texture floor;
+        texture zombie;
         animation_clip idle;
         animation_clip walking;
 
         test() :
-            source("/var/home/finley/Projects/Git/demo/test_assets/zombie_stickman.png"),
+            floor("/var/home/finley/Projects/Git/demo/test_assets/floor_tileset.png"),
+            zombie("/var/home/finley/Projects/Git/demo/test_assets/zombie_stickman.png"),
             idle(
                 {
                     { { 0,   0, 32, 32 }, 100ms },

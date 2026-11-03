@@ -18,7 +18,7 @@ namespace demo::ecs {
             
             registry.emplace<world_position>(entity);
             registry.emplace<sprite>(entity, sprite {
-                &ctx.test.source, { 0, 0, 40, 40 }
+                &ctx.test.zombie, { 0, 0, 40, 40 }
             });
             registry.emplace<animator>(entity, animator {
                 .clip = &ctx.test.walking

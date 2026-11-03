@@ -17,7 +17,7 @@ namespace demo::ecs {
     public:
         using system_base::system_base;
 
-    void update(float dt) {
+    void update(float dt) override {
         auto view = registry().view<defence_placer, base_defence_zone>();
 
         for (auto [e, placer, zone] : view.each()) {

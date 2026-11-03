@@ -4,6 +4,8 @@
 #include "ecs/core/prefab.hpp"
 
 namespace demo::ecs {
+    struct map_control {};
+
     struct defence_placer {
         prefab_id wall_prefab;
         prefab_id turret_prefab;

@@ -27,6 +27,7 @@
 #include "ecs/prefabs/enemies/zombie.hpp"
 #include "ecs/prefabs/defence/wall.hpp"
 
+#include "ecs/systems/world_grid_setup.hpp"
 #include "world/world.hpp"
 #include "world/world_grid/world_grid.hpp"
 #include "world/path_finding/path_finder.hpp"
@@ -53,6 +54,7 @@ int main() {
     world.add_system<demo::ecs::turret_searching>();
     world.add_system<demo::ecs::turret_instant_attack>();
 
+    world.add_system<demo::ecs::world_grid_setup>();
     world.add_system<demo::ecs::grid_entity_placer>();
     world.add_system<demo::ecs::test_grid_selector>();
 

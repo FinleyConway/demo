@@ -101,17 +101,30 @@ namespace demo::ecs {
         }
 
         void update_dynamic_entities() {
-            auto view = registry().view<
+            auto sprite_view = registry().view<
                 dirty_position,
                 world_position,
                 sprite
             >(entt::exclude_t<static_entity>());
 
-            for (auto [e, pos, sprite] : view.each()) {
-                const aabb sprite_bounds = make_bounds(pos, sprite);
+            for (auto [e, pos, spr] : sprite_view.each()) {
+                const aabb sprite_bounds = make_bounds(pos, spr);
 
                 m_spatial_grid.relocate({ e, typeid(sprite) }, sprite_bounds);
                 registry().remove<dirty_position>(e);
+            }
+
+            auto tile_view = registry().view<
+                tile_change,
+                world_position,
+                tile_renderer
+            >();
+
+            for (auto [e, pos, tile] : tile_view.each()) {
+                const aabb tile_bounds = make_bounds(pos, tile);
+
+                m_spatial_grid.relocate({ e, typeid(tile_renderer) }, tile_bounds);
+                registry().remove<tile_change>(e);
             }
         }
 
@@ -139,14 +152,14 @@ namespace demo::ecs {
             point min = world_pos + grid.cell_to_point(tiles.front().position);
             point max = min;
 
-            // produce the bounds from all tiles inside component
             for (const auto& tile : tiles) {
-                const point world = world_pos + grid.cell_to_point(tile.position);
+                const point tile_world = world_pos + grid.cell_to_point(tile.position);
 
-                min.x = std::min(min.x, world.x);
-                min.y = std::min(min.y, world.y);
-                max.x = std::max(max.x, world.x);
-                max.y = std::max(max.y, world.y);
+                min.x = std::min(min.x, tile_world.x);
+                min.y = std::min(min.y, tile_world.y);
+
+                max.x = std::max(max.x, tile_world.x);
+                max.y = std::max(max.y, tile_world.y);
             }
 
             return { min, max };
