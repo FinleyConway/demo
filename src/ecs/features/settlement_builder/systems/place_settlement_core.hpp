@@ -37,6 +37,8 @@ namespace demo::ecs {
 
                 grid.at(centre_position).set_structure(e);
                 registry().emplace_or_replace<set_position>(e, world_position);
+
+                registry().remove<settlement_core_init>(e);
             }
         }
     };
