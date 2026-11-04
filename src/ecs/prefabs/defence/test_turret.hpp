@@ -1,11 +1,16 @@
 #pragma once
 
 #include "ecs/core/entity_builder.hpp"
-#include "ecs/components/health.hpp"
-#include "ecs/components/grid_data.hpp"
-#include "ecs/components/rendering.hpp"
-#include "ecs/components/positional.hpp"
-#include "ecs/components/defence_turret.hpp"
+
+#include "ecs/features/health/components/health.hpp"
+#include "ecs/features/combat/components/area_attack.hpp"
+#include "ecs/features/combat/components/attack_type.hpp"
+#include "ecs/features/combat/components/attack_target.hpp"
+#include "ecs/features/positioning/components/position.hpp"
+#include "ecs/features/combat/components/attack_pattern.hpp"
+#include "ecs/features/rendering/components/tile_renderer.hpp"
+#include "ecs/features/rendering/components/sprite_renderer.hpp"
+#include "ecs/features/settlement_builder/components/structure_size.hpp"
 
 namespace demo::ecs {
     struct test_turret : entity_builder {
@@ -13,10 +18,10 @@ namespace demo::ecs {
             auto entity = registry.create();
 
             // positional
-            registry.emplace<world_position>(entity);
+            registry.emplace<position>(entity);
 
             // visuals
-            registry.emplace<sprite>(entity, sprite {
+            registry.emplace<sprite_renderer>(entity, sprite_renderer {
                 .source = {
                     .w = 32,
                     .h = 32,
@@ -26,28 +31,36 @@ namespace demo::ecs {
                 .tex = nullptr
             });
 
-            // grid logic
-            registry.emplace<grid_size>(entity, grid_size {
+            // building
+            registry.emplace<structure_size>(entity, structure_size {
                 .value = cell(1, 1) // occupies 1 cell
             });
 
             // turret logic
-            registry.emplace<turret>(entity);
-            registry.emplace<turret_attack_area>(entity, turret_attack_area {
-                .shape = turret_attack_area::shape::circle,
-                .radius = 2.5,
+            //registry.emplace<can_attack_entities>(entity);
+
+            registry.emplace<attack_area_init>(entity);
+            registry.emplace<attack_area>(entity);
+            registry.emplace<attack_pattern>(entity, attack_pattern {
+                .shape = attack_pattern::shape::circle,
+                .radius = 2.5f,
             });
-            registry.emplace<turret_search>(entity, turret_search {
-                .attack_intervals = 0.5f,
+            registry.emplace<attack_preference>(entity, attack_preference {
+                .value = attack_preference::type::enemies
             });
+            registry.emplace<attack_cooldown>(entity, attack_cooldown {
+                .duration = 1.0f
+            });
+
+            registry.emplace<instant_attack>(entity);
 
             // health
             registry.emplace<damage>(entity, damage {
                 .amount = 20.0f
             });
             registry.emplace<health>(entity, health {
-                .current_health = 100.0f,
-                .max_health = 100.0f
+                .current = 100.0f,
+                .max = 100.0f
             });
 
             return entity;
