@@ -1,7 +1,7 @@
 #pragma once
 
 #include <limits>
-#include <cstddef>
+#include <cstdint>
 
 namespace demo {
     enum class navigation_type {
@@ -11,17 +11,21 @@ namespace demo {
     };
 
     struct movement_cost {
-        size_t turret = 1;
-        size_t wall = 1;
+        uint32_t turret = 1;
+        uint32_t wall = 1;
         
-        constexpr size_t cost_for(navigation_type type) const {
+        constexpr uint32_t cost_for(navigation_type type) const {
             switch (type) {
-                case navigation_type::none: return 1;
+                case navigation_type::none:   return minimum_cost();
                 case navigation_type::turret: return turret;
-                case navigation_type::wall: return wall;
+                case navigation_type::wall:   return wall;
             }
 
-            return std::numeric_limits<size_t>::max();
+            return std::numeric_limits<uint32_t>::max();
+        }
+
+        static constexpr uint32_t minimum_cost() {
+            return 1;
         }
     };
 }

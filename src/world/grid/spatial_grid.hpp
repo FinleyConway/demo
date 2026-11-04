@@ -11,7 +11,7 @@
 #include "world/grid/aabb.hpp"
 
 namespace demo {
-    template<typename T, uint16_t TCellSize> 
+    template<typename T, uint32_t TCellSize> 
     class spatial_grid {
         static_assert(TCellSize > 0, "TCellSize must be greater than zero");
 
@@ -20,7 +20,7 @@ namespace demo {
             // data is unique inside spatial_grid
             if (m_lookup.contains(data)) return;
 
-            get_region_cells(bounds, [&](spatial_cell cell) {
+            get_region_cells(bounds, [&](cell cell) {
                 m_grid[cell].emplace_back(data);
                 m_lookup[data].emplace_back(cell);
             });
@@ -64,7 +64,7 @@ namespace demo {
         void query(const aabb& bounds, Fn&& fn) {
             std::unordered_set<T> unique; // hash and alloc cost might be iffy due to hot path
             
-            get_region_cells(bounds, [&](spatial_cell cell) {
+            get_region_cells(bounds, [&](cell cell) {
                 // does the cell exist?
                 const auto grid_it = m_grid.find(cell);
                 if (grid_it == m_grid.end()) return;
@@ -88,7 +88,7 @@ namespace demo {
 
             for (auto x = top_left.x;; ++x) {
                 for (auto y = top_left.y;; ++y) {
-                    fn(spatial_cell(x, y));
+                    fn(cell(x, y));
 
                     if (y == bottom_right.y) break;
                 }
@@ -97,22 +97,22 @@ namespace demo {
             }
         }
 
-        constexpr std::pair<spatial_cell, spatial_cell> make_region(const aabb& bounds) const {
+        constexpr std::pair<cell, cell> make_region(const aabb& bounds) const {
             return {
                 to_cell(bounds.lower_bounds),
                 to_cell(bounds.upper_bounds)
             };
         }
 
-        constexpr spatial_cell to_cell(const point& point) const {
+        constexpr cell to_cell(const point& point) const {
             return {
-                static_cast<int64_t>(std::floor(point.x / TCellSize)),
-                static_cast<int64_t>(std::floor(point.y / TCellSize))
+                static_cast<int32_t>(std::floor(point.x / TCellSize)),
+                static_cast<int32_t>(std::floor(point.y / TCellSize))
             };
         }
 
     private:
-        std::unordered_map<spatial_cell, std::vector<T>> m_grid;
-        std::unordered_map<T, std::vector<spatial_cell>> m_lookup;
+        std::unordered_map<cell, std::vector<T>> m_grid;
+        std::unordered_map<T, std::vector<cell>> m_lookup;
     };
 }

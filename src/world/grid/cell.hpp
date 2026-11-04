@@ -1,52 +1,38 @@
 #pragma once
 
-#include <cstddef>
 #include <cstdint>
 
 namespace demo {
-    template<typename T>
-    struct cell_generic {
-        T x = 0;
-        T y = 0;
+    struct cell {
+        int32_t x = 0;
+        int32_t y = 0;
 
-        constexpr cell_generic<int64_t> to_spatial_cell() const {
-            return {
-                static_cast<int64_t>(x),
-                static_cast<int64_t>(y)
-            };
-        }
+        constexpr bool operator<=>(const cell& other) const = default;
 
-        constexpr cell_generic<size_t> to_cell() const {
-            return {
-                static_cast<size_t>(x),
-                static_cast<size_t>(y)
-            };
-        }
-
-        constexpr bool operator==(const cell_generic& other) const {
-            return x == other.x && y == other.y;
-        } 
-
-        constexpr cell_generic<T> operator+(const cell_generic<T>& other) const {
+        constexpr cell operator+(const cell& other) const {
             return {
                 .x = x + other.x,
                 .y = y + other.y
             };
         }        
-    };
 
-    using cell = cell_generic<size_t>;
-    using spatial_cell = cell_generic<int64_t>;
+        constexpr cell operator-(const cell& other) const {
+            return {
+                .x = x - other.x,
+                .y = y - other.y
+            };
+        }       
+    };
 }
 
-template<typename T>
-struct std::hash<demo::cell_generic<T>> {
-    size_t operator()(const demo::cell_generic<T>& c) const noexcept {
+template<>
+struct std::hash<demo::cell> {
+    size_t operator()(const demo::cell& c) const noexcept {
         // https://stackoverflow.com/a/55083395
-        size_t hash = std::hash<T>()(c.x);
-        hash <<= sizeof(size_t) * 4;
-        hash ^= std::hash<T>()(c.y);
+        size_t hash = std::hash<int32_t>()(c.x);
+        hash <<= sizeof(int32_t) * 4;
+        hash ^= std::hash<int32_t>()(c.y);
 
-        return std::hash<size_t>()(hash);
+        return std::hash<int32_t>()(hash);
     }
 };

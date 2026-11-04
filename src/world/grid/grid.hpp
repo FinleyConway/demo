@@ -1,11 +1,12 @@
 #pragma once
 
 #include <array>
+#include <cmath>
 #include <vector>
 #include <cstdint>
+#include <numbers> 
 #include <cstddef>
 #include <optional>
-#include <unordered_set>
 
 #include "core/debugging.hpp"
 #include "core/math/point.hpp"
@@ -14,6 +15,8 @@
 namespace demo {
     template<typename T = int, size_t TWidth = 0, size_t THeight = 0, uint32_t TCellSize = 0>
     class grid {
+        static_assert(TCellSize > 0, "TCellSize must be greater than zero");
+
     public:
         constexpr size_t width() const {
             return TWidth;
@@ -28,8 +31,6 @@ namespace demo {
         }
 
         constexpr T& at(const cell& c) {
-            m_changed_cells.emplace(c);
-
             return m_data[to_index(c)];
         }
 
@@ -38,51 +39,33 @@ namespace demo {
         }
 
         constexpr void set(const cell& c, const T& data) {
-            m_changed_cells.emplace(c);            
             m_data[to_index(c)] = data;
         }
 
         constexpr std::array<std::optional<cell>, 4> vonn_neighbours(const cell& c) const {
+            const cell up    { c.x,     c.y - 1 };
+            const cell right { c.x + 1, c.y     };
+            const cell down  { c.x,     c.y + 1 };
+            const cell left  { c.x - 1, c.y     };
+
             return {{
-                c.y > 0
-                    ? std::optional<cell>{{c.x, c.y - 1}}
-                    : std::nullopt,  // up
-
-                c.x + 1 < TWidth
-                    ? std::optional<cell>{{c.x + 1, c.y}}
-                    : std::nullopt,  // right
-
-                c.y + 1 < THeight
-                    ? std::optional<cell>{{c.x, c.y + 1}}
-                    : std::nullopt,  // down
-
-                c.x > 0
-                    ? std::optional<cell>{{c.x - 1, c.y}}
-                    : std::nullopt   // left
+                in_bounds(up)    ? std::optional{up}    : std::nullopt,
+                in_bounds(right) ? std::optional{right} : std::nullopt,
+                in_bounds(down)  ? std::optional{down}  : std::nullopt,
+                in_bounds(left)  ? std::optional{left}  : std::nullopt
             }};
         }
 
-        constexpr bool has_changed() const {
-            return !m_changed_cells.empty();
-        }
-
-        constexpr std::unordered_set<cell> consume_changed_cells() {
-            std::unordered_set<cell> changed;
-            changed.swap(m_changed_cells);
-            
-            return changed;
-        }
-
-        static constexpr std::vector<spatial_cell> cells_in_radius(float radius) {
-            std::vector<spatial_cell> cells;
+        static constexpr std::vector<cell> cells_in_radius(float radius) {
+            std::vector<cell> cells;
 
             if (radius < 0.0f) return cells;
 
-            const int64_t extent = static_cast<int64_t>(std::floor(radius));
+            const int32_t extent = static_cast<int32_t>(std::floor(radius));
             const float radius_squared = radius * radius;
 
-            for (int64_t y = -extent; y <= extent; ++y) {
-                for (int64_t x = -extent; x <= extent; ++x) {
+            for (int32_t y = -extent; y <= extent; y++) {
+                for (int32_t x = -extent; x <= extent; x++) {
                     if (static_cast<float>(x * x + y * y) <= radius_squared) {
                         cells.emplace_back(x, y);
                     }
@@ -92,10 +75,10 @@ namespace demo {
             return cells;
         }
 
-        static constexpr std::vector<spatial_cell> cells_in_sector(uint16_t angle, uint16_t width, float radius) {
-            std::vector<spatial_cell> cells = cells_in_radius(radius);
+        static constexpr std::vector<cell> cells_in_sector(uint16_t angle, uint16_t width, float radius) {
+            std::vector<cell> cells = cells_in_radius(radius);
 
-            std::erase_if(cells, [&](const spatial_cell& c) {
+            std::erase_if(cells, [&](const cell& c) {
                 const float dx = static_cast<float>(c.x);
                 const float dy = static_cast<float>(c.y);
 
@@ -109,12 +92,15 @@ namespace demo {
         }
 
         static constexpr bool in_bounds(const cell& c) {
-            return c.x < TWidth && c.y < THeight;
+            return c.x >= 0 &&
+                   c.y >= 0 &&
+                   static_cast<size_t>(c.x) < TWidth &&
+                   static_cast<size_t>(c.y) < THeight;
         }
 
-        static constexpr size_t manhattan_distance(const cell& a, const cell& b) {
-            const size_t dx = a.x > b.x ? a.x - b.x : b.x - a.x;
-            const size_t dy = a.y > b.y ? a.y - b.y : b.y - a.y;
+        static constexpr int64_t manhattan_distance(const cell& a, const cell& b) {
+            const int64_t dx = std::abs(static_cast<int64_t>(a.x) - b.x);
+            const int64_t dy = std::abs(static_cast<int64_t>(a.y) - b.y);
 
             return dx + dy;
         }
@@ -127,16 +113,18 @@ namespace demo {
         }
 
         static constexpr cell point_to_cell(const point& world_pos) {
+            static_assert(TCellSize > 0);
+
             return {
-                static_cast<size_t>(std::floor(world_pos.x / TCellSize)),
-                static_cast<size_t>(std::floor(world_pos.y / TCellSize))
+                static_cast<int32_t>(std::floor(world_pos.x / TCellSize)),
+                static_cast<int32_t>(std::floor(world_pos.y / TCellSize))
             };
         }
 
         template<typename Fn>
         static constexpr void for_each_cell(const cell& offset, const cell& size, Fn&& fn) {
-            for (size_t x = 0; x < size.x; x++) {
-                for (size_t y = 0; y < size.y; y++) {
+            for (int32_t x = 0; x < size.x; x++) {
+                for (int32_t y = 0; y < size.y; y++) {
                     fn(cell(x + offset.x, y + offset.y));
                 }
             }
@@ -146,11 +134,11 @@ namespace demo {
         static constexpr size_t to_index(const cell& c) {
             ASSERT(in_bounds(c), "Out of bounds!");
 
-            return c.y * TWidth + c.x;
+            return static_cast<size_t>(c.y) * TWidth
+                 + static_cast<size_t>(c.x);
         }
 
     private:
         std::array<T, TWidth * THeight> m_data{};  
-        std::unordered_set<cell> m_changed_cells;
     };
 }
