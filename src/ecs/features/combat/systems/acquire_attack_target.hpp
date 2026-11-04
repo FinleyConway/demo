@@ -2,9 +2,9 @@
 
 #include "ecs/core/system_base.hpp"
 
-#include "ecs/components/positional.hpp"
 #include "ecs/features/combat/components/area_attack.hpp"
 #include "ecs/features/combat/components/attack_target.hpp"
+#include "ecs/features/positioning/components/position.hpp"
 
 #include "core/debugging.hpp"
 #include "world/world_grid/world_grid.hpp"
@@ -16,7 +16,7 @@ namespace demo::ecs {
 
         void update(float dt) override {
             auto view = registry().view<
-                world_position,
+                position,
                 attack_area,
                 attack_preference
             >();
@@ -51,7 +51,7 @@ namespace demo::ecs {
         }
 
     private:
-        bool is_valid_target(entt::entity attacker, entt::entity target, const world_position& pos, const attack_area& area) const {
+        bool is_valid_target(entt::entity attacker, entt::entity target, const position& pos, const attack_area& area) const {
             if (!registry().valid(target)) return false;
             if (attacker == target) return false;
 
@@ -59,9 +59,9 @@ namespace demo::ecs {
             return true;
         }
 
-        std::pair<entt::entity, cell> search_area(entt::entity attacker, const world_position& pos, const attack_preference& pref, const attack_area& area) {
+        std::pair<entt::entity, cell> search_area(entt::entity attacker, const position& pos, const attack_preference& pref, const attack_area& area) {
             const world_grid& grid = context<world_grid>();
-            const cell origin = grid.point_to_cell(pos.get());
+            const cell origin = grid.point_to_cell(pos.value);
 
             // simple first come first serve atm
             for (const auto& sc : area.cells) {

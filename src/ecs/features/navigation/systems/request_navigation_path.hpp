@@ -2,7 +2,7 @@
 
 #include "ecs/core/system_base.hpp"
 
-#include "ecs/components/positional.hpp"
+#include "ecs/features/positioning/components/position.hpp"
 #include "ecs/features/navigation/components/navigation.hpp"
 #include "ecs/features/navigation/components/navigation_path.hpp"
 
@@ -20,7 +20,7 @@ namespace demo::ecs {
 
         void update(float dt) override {
             auto view = registry().view<
-                world_position,
+                position,
                 navigation_target,
                 navigation_profile,
                 navigation_request_state
@@ -32,7 +32,7 @@ namespace demo::ecs {
                 path_finder& finder = context<path_finder>();
 
                 // request a path from starting position to target position
-                const cell start_position = grid.point_to_cell(pos.get());
+                const cell start_position = grid.point_to_cell(pos.value);
 
                 request_state.request = finder.request(
                     start_position,

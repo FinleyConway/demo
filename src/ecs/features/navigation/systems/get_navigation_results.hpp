@@ -2,7 +2,7 @@
 
 #include "ecs/core/system_base.hpp"
 
-#include "ecs/components/positional.hpp"
+#include "ecs/features/positioning/components/position.hpp"
 #include "ecs/features/navigation/components/navigation.hpp"
 #include "ecs/features/navigation/components/navigation_path.hpp"
 #include "ecs/features/navigation/components/navigation_motion.hpp"
@@ -16,7 +16,7 @@ namespace demo::ecs {
 
         void update(float dt) override {
             auto view = registry().view<
-                world_position,
+                position,
                 navigation_wait,
                 navigation_path,
                 navigation_request_state,
@@ -30,7 +30,7 @@ namespace demo::ecs {
                 if (finder.try_get_result(request_state.request, path.cells)) {
                     // reset motion for new path
                     motion.elapsed = 0.0f;
-                    motion.start_position = pos.get();
+                    motion.start_position = pos.value;
                 }
             }
         }

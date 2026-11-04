@@ -2,8 +2,7 @@
 
 #include "ecs/core/system_base.hpp"
 
-#include "ecs/components/positional.hpp"
-
+#include "ecs/features/positioning/components/position.hpp"
 #include "ecs/features/navigation/components/navigation_path.hpp"
 #include "ecs/features/navigation/components/navigation_motion.hpp"
 #include "ecs/features/navigation/components/navigation_obstruction.hpp"
@@ -17,18 +16,18 @@ namespace demo::ecs {
 
         void update(float dt) override {
             auto view = registry().view<
-                world_position,
+                position,
                 navigation_path,
                 navigation_motion
             >(entt::exclude<navigation_obstruction>);
 
-            for (auto [e, world_position, nav_path, nav_mov] : view.each()) {
-                move_to_cell(e, world_position, nav_path, nav_mov, dt);
+            for (auto [e, pos, nav_path, nav_mov] : view.each()) {
+                move_to_cell(e, pos, nav_path, nav_mov, dt);
             }
         }
 
     private:
-        void move_to_cell(entt::entity e, world_position& pos, navigation_path& path, navigation_motion& motion, float dt) {
+        void move_to_cell(entt::entity e, const position& pos, navigation_path& path, navigation_motion& motion, float dt) {
             if (path.cells.empty()) return;
 
             world_grid& grid = context<world_grid>();
@@ -57,7 +56,7 @@ namespace demo::ecs {
                 );
 
                 motion.elapsed += dt;
-                pos.set(new_position, registry(), e);
+                registry().emplace_or_replace<set_position>(e, new_position);
 
                 return;
             }
@@ -69,7 +68,7 @@ namespace demo::ecs {
             grid.at(previous_cell).remove_entity(e);
             grid.at(next_cell).add_entity(e);
 
-            pos.set(next_world_pos, registry(), e);
+            registry().emplace_or_replace<set_position>(e, next_world_pos);
 
             motion.start_position = next_world_pos;
             motion.elapsed = 0.0f;
