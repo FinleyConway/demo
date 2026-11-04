@@ -22,6 +22,9 @@ namespace demo::ecs {
                     .h = 32,
                 }
             });
+            registry.emplace<tile_renderer>(entity, tile_renderer {
+                .tex = nullptr
+            });
 
             // grid logic
             registry.emplace<grid_size>(entity, grid_size {
@@ -30,21 +33,21 @@ namespace demo::ecs {
 
             // turret logic
             registry.emplace<turret>(entity);
-            registry.emplace<attack_area>(entity, attack_area {
-                .shape = attack_shape::circle,
+            registry.emplace<turret_attack_area>(entity, turret_attack_area {
+                .shape = turret_attack_area::shape::circle,
                 .radius = 2.5,
             });
             registry.emplace<turret_search>(entity, turret_search {
                 .attack_intervals = 0.5f,
             });
-            registry.emplace<turret_attack_damage>(entity, turret_attack_damage {
-                .value = 20
-            });
 
             // health
+            registry.emplace<damage>(entity, damage {
+                .amount = 20.0f
+            });
             registry.emplace<health>(entity, health {
-                .current_health = 100,
-                .max_health = 100
+                .current_health = 100.0f,
+                .max_health = 100.0f
             });
 
             return entity;

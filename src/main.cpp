@@ -50,8 +50,8 @@ int main() {
     // add systems
     world.add_system<demo::ecs::camera_movement>();
 
-    world.add_system<demo::ecs::generate_attack_area>();
-    world.add_system<demo::ecs::turret_searching>();
+    world.add_system<demo::ecs::generate_attack_range>();
+    world.add_system<demo::ecs::attack_area_search>();
     world.add_system<demo::ecs::turret_instant_attack>();
 
     world.add_system<demo::ecs::world_grid_setup>();

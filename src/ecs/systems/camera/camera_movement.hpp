@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ecs/core/system_base.hpp"
+
 #include "ecs/components/camera_control.hpp"
 
 #include "core/input/input.hpp"
@@ -13,10 +14,12 @@ namespace demo::ecs {
         using system_base::system_base;
 
         void start() override {
-            auto view = registry().view<camera_control>();
+            auto view = registry().view<camera_control, camera_init>();
 
             for (auto [e, control] : view.each()) {
                 setup_camera(control);
+
+                registry().remove<camera_init>(e);
             }
         }
 

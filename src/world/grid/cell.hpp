@@ -9,11 +9,25 @@ namespace demo {
         T x = 0;
         T y = 0;
 
+        constexpr cell_generic<int64_t> to_spatial_cell() const {
+            return {
+                static_cast<int64_t>(x),
+                static_cast<int64_t>(y)
+            };
+        }
+
+        constexpr cell_generic<size_t> to_cell() const {
+            return {
+                static_cast<size_t>(x),
+                static_cast<size_t>(y)
+            };
+        }
+
         constexpr bool operator==(const cell_generic& other) const {
             return x == other.x && y == other.y;
         } 
 
-        cell_generic<T> operator+(const cell_generic<T>& other) const {
+        constexpr cell_generic<T> operator+(const cell_generic<T>& other) const {
             return {
                 .x = x + other.x,
                 .y = y + other.y

@@ -1,10 +1,12 @@
 #pragma once
 
 #include "ecs/core/system_base.hpp"
-#include "ecs/components/health.hpp"
+
+#include "ecs/features/health/components/health.hpp"
+#include "ecs/features/health/components/health_events.hpp"
 
 namespace demo::ecs {
-    class health_addition : public system_base {
+    class apply_healing : public system_base {
     public:
         using system_base::system_base;
 
@@ -12,10 +14,10 @@ namespace demo::ecs {
             auto view = registry().view<health, heal>();
 
             for (auto [e, health, heal] : view.each()) {
-                health.current_health += heal.amount;
+                health.current += heal.amount;
 
-                if (health.current_health > health.max_health) {
-                    health.current_health = health.max_health;
+                if (health.current > health.max) {
+                    health.current = health.max;
                 }
             }
         }
