@@ -4,8 +4,7 @@
 
 #include "ecs/features/combat/components/area_attack.hpp"
 #include "ecs/features/combat/components/attack_pattern.hpp"
-
-#include "ecs/components/rendering.hpp"
+#include "ecs/features/rendering/components/tile_renderer.hpp"
 
 #include "world/grid/cell.hpp"
 #include "world/world_grid/world_grid.hpp"
@@ -26,15 +25,7 @@ namespace demo::ecs {
                 const std::vector<spatial_cell> cells = get_cells(pattern);
 
                 // provide attack visuals if entity has tile renderer
-                if (auto* tile = registry().try_get<tile_renderer>(e)) {
-                    for (const auto& sc : cells) {
-                        // add tile for each cell
-                        tile->add_tile({
-                            .cell = sc.to_cell(),
-                            .source = { 64, 0, 32, 32 }
-                        }, registry(), e);
-                    }
-                }
+                try_add_visuals(e, cells);
 
                 area.cells = std::move(cells);
 
@@ -43,6 +34,23 @@ namespace demo::ecs {
         }
 
     private:
+        void try_add_visuals(entt::entity e, const  std::vector<spatial_cell>& cells) {
+            if (!registry().all_of<tile_renderer>(e)) return;
+            
+            std::vector<tile_renderer::tile> tiles;
+            tiles.reserve(cells.size());
+
+            for (const auto& sc : cells) {
+                // add tile for each cell
+                tiles.emplace_back(tile_renderer::tile {
+                    .cell = sc.to_cell(),
+                    .source = { 64, 0, 32, 32 }
+                });
+            }
+
+            registry().emplace<add_renderer_tiles>(e, std::move(tiles));
+        }
+
         std::vector<spatial_cell> get_cells(const attack_pattern& area) const {
             const world_grid& grid = context<world_grid>();
 
