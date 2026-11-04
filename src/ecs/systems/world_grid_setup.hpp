@@ -32,7 +32,7 @@ namespace demo::ecs {
                     : rect_int(32, 0, 32, 32);
 
                 tile.add_tile(tile_renderer::tile {
-                    .position = cell,
+                    .cell = cell,
                     .source = source
                 }, registry(), e);
             });

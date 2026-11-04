@@ -1,24 +1,29 @@
 #pragma once
 
+#include <chrono>
+
 #include "ecs/core/system_base.hpp"
-#include "ecs/components/rendering.hpp"
-#include "ecs/components/animation.hpp"
+
+#include "ecs/features/rendering/components/animator.hpp"
+#include "ecs/features/rendering/components/sprite_renderer.hpp"
 
 namespace demo::ecs {
     class animation : public system_base {
     public:
         using system_base::system_base;
     
-        void update(std::chrono::duration<float> dt) {
-            auto view = registry().view<animator, sprite>();
+        void update(float dt) {
+            std::chrono::duration<float> anim_dt(dt);
+
+            auto view = registry().view<animator, sprite_renderer>();
 
             for (auto [e, anim, sprite] : view.each()) {
-                update_animation(anim, sprite, dt);
+                update_animation(anim, sprite, anim_dt);
             }
         }
 
     private:
-        void update_animation(animator& anim, sprite& sprite, std::chrono::duration<float> dt) {
+        void update_animation(animator& anim, sprite_renderer& sprite, std::chrono::duration<float> dt) {
             if (anim.clip == nullptr) return;
 
             const auto& clip = *anim.clip;

@@ -30,7 +30,7 @@ namespace demo::ecs {
                     for (const auto& sc : cells) {
                         // add tile for each cell
                         tile->add_tile({
-                            .position = sc.to_cell(),
+                            .cell = sc.to_cell(),
                             .source = { 64, 0, 32, 32 }
                         }, registry(), e);
                     }

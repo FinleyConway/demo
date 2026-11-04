@@ -4,13 +4,10 @@
 
 #include <entt/entt.hpp>
 
-#include "ecs/core/entity_builder.hpp"
 #include "ecs/core/prefab.hpp"
 #include "ecs/core/system_base.hpp"
+#include "ecs/core/entity_builder.hpp"
 #include "ecs/core/prefab_manager.hpp"
-
-#include "ecs/systems/internal/animation.hpp"
-#include "ecs/systems/internal/rendering.hpp"
 
 #include "core/input/input.hpp"
 #include "rendering/camera.hpp"
@@ -32,10 +29,13 @@ namespace demo {
             );
         }
 
-        template<typename T>
-        void add_system() {
+        template<typename T, typename... Args>
+        void add_system(Args&&... args) {
             m_systems.emplace_back(
-                std::move(std::make_unique<T>(m_registry))
+                std::move(std::make_unique<T>(
+                    m_registry,
+                    std::forward<Args>(args)...
+                ))
             );
         }
 
@@ -57,8 +57,6 @@ namespace demo {
 
     public:
         void on_hooks() {
-            m_rendering.on_hook();
-
             for (auto& system : m_systems) {
                 system->on_hook();
             }
@@ -77,13 +75,6 @@ namespace demo {
             for (auto& system : m_systems) {
                 system->update(dt);
             }
-
-            // internals
-            m_animation.update(std::chrono::duration<float>(dt));
-        }
-
-        void draw() {
-            m_rendering.render();
         }
 
         void end() {
@@ -94,10 +85,7 @@ namespace demo {
 
     private:
         entt::registry m_registry;
-
         std::vector<std::unique_ptr<ecs::system_base>> m_systems;
-        ecs::animation m_animation{ m_registry };
-        ecs::rendering m_rendering{ m_registry };
 
         input m_input_manager;
         const asset_context c_asset_context;

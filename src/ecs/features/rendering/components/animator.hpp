@@ -14,4 +14,4 @@ namespace demo::ecs {
         std::chrono::milliseconds time;
         float speed = 1.0f;
     };
-}
+}   
