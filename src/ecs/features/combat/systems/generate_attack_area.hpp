@@ -48,7 +48,7 @@ namespace demo::ecs {
                 });
             }
 
-            registry().emplace<add_renderer_tiles>(e, std::move(tiles));
+            registry().emplace_or_replace<add_renderer_tiles>(e, std::move(tiles));
         }
 
         std::vector<spatial_cell> get_cells(const attack_pattern& area) const {

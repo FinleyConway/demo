@@ -42,7 +42,7 @@ namespace demo::ecs {
                 });
             });
 
-            registry().emplace<add_renderer_tiles>(e, add_renderer_tiles {
+            registry().emplace_or_replace<add_renderer_tiles>(e, add_renderer_tiles {
                 .values = std::move(tiles)
             });
         }
