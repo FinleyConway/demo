@@ -6,4 +6,4 @@
 #include "ecs/features/settlement_builder/components/structures.hpp"
 
 #include "ecs/features/settlement_builder/systems/place_settlement_core.hpp"
-#include "ecs/features/settlement_builder/systems/structure_placer.hpp"
+#include "ecs/features/settlement_builder/systems/place_structures.hpp"
