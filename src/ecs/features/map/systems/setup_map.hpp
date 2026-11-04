@@ -13,31 +13,36 @@ namespace demo::ecs {
         void start() override {
             auto view = registry().view<
                 map_init, 
-                map, 
-                tile_renderer
+                map
             >();
 
-            for (auto [e, tile] : view.each()) {
-                create_visuals(e, tile);
+            for (auto e : view) {
+                create_visuals(e);
+
+                registry().remove<map_init>(e);
             }
         }
 
     private:
-        void create_visuals(entt::entity e, tile_renderer& tile) {
+        void create_visuals(entt::entity e) {
             const auto& grid = context<world_grid>();
             const cell grid_size = { grid.width(), grid.height() };
 
+            std::vector<tile_renderer::tile> tiles;
+            tiles.reserve(grid.width() * grid.height());
+
             grid.for_each_cell({}, grid_size, [&](cell cell) {
-                rect_int source = ((cell.x + cell.y) % 2 == 0) 
+                const rect_int source = ((cell.x + cell.y) % 2 == 0) 
                     ? rect_int(0 , 0, 32, 32)
                     : rect_int(32, 0, 32, 32);
-
-                //! need to setup tile rendering events
-                // tile.add_tile(tile_renderer::tile {
-                //     .cell = cell,
-                //     .source = source
-                // }, registry(), e);
+                
+                tiles.emplace_back(tile_renderer::tile {
+                    .cell = cell,
+                    .source = source
+                });
             });
+
+            registry().emplace<add_renderer_tiles>(e, std::move(tiles));
         }
     };
 }
