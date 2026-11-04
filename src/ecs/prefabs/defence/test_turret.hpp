@@ -29,7 +29,7 @@ namespace demo::ecs {
                 }
             });
             registry.emplace<tile_renderer>(entity, tile_renderer {
-                .tex = nullptr
+                .tex = &ctx.test.floor
             });
 
             // building

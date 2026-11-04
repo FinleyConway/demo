@@ -48,7 +48,7 @@ namespace demo::ecs {
 
             for (const auto& sc : cells) {
                 //! need use int64_t as the cell and not size_t
-                const int64_t x = sc.x + grid_pos.x; // shouldnt have to offset with pos?
+                const int64_t x = sc.x + grid_pos.x; // shouldnt have to offset with pos? renderer should do this!
                 const int64_t y = sc.y + grid_pos.y;
 
                 LOG_INFO("[%d, %d]", x, y);
@@ -61,7 +61,8 @@ namespace demo::ecs {
                         .x = (size_t)x,
                         .y = (size_t)y
                     },
-                    .source = { 64, 0, 32, 32 }
+                    .source = { 64, 0, 32, 32 },
+                    .tint = { 255, 255, 255, 128 }
                 });
             }
 
