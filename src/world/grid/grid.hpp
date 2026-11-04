@@ -133,6 +133,15 @@ namespace demo {
             };
         }
 
+        template<typename Fn>
+        static constexpr void for_each_cell(const cell& offset, const cell& size, Fn&& fn) {
+            for (size_t x = 0; x < size.x; x++) {
+                for (size_t y = 0; y < size.y; y++) {
+                    fn(cell(x + offset.x, y + offset.y));
+                }
+            }
+        }
+
     private:
         static constexpr size_t to_index(const cell& c) {
             ASSERT(in_bounds(c), "Out of bounds!");

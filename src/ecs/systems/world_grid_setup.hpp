@@ -37,15 +37,5 @@ namespace demo::ecs {
                 }, registry(), e);
             });
         }
-
-        // this could be a helper method inside grid?
-        template<typename Fn>
-        void for_each_cell(const cell& offset, const cell& size, Fn&& fn) {
-            for (size_t x = 0; x < size.x; x++) {
-                for (size_t y = 0; y < size.y; y++) {
-                    fn(cell(x + offset.x, y + offset.y));
-                }
-            }
-        }
     };
 }

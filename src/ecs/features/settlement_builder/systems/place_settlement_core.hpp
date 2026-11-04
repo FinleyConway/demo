@@ -1,21 +1,26 @@
 #pragma once
 
 #include "ecs/core/system_base.hpp"
-#include "ecs/components/positional.hpp"
-#include "ecs/components/defence_pillar.hpp"
+
+#include "ecs/features/positioning/components/position.hpp"
+#include "ecs/features/settlement_builder/components/settlement_core.hpp"
 
 #include "world/world_grid/world_grid.hpp"
 
 namespace demo::ecs {
-    class place_pillar : public system_base {
+    class place_settlement_core : public system_base {
     public:
         using system_base::system_base;
 
         void start() override {
-            auto view = registry().view<defence_pillar, world_position>();
+            auto view = registry().view<
+                position, 
+                settlement_core_init,
+                settlement_core
+            >();
 
             for (auto [e, pos] : view.each()) {
-                world_grid& grid = context<world_grid>();
+                auto& grid = context<world_grid>();
 
                 const size_t width = grid.width();
                 const size_t height = grid.height();
@@ -30,8 +35,8 @@ namespace demo::ecs {
                     .y = static_cast<float>(centre_position.y * cell_size),
                 };
 
-                pos.set(world_position, registry(), e);
                 grid.at(centre_position).set_structure(e);
+                registry().emplace_or_replace<set_position>(e, world_position);
             }
         }
     };
