@@ -33,7 +33,7 @@ namespace demo::ecs {
             auto& grid = context<world_grid>();
             const auto& prefabs = context<prefab_manager>();
 
-            const auto* size = prefabs.peak<structure_size>(structures.wall_prefab);
+            const auto* size = prefabs.peak<structure_size>(structures.turret_prefab);
 
             ASSERT(size != nullptr, "Structure prefab does not have grid_size component");
 
@@ -46,7 +46,7 @@ namespace demo::ecs {
                 return;
             }; 
 
-            auto entity = prefabs.instantiate(structures.wall_prefab);
+            auto entity = prefabs.instantiate(structures.turret_prefab);
 
             // place instantied entity on grid
             grid.for_each_cell(cell_pos, size->value, [&](cell current) {

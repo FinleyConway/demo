@@ -70,7 +70,8 @@ namespace demo::ecs {
             if (!tiles.visible) return;
 
             for (const auto& tile : tiles.tiles) {
-                const point tile_position = tiles_position.value + grid.cell_to_point(tile.cell_position);
+                //const point tile_position = tiles_position.value + grid.cell_to_point(tile.cell_position);
+                const point tile_position = grid.cell_to_point(tile.cell_position);
 
                 renderer::draw_sprite(
                     tile_position, 

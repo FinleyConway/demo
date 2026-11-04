@@ -27,8 +27,6 @@ namespace demo::ecs {
             auto& request = registry.get<add_renderer_tiles>(entity);
 
             if (request.values.empty()) {
-                registry.remove<add_renderer_tiles>(entity);
-                
                 return;
             }
 
