@@ -47,6 +47,7 @@ namespace demo::ecs {
             tiles.reserve(cells.size());
 
             for (const auto& sc : cells) {
+                //! need use int64_t as the cell and not size_t
                 const int64_t x = sc.x + grid_pos.x; // shouldnt have to offset with pos?
                 const int64_t y = sc.y + grid_pos.y;
 
