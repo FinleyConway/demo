@@ -5,7 +5,7 @@
 #include "ecs/features/health/components/health.hpp"
 #include "ecs/features/positioning/components/position.hpp"
 #include "ecs/features/rendering/components/sprite_renderer.hpp"
-#include "ecs/features/settlement_builder/components/structure_size.hpp"
+#include "ecs/features/settlement_builder/settlement_builder_setup.hpp"
 
 namespace demo::ecs {
     struct wall : prefab_builder {
@@ -24,8 +24,9 @@ namespace demo::ecs {
             });
 
             // grid logic
-            registry.emplace<structure_size>(entity, structure_size {
-                .value = cell(1, 1) // occupies 1 cell
+            settlement_feature::make_structure(registry, entity, {
+                .is_core = false,
+                .size = { 1, 1 }
             });
 
             // health

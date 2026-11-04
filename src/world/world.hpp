@@ -12,6 +12,7 @@
 #include "core/input/input.hpp"
 #include "rendering/camera.hpp"
 #include "resources/asset_context.hpp"
+#include "world/world_grid/world_grid.hpp"
 
 namespace demo {
     class world {
@@ -55,6 +56,11 @@ namespace demo {
             return ctx.create<T>();
         }
 
+        //! i hate this but it'll do for now
+        spatial_render_grid& spatial_grid() {
+            return m_spatial_grid;
+        }
+
     public:
         void on_hooks() {
             for (auto& system : m_systems) {
@@ -87,6 +93,7 @@ namespace demo {
         entt::registry m_registry;
         std::vector<std::unique_ptr<ecs::system_base>> m_systems;
 
+        spatial_render_grid m_spatial_grid;
         input m_input_manager;
         const asset_context c_asset_context;
     };

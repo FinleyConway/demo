@@ -14,7 +14,7 @@ namespace demo::ecs {
         using system_base::system_base;
 
         void on_hook() override {
-            registry().on_construct<set_position>().connect<&apply_position::apply>();
+            registry().on_construct<set_position>().connect<&apply_position::apply>(*this);
         }
 
     private:    
@@ -36,7 +36,7 @@ namespace demo::ecs {
                 registry.emplace_or_replace<dirty_position>(e);
             }
 
-            registry.remove<set_position>(e);
+            //registry.remove<set_position>(e);
         }
     };
 }

@@ -4,7 +4,7 @@
 
 #include "ecs/features/positioning/components/position.hpp"
 #include "ecs/features/rendering/components/sprite_renderer.hpp"
-#include "ecs/features/settlement_builder/components/settlement_core.hpp"
+#include "ecs/features/settlement_builder/settlement_builder_setup.hpp"
 
 namespace demo::ecs {
     struct core : entity_builder {
@@ -20,8 +20,10 @@ namespace demo::ecs {
                 }
             });
 
-            registry.emplace<settlement_core_init>(entity);
-            registry.emplace<settlement_core>(entity);
+            settlement_feature::make_structure(registry, entity, {
+                .is_core = true,
+                .size = { 1, 1 }
+            });
 
             return entity;
         }

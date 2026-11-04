@@ -1,93 +1,78 @@
 #include <raylib.h>
 
-#include "ecs/entities/map_controller.hpp"
-#include "ecs/systems/camera/camera_movement.hpp"
-
-#include "ecs/systems/combat/defence/generate_attack_area.hpp"
-#include "ecs/systems/combat/defence/turret_instant_attack.hpp"
-#include "ecs/systems/combat/defence/turret_searching.hpp"
-
-#include "ecs/systems/combat/enemies/obstruction_clearance.hpp"
-
-#include "ecs/systems/health/entity_killed.hpp"
-#include "ecs/systems/health/health_addition.hpp"
-#include "ecs/systems/health/health_reduction.hpp"
-
-#include "ecs/systems/navigation/navigation_request.hpp"
-#include "ecs/systems/navigation/navigation_results.hpp"
-#include "ecs/systems/navigation//navigation_move.hpp"
-
-#include "ecs/systems/placement/place_pillar.hpp"
-#include "ecs/systems/placement/grid_entity_placer.hpp"
-#include "ecs/systems/placement/test_grid_selector.hpp"
-
-#include "ecs/entities/camera/main_camera.hpp"
-
-#include "ecs/prefabs/defence/pillar.hpp"
-#include "ecs/prefabs/enemies/zombie.hpp"
-#include "ecs/prefabs/defence/wall.hpp"
-
-#include "ecs/systems/world_grid_setup.hpp"
 #include "world/world.hpp"
 #include "world/world_grid/world_grid.hpp"
 #include "world/path_finding/path_finder.hpp"
 
+#include "ecs/prefabs/defence/wall.hpp"
+#include "ecs/prefabs/defence/test_turret.hpp"
+
+#include "ecs/prefabs/defence/core.hpp"
+#include "ecs/entities/map_controller.hpp"
+#include "ecs/entities/camera/main_camera.hpp"
+
+#include "ecs/features/map/map_setup.hpp"
+#include "ecs/features/camera/camera_setup.hpp"
+#include "ecs/features/combat/combat_setup.hpp"
+#include "ecs/features/health/health_setup.hpp"
+#include "ecs/features/rendering/rendering_setup.hpp"
+#include "ecs/features/navigation/navigation_setup.hpp"
+#include "ecs/features/positioning/positioning_setup.hpp"
+#include "ecs/features/settlement_builder/settlement_builder_setup.hpp"
+
+using namespace demo;
+
+void setup_systems(world& world) {
+    ecs::positioning_feature::register_systems(world);
+
+    ecs::camera_feature::register_systems(world);
+
+    ecs::navigation_feature::register_systems(world);
+    ecs::combat_feature::register_systems(world);
+    ecs::health_feature::register_systems(world);
+
+    ecs::map_feature::register_systems(world);
+    ecs::settlement_feature::register_systems(world);
+
+    ecs::rendering_feature::register_systems(world);
+}
+
+void setup_entities(world& world) {
+    auto wall_prefab = world.emplace_prefab<ecs::wall>();
+    auto turret_prefab = world.emplace_prefab<ecs::test_turret>();
+
+    world.add_entity<ecs::main_camera>();
+    world.add_entity<ecs::map_controller>(
+        wall_prefab,
+        turret_prefab
+    );
+    world.add_entity<ecs::core>();
+}
 
 int main() {
     InitWindow(800, 450, "Grid Pathfinding");
     SetTargetFPS(60);
 
-    demo::world world;
+    world world;
 
     // add context
-    world.add_context<demo::world_grid>();
-    world.add_context<demo::path_finder>();
-
-    // create prefabs
-    auto test_prefab = world.emplace_prefab<demo::ecs::zombie>();
-    auto wall_prefab = world.emplace_prefab<demo::ecs::wall>();
+    world.add_context<world_grid>();
+    world.add_context<path_finder>();
 
     // add systems
-    world.add_system<demo::ecs::camera_movement>();
-
-    world.add_system<demo::ecs::generate_attack_range>();
-    world.add_system<demo::ecs::attack_area_search>();
-    world.add_system<demo::ecs::turret_instant_attack>();
-
-    world.add_system<demo::ecs::world_grid_setup>();
-    world.add_system<demo::ecs::grid_entity_placer>();
-    world.add_system<demo::ecs::test_grid_selector>();
-
-    world.add_system<demo::ecs::navigation_request>();
-    world.add_system<demo::ecs::navigation_results>();
-    world.add_system<demo::ecs::navigation_move>();
-
-    world.add_system<demo::ecs::obstruction_clearance>();
-
-    world.add_system<demo::ecs::health_addition>();
-    world.add_system<demo::ecs::health_reduction>();
-    world.add_system<demo::ecs::entity_killed>();
-
-    world.add_system<demo::ecs::place_pillar>();
+    setup_systems(world);
 
     // register hooks
     world.on_hooks();
 
-    // add entities
-    world.add_entity<demo::ecs::main_camera>();
-    world.add_entity<demo::ecs::pillar>();
-
-    world.add_entity<demo::ecs::map_controller>(wall_prefab);
-
-    world.start();
+    // create prefabs and add entities
+    setup_entities(world);
 
     while (!WindowShouldClose()) {
-        world.update(GetFrameTime());
-
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
-        world.draw();
+        world.update(GetFrameTime());
 
         EndDrawing();
     }

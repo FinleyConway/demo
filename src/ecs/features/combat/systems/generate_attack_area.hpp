@@ -43,7 +43,7 @@ namespace demo::ecs {
             for (const auto& sc : cells) {
                 // add tile for each cell
                 tiles.emplace_back(tile_renderer::tile {
-                    .cell = sc.to_cell(),
+                    .cell_position = sc.to_cell(),
                     .source = { 64, 0, 32, 32 }
                 });
             }
@@ -55,7 +55,7 @@ namespace demo::ecs {
             const world_grid& grid = context<world_grid>();
 
             // generate cells basedon attack pattern shape
-            switch (area.shape) {
+            switch (area.attack_shape) {
                 case attack_pattern::shape::circle:
                     return grid.cells_in_radius(area.radius);
 

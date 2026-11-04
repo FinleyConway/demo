@@ -3,18 +3,17 @@
 #include "ecs/core/entity_builder.hpp"
 #include "ecs/core/prefab.hpp"
 
-#include "ecs/features/map/components/map.hpp"
-#include "ecs/features/positioning/components/position.hpp"
+#include "ecs/features/map/map_setup.hpp"
+#include "ecs/features/positioning/positioning_setup.hpp"
 #include "ecs/features/rendering/components/tile_renderer.hpp"
-#include "ecs/features/positioning/components/static_entity.hpp"
-#include "ecs/features/settlement_builder/components/structures.hpp"
-#include "ecs/features/settlement_builder/components/settlement_zone.hpp"
+#include "ecs/features/settlement_builder/settlement_builder_setup.hpp"
 
 namespace demo::ecs {
     struct map_controller : entity_builder {
     public:
-        map_controller(prefab_id wall_prefab) :
-            m_wall_prefab(wall_prefab)
+        map_controller(prefab_id wall_prefab, prefab_id turret_prefab) :
+            m_wall_prefab(wall_prefab),
+            m_turret_prefab(turret_prefab)
         {
         }
 
@@ -22,11 +21,12 @@ namespace demo::ecs {
             auto entity = registry.create();
 
             // positional
-            registry.emplace<static_entity>(entity);
-            registry.emplace<position>(entity);
+            positioning_feature::make_positioning(registry, entity, {
+                .is_static = true,
+                .position = { 0, 0 }
+            });
 
-            registry.emplace<map_init>(entity);
-            registry.emplace<map>(entity);
+            map_feature::make_map(registry, entity);
 
             // visual
             registry.emplace<tile_renderer>(entity, tile_renderer {
@@ -34,15 +34,16 @@ namespace demo::ecs {
             });
 
             // settlement building
-            registry.emplace<structures>(entity, structures {
-                .wall_prefab = m_wall_prefab
+            settlement_feature::make_map(registry, entity, {
+                .wall_prefab = m_wall_prefab,
+                .turret_prefab = m_turret_prefab,
             });
-            registry.emplace<settlement_zone>(entity);
 
             return entity;
         }
 
     private:
         prefab_id m_wall_prefab;
+        prefab_id m_turret_prefab;
     };
 }

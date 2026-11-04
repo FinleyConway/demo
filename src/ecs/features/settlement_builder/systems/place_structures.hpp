@@ -13,7 +13,7 @@
 #include "world/world_grid/world_grid.hpp"
 
 namespace demo::ecs {
-    class grid_entity_placer : public system_base {
+    class place_structures : public system_base {
     public:
         using system_base::system_base;
 

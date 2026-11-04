@@ -8,7 +8,7 @@
 #include "ecs/features/rendering/components/sprite_renderer.hpp"
 
 namespace demo::ecs {
-    class animation : public system_base {
+    class animate_entities : public system_base {
     public:
         using system_base::system_base;
     

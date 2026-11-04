@@ -2,18 +2,19 @@
 
 #include "ecs/core/entity_builder.hpp"
 
+#include "ecs/core/prefab_builder.hpp"
+#include "ecs/features/combat/combat_setup.hpp"
 #include "ecs/features/health/components/health.hpp"
-#include "ecs/features/combat/components/area_attack.hpp"
 #include "ecs/features/combat/components/attack_type.hpp"
 #include "ecs/features/combat/components/attack_target.hpp"
 #include "ecs/features/positioning/components/position.hpp"
 #include "ecs/features/combat/components/attack_pattern.hpp"
 #include "ecs/features/rendering/components/tile_renderer.hpp"
 #include "ecs/features/rendering/components/sprite_renderer.hpp"
-#include "ecs/features/settlement_builder/components/structure_size.hpp"
+#include "ecs/features/settlement_builder/settlement_builder_setup.hpp"
 
 namespace demo::ecs {
-    struct test_turret : entity_builder {
+    struct test_turret : prefab_builder {
         entt::entity build(entt::registry& registry, const asset_context& ctx) override {
             auto entity = registry.create();
 
@@ -32,26 +33,20 @@ namespace demo::ecs {
             });
 
             // building
-            registry.emplace<structure_size>(entity, structure_size {
-                .value = cell(1, 1) // occupies 1 cell
+            settlement_feature::make_structure(registry, entity, {
+                .is_core = false,
+                .size = cell(1, 1)
             });
 
             // turret logic
-            //registry.emplace<can_attack_entities>(entity);
-
-            registry.emplace<attack_area_init>(entity);
-            registry.emplace<attack_area>(entity);
-            registry.emplace<attack_pattern>(entity, attack_pattern {
-                .shape = attack_pattern::shape::circle,
-                .radius = 2.5f,
+            combat_feature::make_combat(registry, entity, {
+                .attack_shape = attack_pattern::shape::circle,
+                .radius =  2.5f,
+                .angle = 0,
+                .width = 0,
+                .attack_cooldown = 1.0f,
+                .attack_pref = attack_preference::type::enemies,
             });
-            registry.emplace<attack_preference>(entity, attack_preference {
-                .value = attack_preference::type::enemies
-            });
-            registry.emplace<attack_cooldown>(entity, attack_cooldown {
-                .duration = 1.0f
-            });
-
             registry.emplace<instant_attack>(entity);
 
             // health

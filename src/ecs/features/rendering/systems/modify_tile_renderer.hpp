@@ -39,7 +39,7 @@ namespace demo::ecs {
             );
 
             registry.emplace_or_replace<tile_renderer_changed>(entity);
-            registry.remove<add_renderer_tiles>(entity);
+            //registry.remove<add_renderer_tiles>(entity);
         }
     };
 }

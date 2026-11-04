@@ -37,12 +37,14 @@ namespace demo::ecs {
                     : rect_int(32, 0, 32, 32);
                 
                 tiles.emplace_back(tile_renderer::tile {
-                    .cell = cell,
+                    .cell_position = cell,
                     .source = source
                 });
             });
 
-            registry().emplace<add_renderer_tiles>(e, std::move(tiles));
+            registry().emplace<add_renderer_tiles>(e, add_renderer_tiles {
+                .values = std::move(tiles)
+            });
         }
     };
 }
