@@ -1,20 +1,21 @@
 #pragma once
 
-#include "core/math/rect.hpp"
 #include "ecs/core/system_base.hpp"
 
-#include "ecs/components/base_management.hpp"
-#include "ecs/components/rendering.hpp"
-
-#include "world/world_grid/world_grid.hpp"
+#include "ecs/features/map/components/map.hpp"
+#include "ecs/features/rendering/components/tile_renderer.hpp"
 
 namespace demo::ecs {
-    class world_grid_setup : public system_base {
+    class setup_map : public system_base {
     public:
         using system_base::system_base;
 
         void start() override {
-            auto view = registry().view<map_control, tile_renderer>();
+            auto view = registry().view<
+                map_init, 
+                map, 
+                tile_renderer
+            >();
 
             for (auto [e, tile] : view.each()) {
                 create_visuals(e, tile);
@@ -26,15 +27,16 @@ namespace demo::ecs {
             const auto& grid = context<world_grid>();
             const cell grid_size = { grid.width(), grid.height() };
 
-            for_each_cell({}, grid_size, [&](cell cell) {
+            grid.for_each_cell({}, grid_size, [&](cell cell) {
                 rect_int source = ((cell.x + cell.y) % 2 == 0) 
                     ? rect_int(0 , 0, 32, 32)
                     : rect_int(32, 0, 32, 32);
 
-                tile.add_tile(tile_renderer::tile {
-                    .cell = cell,
-                    .source = source
-                }, registry(), e);
+                //! need to setup tile rendering events
+                // tile.add_tile(tile_renderer::tile {
+                //     .cell = cell,
+                //     .source = source
+                // }, registry(), e);
             });
         }
     };
