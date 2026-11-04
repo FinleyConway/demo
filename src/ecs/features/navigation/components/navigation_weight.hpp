@@ -1,9 +1,9 @@
 #pragma once
 
-#include <cstddef>
+#include <cstdint>
 
 namespace demo {
     struct navigation_weight {
-        size_t value = 0;
+        uint32_t value = 0;
     };
 }

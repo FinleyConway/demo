@@ -64,8 +64,8 @@ namespace demo::ecs {
             const cell origin = grid.point_to_cell(pos.value);
 
             // simple first come first serve atm
-            for (const auto& sc : area.cells) {
-                const cell target_cell = sc.to_cell() + origin;
+            for (const auto& c : area.cells) {
+                const cell target_cell = c + origin;
 
                 if (!grid.in_bounds(target_cell)) continue;
 

@@ -8,6 +8,6 @@ namespace demo {
     struct attack_area_init {};
 
     struct attack_area {
-        std::vector<spatial_cell> cells;
+        std::vector<cell> cells;
     };
 }

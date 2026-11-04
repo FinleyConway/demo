@@ -25,7 +25,7 @@ namespace demo::ecs {
             >();
 
             for (auto [e, pos, pattern, area] : view.each()) {
-                const std::vector<spatial_cell> cells = get_cells(pattern);
+                const std::vector<cell> cells = get_cells(pattern);
 
                 // provide attack visuals if entity has tile renderer
                 try_add_visuals(e, pos, cells);
@@ -37,7 +37,7 @@ namespace demo::ecs {
         }
 
     private:
-        void try_add_visuals(entt::entity e, const position& pos, const std::vector<spatial_cell>& cells) {
+        void try_add_visuals(entt::entity e, const position& pos, const std::vector<cell>& cells) {
             if (!registry().all_of<tile_renderer>(e)) return;
             
             const auto& grid = context<world_grid>();
@@ -46,21 +46,10 @@ namespace demo::ecs {
             std::vector<tile_renderer::tile> tiles;
             tiles.reserve(cells.size());
 
-            for (const auto& sc : cells) {
-                //! need use int64_t as the cell and not size_t
-                const int64_t x = sc.x + grid_pos.x; // shouldnt have to offset with pos? renderer should do this!
-                const int64_t y = sc.y + grid_pos.y;
-
-                LOG_INFO("[%d, %d]", x, y);
-
-                if (x < 0 || y < 0) continue;
-
+            for (const auto& cell : cells) {
                 // add tile for each cell
                 tiles.emplace_back(tile_renderer::tile {
-                    .cell_position = {
-                        .x = (size_t)x,
-                        .y = (size_t)y
-                    },
+                    .cell_position = cell,
                     .source = { 64, 0, 32, 32 },
                     .tint = { 255, 255, 255, 128 }
                 });
@@ -71,7 +60,7 @@ namespace demo::ecs {
             });
         }
 
-        std::vector<spatial_cell> get_cells(const attack_pattern& area) const {
+        std::vector<cell> get_cells(const attack_pattern& area) const {
             const auto& grid = context<world_grid>();
 
             // generate cells basedon attack pattern shape
