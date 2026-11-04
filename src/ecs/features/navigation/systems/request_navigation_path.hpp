@@ -1,14 +1,16 @@
 #pragma once
 
 #include "ecs/core/system_base.hpp"
-#include "ecs/components/navigation.hpp"
+
 #include "ecs/components/positional.hpp"
+#include "ecs/features/navigation/components/navigation.hpp"
+#include "ecs/features/navigation/components/navigation_path.hpp"
 
 #include "world/world_grid/world_grid.hpp"
 #include "world/path_finding/path_finder.hpp"
 
 namespace demo::ecs {
-    class navigation_request : public system_base {
+    class request_navigation_path : public system_base {
     public:
         using system_base::system_base;
 

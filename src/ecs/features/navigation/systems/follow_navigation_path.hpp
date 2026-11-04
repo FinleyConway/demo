@@ -2,14 +2,16 @@
 
 #include "ecs/core/system_base.hpp"
 
-#include "ecs/components/enemy.hpp"
-#include "ecs/components/navigation.hpp"
 #include "ecs/components/positional.hpp"
+
+#include "ecs/features/navigation/components/navigation_path.hpp"
+#include "ecs/features/navigation/components/navigation_motion.hpp"
+#include "ecs/features/navigation/components/navigation_obstruction.hpp"
 
 #include "world/world_grid/world_grid.hpp"
 
 namespace demo::ecs {
-    class navigation_move : public system_base {
+    class follow_navigation_path : public system_base {
     public:
         using system_base::system_base;
 
@@ -18,7 +20,7 @@ namespace demo::ecs {
                 world_position,
                 navigation_path,
                 navigation_motion
-            >();
+            >(entt::exclude<navigation_obstruction>);
 
             for (auto [e, world_position, nav_path, nav_mov] : view.each()) {
                 move_to_cell(e, world_position, nav_path, nav_mov, dt);
@@ -36,11 +38,12 @@ namespace demo::ecs {
 
             // check if the next cell is free
             if (grid.get(next_cell).has_structure(registry())) {
-                if (registry().all_of<route_obstruction>(e)) return;
-
-                registry().emplace<route_obstruction>(e, route_obstruction {
-                    .tile = next_cell
-                });
+                registry().emplace_or_replace<navigation_obstruction>(
+                    e, 
+                    navigation_obstruction {
+                        .tile = next_cell
+                    }
+                );
 
                 // dont want the entity to move until the obstruction is cleared
                 return;
