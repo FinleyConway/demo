@@ -5,6 +5,7 @@
 #include <raylib.h>
 
 #include "core/math/point.hpp"
+#include "world/grid/aabb.hpp"
 
 namespace demo {
     class camera {
@@ -69,6 +70,25 @@ namespace demo {
             };
         }
         
+        constexpr aabb make_bounds() const {
+            const point top_left = screen_to_world({
+                .x = 0.0f,
+                .y = 0.0f,
+            });
+
+            const point bottom_right = screen_to_world({
+                .x = static_cast<float>(GetScreenWidth()),
+                .y = static_cast<float>(GetScreenHeight()),
+            });
+
+            return {
+                std::min(top_left.x, bottom_right.x),
+                std::min(top_left.y, bottom_right.y),
+                std::max(top_left.x, bottom_right.x),
+                std::max(top_left.y, bottom_right.y),
+            };
+        }
+
     private:
         void set_offset(const point& offset) {
             m_camera.offset = {

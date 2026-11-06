@@ -24,7 +24,7 @@ namespace demo::ecs {
             camera& main_camera = context<camera>();
 
             const float camera_zoom = main_camera.get_zoom();
-            const aabb camera_bounds = make_world_bounds(main_camera);
+            const aabb camera_bounds = main_camera.make_bounds();
             const point camera_offset = {
                 .x = GetScreenWidth() / (2.0f * camera_zoom),
                 .y = GetScreenHeight() / (2.0f * camera_zoom),
@@ -43,25 +43,6 @@ namespace demo::ecs {
         }
 
     private:
-        constexpr aabb make_world_bounds(const camera& main_camera) {
-            const point top_left = main_camera.screen_to_world({
-                .x = 0.0f,
-                .y = 0.0f,
-            });
-
-            const point bottom_right = main_camera.screen_to_world({
-                .x = static_cast<float>(GetScreenWidth()),
-                .y = static_cast<float>(GetScreenHeight()),
-            });
-
-            return {
-                std::min(top_left.x, bottom_right.x),
-                std::min(top_left.y, bottom_right.y),
-                std::max(top_left.x, bottom_right.x),
-                std::max(top_left.y, bottom_right.y),
-            };
-        }
-
         void draw_grid(entt::entity entity) {
             const world_grid& grid = context<world_grid>();
             const auto& tiles_position = registry().get<position>(entity);
