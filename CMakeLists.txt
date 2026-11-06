@@ -15,6 +15,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY
     "${CMAKE_BINARY_DIR}/${BINARY_DIR}"
 )
 
+if(UNIX AND NOT APPLE)
+    set(GLFW_BUILD_WAYLAND ON)
+    set(GLFW_BUILD_X11 OFF)
+endif()
+
 add_subdirectory(vendors/raylib)
 add_subdirectory(vendors/entt)
 
