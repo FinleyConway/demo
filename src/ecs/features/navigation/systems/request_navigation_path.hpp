@@ -14,7 +14,7 @@ namespace demo::ecs {
     public:
         using system_base::system_base;
 
-        void start() override {
+        void on_hook() override {
             context<path_finder>().add_grid_context(context<world_grid>());
         }
 

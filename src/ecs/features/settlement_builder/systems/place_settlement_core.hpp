@@ -12,7 +12,7 @@ namespace demo::ecs {
     public:
         using system_base::system_base;
 
-        void start() override {
+        void update(float dt) override {
             auto view = registry().view<
                 position, 
                 settlement_core_init,

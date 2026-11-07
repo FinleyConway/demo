@@ -69,23 +69,12 @@ namespace demo {
         }
 
         void update(float dt) {
-            // execute newly created entities 
-            for (auto& system : m_systems) {
-                system->start();
-            }
-
             // reset input consumption
             m_input_manager.begin_frame();
 
             // update entities
             for (auto& system : m_systems) {
                 system->update(dt);
-            }
-        }
-
-        void end() {
-            for (auto& system : m_systems) {
-                system->end();
             }
         }
 

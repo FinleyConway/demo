@@ -15,11 +15,7 @@ namespace demo::ecs {
     public:
         virtual void on_hook() {}
 
-        virtual void start() {}
-
         virtual void update(float dt) {}
-
-        virtual void end() {}
 
     protected:
         entt::registry& registry() {

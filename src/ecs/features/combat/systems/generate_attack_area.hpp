@@ -1,6 +1,5 @@
 #pragma once
 
-#include "core/debugging.hpp"
 #include "ecs/core/system_base.hpp"
 
 #include "ecs/features/combat/components/area_attack.hpp"
@@ -16,7 +15,7 @@ namespace demo::ecs {
     public:
         using system_base::system_base;
 
-        void start() override {
+        void update(float dt) override {
             auto view = registry().view<
                 position,
                 attack_area_init,

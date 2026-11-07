@@ -77,7 +77,5 @@ int main() {
         EndDrawing();
     }
 
-    world.end();
-
     CloseWindow();
 }
