@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ecs/features/ui/components/ui_canvas.hpp"
 #include "ecs/features/ui/components/ui_size.hpp"
 #include "ecs/features/ui/components/ui_sprite.hpp"
 #include "ecs/features/ui/components/ui_state.hpp"
@@ -11,7 +12,15 @@
 #include "world/world.hpp"
 
 namespace demo::ecs {
+    struct ui_canvas_spec {
+        point canvas_size;
+    };
+
     struct ui_button_spec {
+        canvas_id canvas = 0;
+
+        point size;
+
         const texture* sprite_texture = nullptr;
 
         rect_int idle_sprite_source;
@@ -19,14 +28,28 @@ namespace demo::ecs {
         rect_int pressed_sprite_source;
 
         colour sprite_tint = colour::white;
-
-        point button_size;
     };
 
     struct ui_feature {
-        static void make_button(entt::registry& registry, entt::entity entity, const ui_button_spec& spec) {
+        static canvas_id make_canvas(entt::registry& registry, entt::entity entity, const ui_canvas_spec& spec) {
+            const auto& canvas = registry.emplace<ui_canvas>(entity);
+            
             registry.emplace<ui_size>(entity, ui_size {
-                .value = spec.button_size
+                .value = spec.canvas_size
+            });
+
+            registry.emplace<ui_canvas_capture>(entity);
+
+            return canvas.id;
+        }
+
+        static void make_button(entt::registry& registry, entt::entity entity, const ui_button_spec& spec) {
+            registry.emplace<ui_element>(entity, ui_element {
+                .canvas = spec.canvas
+            });
+
+            registry.emplace<ui_size>(entity, ui_size {
+                .value = spec.size
             });
 
             registry.emplace<ui_sprite>(entity, ui_sprite {

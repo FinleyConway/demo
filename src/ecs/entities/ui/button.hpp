@@ -8,6 +8,9 @@
 namespace demo::ecs {
     struct button : entity_builder {
     public:
+        explicit button(entt::entity canvas) : m_canvas(canvas) {
+        }
+
         entt::entity build(entt::registry& registry, const asset_context& ctx) override {
             auto entity = registry.create();
 
@@ -17,16 +20,21 @@ namespace demo::ecs {
                 .position = { 100, 100 }
             });
 
-            // ui
+            const canvas_id id = registry.get<ui_canvas>(m_canvas).id;
+
             ui_feature::make_button(registry, entity, {
+                .canvas = id, 
+                .size = { 32.0f, 32.0f },
                 .sprite_texture = &ctx.test.floor,
                 .idle_sprite_source = { 64, 0, 32, 32 },
                 .hover_sprite_source = { 64, 0, 32, 32 },
                 .pressed_sprite_source = { 64, 0, 32, 32 },
-                .button_size = { 32.0f, 32.0f }
             });
 
             return entity;
         }
+
+    private:
+        entt::entity m_canvas;
     };
 }

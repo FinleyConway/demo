@@ -1,5 +1,6 @@
 #include <raylib.h>
 
+#include "ecs/entities/ui/button.hpp"
 #include "world/world.hpp"
 #include "world/world_grid/world_grid.hpp"
 #include "world/path_finding/path_finder.hpp"
@@ -7,7 +8,7 @@
 #include "ecs/prefabs/defence/wall.hpp"
 #include "ecs/prefabs/defence/test_turret.hpp"
 
-#include "ecs/entities/ui/button.hpp"
+#include "ecs/entities/ui/canvas.hpp"
 #include "ecs/prefabs/defence/core.hpp"
 #include "ecs/entities/map_controller.hpp"
 #include "ecs/entities/camera/main_camera.hpp"
@@ -51,7 +52,9 @@ void setup_entities(world& world) {
         turret_prefab
     );
     world.add_entity<ecs::core>();
-    world.add_entity<ecs::button>();
+
+    auto canvas = world.add_entity<ecs::canvas>();
+    world.add_entity<ecs::button>(canvas);
 }
 
 int main() {

@@ -3,8 +3,10 @@
 #include "ecs/core/system_base.hpp"
 
 #include "ecs/features/ui/components/ui_state.hpp"
+#include "ecs/features/ui/components/ui_canvas.hpp"
 
 #include "core/input/ui_input.hpp"
+#include "ecs/features/ui/ui_utils.hpp"
 
 namespace demo::ecs {
     class ui_click : public system_base {
@@ -12,26 +14,36 @@ namespace demo::ecs {
         using system_base::system_base;
     
         void update(float dt) {
-            auto view = registry().view<
-                ui_interactable,
-                ui_interaction_state
-            >(entt::exclude<ui_disabled>);
+            auto view = registry().view<ui_canvas, ui_canvas_capture>();
 
-            for (auto [e, state] : view.each()) {
-                handle_click(e, state);
+            for (auto [e, _, capture] : view.each()) {
+                check_interactables(e, capture);
             }
         }
 
     private:
-        void handle_click(entt::entity e, ui_interaction_state& state) {
-            if (registry().all_of<ui_pointer_capture>(e)) {
+        void check_interactables(entt::entity canvas, ui_canvas_capture& capture) {
+            auto view = ui_utils::canvas_view<
+                ui_interactable,
+                ui_interaction_state
+            >(registry(), canvas);
+
+            for (auto e : view) {
+                auto& state = registry().get<ui_interaction_state>(e);
+
+                handle_click(e, state, capture);
+            }
+        }
+
+        void handle_click(entt::entity e, ui_interaction_state& state, ui_canvas_capture& capture) {
+            if (capture.entity != entt::null) {
                 ui_input::consume_mouse_input();
             }
 
             if (state.value == ui_interaction_state::state::hover &&
                 ui_input::mouse_button_pressed(input::mouse::left)) {
 
-                registry().emplace<ui_pointer_capture>(e);
+                capture.entity = e;
 
                 set_state(e, state, ui_interaction_state::state::press);
 
@@ -41,7 +53,7 @@ namespace demo::ecs {
             if (state.value == ui_interaction_state::state::press &&
                 ui_input::mouse_button_release(input::mouse::left)) {
                 
-                registry().remove<ui_pointer_capture>(e);
+                capture.entity = entt::null;
 
                 set_state(e, state, ui_interaction_state::state::hover);
             }

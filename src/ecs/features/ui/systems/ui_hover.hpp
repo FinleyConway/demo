@@ -1,13 +1,14 @@
 #pragma once
 
-#include "core/debugging.hpp"
 #include "ecs/core/system_base.hpp"
 
 #include "ecs/features/ui/components/ui_size.hpp"
+#include "ecs/features/ui/components/ui_canvas.hpp"
 #include "ecs/features/ui/components/ui_state.hpp"
 #include "ecs/features/positioning/components/position.hpp"
 
 #include "core/input/ui_input.hpp"
+#include "ecs/features/ui/ui_utils.hpp"
 
 namespace demo::ecs {
     class ui_hover : public system_base {
@@ -15,14 +16,28 @@ namespace demo::ecs {
         using system_base::system_base;
     
         void update(float dt) {
-            auto view = registry().view<
+            auto view = registry().view<ui_canvas, ui_canvas_capture>();
+
+            for (auto [e, _, capture] : view.each()) {
+                // wont even bother checking other entities if the mouse is busy
+                if (capture.entity != entt::null) continue;
+
+                check_interactables(e);
+            }
+        }
+
+    private:
+        void check_interactables(entt::entity canvas) {
+            auto view = ui_utils::canvas_view<
                 ui_interactable,
                 ui_interaction_state,
                 position,
                 ui_size
-            >(entt::exclude<ui_disabled, ui_pointer_capture>);
+            >(registry(), canvas);
 
-            for (auto [e, state, pos, size] : view.each()) {
+            for (auto e : view) {
+                auto [state, pos, size] = registry().get<ui_interaction_state, position, ui_size>(e);
+
                 if (is_mouse_over(pos, size)) {
                     // make sure the mouse is being consumed while the mouse is over
                     ui_input::consume_mouse_input();
@@ -35,7 +50,6 @@ namespace demo::ecs {
             }
         }
 
-    private:
         bool is_mouse_over(const position& pos, const ui_size& size) {
             const point mouse_position = ui_input::mouse_position();
 
