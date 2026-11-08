@@ -43,7 +43,7 @@ namespace demo::ecs {
                 
                 registry().remove<ui_pointer_capture>(e);
 
-                set_state(e, state, ui_interaction_state::state::idle);
+                set_state(e, state, ui_interaction_state::state::hover);
             }
         }
 
