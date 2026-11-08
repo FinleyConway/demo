@@ -11,8 +11,8 @@
 namespace demo::ecs {
     class rendering_spatial_index : public system_base {
     public:
-        rendering_spatial_index(entt::registry& registry, spatial_render_grid& spatial_grid) :
-            system_base(registry),
+        rendering_spatial_index(entt::registry& registry, entt::dispatcher& dispatcher, spatial_render_grid& spatial_grid) :
+            system_base(registry, dispatcher),
             m_spatial_grid(spatial_grid)
         {
         }

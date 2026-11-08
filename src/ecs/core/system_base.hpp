@@ -5,8 +5,9 @@
 namespace demo::ecs {
     class system_base {
     public:
-        explicit system_base(entt::registry& registry) :
-            m_registry(registry)
+        explicit system_base(entt::registry& registry, entt::dispatcher& dispatcher) :
+            m_registry(registry),
+            m_dispatcher(dispatcher)
         {
         }
 
@@ -26,6 +27,14 @@ namespace demo::ecs {
             return m_registry;
         }
 
+        entt::dispatcher& dispatcher() {
+            return m_dispatcher;
+        }
+    
+        const entt::dispatcher& dispatcher() const {
+            return m_dispatcher;
+        }
+
         template<typename T>
         T& context() {
             return m_registry.ctx().get<T>();
@@ -38,5 +47,6 @@ namespace demo::ecs {
 
     private:
         entt::registry& m_registry;
+        entt::dispatcher& m_dispatcher;
     };
 }

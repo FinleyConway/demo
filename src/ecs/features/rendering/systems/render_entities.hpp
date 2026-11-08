@@ -15,8 +15,8 @@
 namespace demo::ecs {
     class render_entities : public system_base {
     public:
-        render_entities(entt::registry& registry, spatial_render_grid& spatial_grid) :
-            system_base(registry),
+        render_entities(entt::registry& registry, entt::dispatcher& dispatcher, spatial_render_grid& spatial_grid) :
+            system_base(registry, dispatcher),
             m_spatial_grid(spatial_grid)
         {
         }

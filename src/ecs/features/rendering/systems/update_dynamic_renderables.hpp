@@ -11,8 +11,8 @@
 namespace demo::ecs {
     class update_dynamic_renderables : public system_base {
     public:
-        update_dynamic_renderables(entt::registry& registry, spatial_render_grid& spatial_grid) :
-            system_base(registry),
+        update_dynamic_renderables(entt::registry& registry, entt::dispatcher& dispatcher, spatial_render_grid& spatial_grid) :
+            system_base(registry, dispatcher),
             m_spatial_grid(spatial_grid)
         {
         }

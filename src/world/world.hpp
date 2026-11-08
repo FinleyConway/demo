@@ -34,7 +34,7 @@ namespace demo {
         void add_system(Args&&... args) {
             m_systems.emplace_back(
                 std::move(std::make_unique<T>(
-                    m_registry,
+                    m_registry, m_dispatcher,
                     std::forward<Args>(args)...
                 ))
             );
@@ -80,6 +80,8 @@ namespace demo {
 
     private:
         entt::registry m_registry;
+        entt::dispatcher m_dispatcher;
+
         std::vector<std::unique_ptr<ecs::system_base>> m_systems;
 
         spatial_render_grid m_spatial_grid;
