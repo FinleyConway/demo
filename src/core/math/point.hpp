@@ -17,9 +17,7 @@ namespace demo {
             };
         }
 
-        constexpr bool operator==(const point& other) const {
-            return x == other.x && y == other.y;
-        }
+        constexpr bool operator<=>(const point& other) const = default;
 
         constexpr point operator+(const point& other) const {
             return {

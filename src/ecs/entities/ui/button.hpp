@@ -16,7 +16,7 @@ namespace demo::ecs {
 
             // positional
             positioning_feature::make_positioning(registry, entity, {
-                .is_static = true,
+                .is_static = false,
                 .position = { 100, 100 }
             });
 
@@ -25,6 +25,7 @@ namespace demo::ecs {
             ui_feature::make_button(registry, entity, {
                 .canvas = id, 
                 .size = { 32.0f, 32.0f },
+                .anchor_padding = { -128.0f, -128.0f },
                 .sprite_texture = &ctx.test.floor,
                 .idle_sprite_source = { 64, 0, 32, 32 },
                 .hover_sprite_source = { 64, 0, 32, 32 },

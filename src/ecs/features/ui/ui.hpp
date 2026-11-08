@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ecs/features/ui/components/ui_anchor.hpp"
 #include "ecs/features/ui/components/ui_canvas.hpp"
 #include "ecs/features/ui/components/ui_size.hpp"
 #include "ecs/features/ui/components/ui_sprite.hpp"
@@ -8,6 +9,8 @@
 #include "ecs/features/ui/systems/ui_click.hpp"
 #include "ecs/features/ui/systems/ui_hover.hpp"
 #include "ecs/features/ui/systems/ui_visual_state.hpp"
+#include "ecs/features/ui/systems/update_canvas_size.hpp"
+#include "ecs/features/ui/systems/update_ui_position.hpp"
 
 #include "world/world.hpp"
 
@@ -20,6 +23,9 @@ namespace demo::ecs {
         canvas_id canvas = 0;
 
         point size;
+
+        ui_anchor_point::anchor anchor_point = ui_anchor_point::anchor::bottom_right;
+        point anchor_padding;
 
         const texture* sprite_texture = nullptr;
 
@@ -52,6 +58,13 @@ namespace demo::ecs {
                 .value = spec.size
             });
 
+            registry.emplace<ui_anchor_point>(entity, ui_anchor_point {
+                .value = spec.anchor_point
+            });
+            registry.emplace<ui_anchor_padding>(entity, ui_anchor_padding {
+                .value = spec.anchor_padding
+            });
+
             registry.emplace<ui_sprite>(entity, ui_sprite {
                 .tex = spec.sprite_texture,
                 .source = spec.idle_sprite_source,
@@ -71,6 +84,9 @@ namespace demo::ecs {
         static void register_systems(world& world) {
             world.add_system<ui_visual_state>();
             
+            world.add_system<update_canvas_size>();
+            world.add_system<update_ui_position>();
+
             world.add_system<ui_hover>();
             world.add_system<ui_click>();
         }

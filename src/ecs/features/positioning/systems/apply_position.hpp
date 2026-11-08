@@ -15,6 +15,7 @@ namespace demo::ecs {
 
         void on_hook() override {
             registry().on_construct<set_position>().connect<&apply_position::apply>(*this);
+            registry().on_update<set_position>().connect<&apply_position::apply>(*this);
         }
 
     private:    
