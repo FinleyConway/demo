@@ -34,6 +34,11 @@ namespace demo {
                 && IsMouseButtonDown(to_raylib(button));
         }
 
+        static bool mouse_button_release(mouse button) {
+            return !is_consumed(button)
+                && IsMouseButtonUp(to_raylib(button));
+        }
+
         static float mouse_scroll_delta() {
             return s_scroll_consumed
                 ? 0.0f

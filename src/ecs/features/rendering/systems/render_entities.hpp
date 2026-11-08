@@ -5,6 +5,7 @@
 #include "ecs/features/positioning/components/position.hpp"
 #include "ecs/features/rendering/components/tile_renderer.hpp"
 #include "ecs/features/rendering/components/sprite_renderer.hpp"
+#include "ecs/features/ui/components/ui_sprite.hpp"
 
 #include "world/grid/aabb.hpp"
 #include "rendering/camera.hpp"
@@ -30,6 +31,7 @@ namespace demo::ecs {
                 .y = GetScreenHeight() / (2.0f * camera_zoom),
             };
 
+            // draw objects in world space
             renderer::draw_in_camera(main_camera, camera_offset, [&]() {
                 m_spatial_grid.query(camera_bounds, [&](spatial_id id) {
                     if (id.type == typeid(sprite_renderer)) {
@@ -40,9 +42,25 @@ namespace demo::ecs {
                     }
                 });
             });
+
+            // draw objects on screen space
+            draw_ui();
         }
 
     private:
+        void draw_ui() {
+            auto view = registry().view<position, ui_sprite>();
+
+            for (auto [e, pos, sprite] : view.each()) {
+                renderer::draw_sprite(
+                    pos.value, 
+                    sprite.tex, 
+                    sprite.source,
+                    sprite.tint
+                );
+            }
+        }
+
         void draw_grid(entt::entity entity) {
             const world_grid& grid = context<world_grid>();
             const auto& tiles_position = registry().get<position>(entity);

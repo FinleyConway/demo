@@ -7,10 +7,12 @@
 #include "ecs/prefabs/defence/wall.hpp"
 #include "ecs/prefabs/defence/test_turret.hpp"
 
+#include "ecs/entities/ui/button.hpp"
 #include "ecs/prefabs/defence/core.hpp"
 #include "ecs/entities/map_controller.hpp"
 #include "ecs/entities/camera/main_camera.hpp"
 
+#include "ecs/features/ui/ui.hpp"
 #include "ecs/features/map/map_setup.hpp"
 #include "ecs/features/camera/camera_setup.hpp"
 #include "ecs/features/combat/combat_setup.hpp"
@@ -24,6 +26,8 @@ using namespace demo;
 
 void setup_systems(world& world) {
     ecs::positioning_feature::register_systems(world);
+
+    ecs::ui_feature::register_systems(world);
 
     ecs::camera_feature::register_systems(world);
 
@@ -47,9 +51,11 @@ void setup_entities(world& world) {
         turret_prefab
     );
     world.add_entity<ecs::core>();
+    world.add_entity<ecs::button>();
 }
 
 int main() {
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(800, 450, "Grid Pathfinding");
     SetTargetFPS(60);
 

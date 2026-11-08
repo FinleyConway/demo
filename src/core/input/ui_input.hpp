@@ -17,6 +17,10 @@ namespace demo {
             return IsMouseButtonDown(input::to_raylib(button));
         }
 
+        static bool mouse_button_release(mouse button) {
+            return IsMouseButtonUp(input::to_raylib(button));
+        }
+
         static float mouse_scroll_delta() {
             return GetMouseWheelMove();
         }
