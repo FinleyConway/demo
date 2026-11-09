@@ -22,6 +22,7 @@ endif()
 
 add_subdirectory(vendors/raylib)
 add_subdirectory(vendors/entt)
+add_subdirectory(vendors/json)
 
 add_executable(demo
     src/main.cpp
@@ -44,4 +45,5 @@ target_include_directories(demo PUBLIC
 target_link_libraries(demo PUBLIC
     raylib
     EnTT::EnTT
+    nlohmann_json::nlohmann_json
 )
