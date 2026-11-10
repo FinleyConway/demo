@@ -1,17 +1,23 @@
 #pragma once 
 
-#include <memory>
-
 #include <entt/entt.hpp>
 
-#include "core/debugging.hpp"
-#include "ecs/core/prefab_builder.hpp"
-#include "resources/asset_context.hpp"
-
 namespace demo::ecs {
-    using prefab_id = size_t;
-
     class prefab {
+    private:
+        using instruction = std::function<void(entt::registry&, entt::entity)>;
+    
+    public:
+        prefab(entt::registry& registry, entt::registry& prefab_registry, std::vector<instruction>&& instructions) :
+            m_registry(registry),
+            m_prefab_registry(prefab_registry),
+            m_instructions(std::move(instructions))
+        {
+            m_prefab = m_prefab_registry.create();
+
+            setup_prefab(m_prefab_registry, m_prefab);
+        } 
+
     public:
         template<typename T>
         const T* peek() const {
@@ -19,33 +25,28 @@ namespace demo::ecs {
         }
 
         entt::entity instantiate() const {
-            ASSERT(m_builder != nullptr);
+            auto entity = m_registry.create();
 
-            return m_builder->build(m_registry, c_asset_context);
+            setup_prefab(m_registry, entity);
+
+            return entity;
+        }
+
+    private:
+        void setup_prefab(entt::registry& registry, entt::entity e) const {
+            for (const auto& instruction : m_instructions) {
+                instruction(registry, e);
+            }
         }
 
     private:
         friend class prefab_manager;
 
-        template<typename T>
-        prefab(entt::registry& registry, const asset_context& ctx, entt::registry& prefab_registry, std::in_place_type_t<T>) :
-            m_registry(registry),
-            m_prefab_registry(prefab_registry),
-            c_asset_context(ctx),
-            m_builder(std::make_unique<T>())
-        {
-            static_assert(std::derived_from<T, prefab_builder>);
-
-            m_prefab = m_builder->build(prefab_registry, c_asset_context);
-        } 
-
     private:
         entt::registry& m_registry;
         entt::registry& m_prefab_registry;
-        const asset_context& c_asset_context;
 
         entt::entity m_prefab = entt::null;
-
-        std::unique_ptr<prefab_builder> m_builder;
+        std::vector<instruction> m_instructions;
     };
 }
