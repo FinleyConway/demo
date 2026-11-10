@@ -58,7 +58,7 @@ namespace demo::ecs {
         entt::registry m_prefab_registry;
         entt::registry& m_registry;
 
-        size_t m_next_id = 1;
+        prefab_id m_next_id = 1;
         std::unordered_map<prefab_id, prefab> m_prefabs;
     };
 }
