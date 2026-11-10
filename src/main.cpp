@@ -11,7 +11,7 @@ using namespace demo;
 
 class component_registry {
 private:
-    using component_info = void(*)(entt::registry&, entt::entity, const nlohmann::json&);
+    using component_info = void(*)(entt::registry&, entt::entity, const asset_context&, const nlohmann::json&);
     using prefab_instruction = void(*)(entt::registry&, entt::entity, const asset_context&);
 
 public:
@@ -24,9 +24,24 @@ public:
     void register_component() {
         constexpr std::string_view name = entt::type_name<T>::value();
 
-        m_components.try_emplace(name, [](entt::registry& r, entt::entity e, const nlohmann::json& j) {
-            r.emplace<T>(e, j.get<T>());
-        });
+        m_components.try_emplace(
+            name, 
+            [](entt::registry& r, entt::entity e, const asset_context&, const nlohmann::json& j) {
+                r.emplace<T>(e, j.get<T>());
+            }
+        );
+    }
+
+    template<typename T, typename Fn>
+    void register_component(Fn&& deserialise) {
+        constexpr std::string_view name = entt::type_name<T>::value();
+
+        m_components.try_emplace(
+            name, 
+            [deserialise](entt::registry& r, entt::entity e, const asset_context& c, const nlohmann::json& j) {
+                r.emplace<T>(e, std::forward<Fn>(deserialise)(r, e, c, j));
+            }
+        );
     }
 
     entt::entity entity_from_file(std::string_view file) const {
@@ -40,7 +55,7 @@ public:
 
             const auto& info = m_components.at(name);
 
-            info(m_registry, entity, data);
+            info(m_registry, entity, c_context, data);
         }
 
         return entity;
@@ -48,6 +63,8 @@ public:
 
 private:
     entt::registry& m_registry;
+    const asset_context c_context;
+
     std::unordered_map<std::string_view, component_info> m_components;
 };
 
