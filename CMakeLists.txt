@@ -39,11 +39,15 @@ if (ENABLE_DEBUGGING)
 endif()
 
 target_include_directories(demo PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/src # provide explicit cleaner headers
+    src # provide explicit cleaner headers
 )
 
 target_link_libraries(demo PUBLIC
     raylib
     EnTT::EnTT
     nlohmann_json::nlohmann_json
+)
+
+target_precompile_headers(${PROJECT_NAME} PRIVATE
+    src/pch.hpp
 )
