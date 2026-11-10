@@ -17,7 +17,7 @@ namespace demo::ecs {
         using component_info = std::function<instruction(const nlohmann::json&, const asset_context&)>;
 
     public:
-        explicit entity_loader(entt::registry& registry, prefab_manager& prefab_manager, const asset_context& context) :
+        entity_loader(entt::registry& registry, prefab_manager& prefab_manager, const asset_context& context) :
             m_registry(registry),
             m_prefab_manager(prefab_manager),
             c_context(context)
