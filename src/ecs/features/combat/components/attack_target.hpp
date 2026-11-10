@@ -1,6 +1,7 @@
 #pragma once
 
 #include <entt/entt.hpp>
+#include <nlohmann/json.hpp>
 
 #include "world/grid/cell.hpp"
 
@@ -12,16 +13,24 @@ namespace demo::ecs {
         };
 
         type value = type::enemies;
-    };
 
-    struct attack_target {
-        entt::entity entity = entt::null;
-        cell target_cell;
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(attack_preference,
+            value
+        );
     };
 
     struct attack_cooldown {
         float duration = 1.0f;
         float remaining = 0.0f;
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(attack_cooldown,
+            duration
+        );
+    };
+
+    struct attack_target {
+        entt::entity entity = entt::null;
+        cell target_cell;
     };
 
     // maybe different attack types?

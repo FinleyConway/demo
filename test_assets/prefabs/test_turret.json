@@ -1,0 +1,35 @@
+{
+    "name": "test_turret",
+    "components": {
+        "position": {
+            "value": {
+                "x": 0,
+                "y": 0
+            }
+        },
+
+        "attack_area_init": {},
+        "attack_area": {},
+        "attack_pattern": {
+            "attack_shape": "circle",
+            "radius": 4.0,
+            "angle": 0,
+            "width": 0
+        },
+        "attack_preference": {
+            "value": "enemies"
+        },
+        "attack_cooldown": {
+            "duration": 1.0
+        },
+        "instant_attack": {},
+
+        "health": {
+            "current": 100.0,
+            "max": 100.0
+        },
+        "damage": {
+            "amount": 20.0
+        }
+    }
+}

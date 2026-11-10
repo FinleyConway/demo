@@ -1,0 +1,14 @@
+{
+    "name": "wall",
+    "components": {
+        "position": {
+            "x": 0.0,
+            "y": 0.0
+        },
+
+        "health": {
+            "current": 100.0,
+            "max": 100.0
+        }
+    }
+}

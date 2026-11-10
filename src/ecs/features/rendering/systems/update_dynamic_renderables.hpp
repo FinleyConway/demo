@@ -33,7 +33,7 @@ namespace demo::ecs {
                 position,
                 dirty_position,
                 sprite_renderer
-            >(entt::exclude_t<static_entity>());
+            >(entt::exclude_t<is_static>());
 
             for (auto [e, pos, sprite] : view.each()) {
                 m_spatial_grid.relocate(
@@ -48,7 +48,7 @@ namespace demo::ecs {
                 position,
                 dirty_position,
                 tile_renderer
-            >(entt::exclude_t<static_entity>());
+            >(entt::exclude_t<is_static>());
 
             for (auto [e, pos, tile] : tile_view.each()) {
                 m_spatial_grid.relocate(

@@ -24,7 +24,7 @@ namespace demo::ecs {
                 "Entity doesn't have a position component!");
 
             // cant move a static entity
-            if (registry.all_of<static_entity>(e)) return;
+            if (registry.all_of<is_static>(e)) return;
 
             const auto& request = registry.get<set_position>(e);
             auto& current = registry.get<position>(e);

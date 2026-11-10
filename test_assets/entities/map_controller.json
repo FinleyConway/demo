@@ -1,0 +1,12 @@
+{
+    "components": {
+        "is_static": {},
+        "position": {
+            "x": 0.0,
+            "y": 0.0
+        },
+
+        "map_init": {},
+        "map": {}
+    }
+}
