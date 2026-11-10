@@ -1,12 +1,9 @@
 #pragma once
 
-#include <concepts>
-
 #include <entt/entt.hpp>
 
 #include "ecs/core/prefab.hpp"
 #include "ecs/core/system_base.hpp"
-#include "ecs/core/entity_builder.hpp"
 #include "ecs/core/prefab_manager.hpp"
 
 #include "core/input/input.hpp"
@@ -19,7 +16,7 @@ namespace demo {
     public:
         world() {
             add_context<camera>();
-            add_context<ecs::prefab_manager>(m_registry, c_asset_context);
+            add_context<ecs::prefab_manager>(m_registry);
         }
 
     public:
@@ -38,22 +35,6 @@ namespace demo {
                     std::forward<Args>(args)...
                 ))
             );
-        }
-
-        template<typename T, typename... Args>
-        entt::entity add_entity(Args&&... args) {
-            static_assert(std::derived_from<T, ecs::entity_builder>);
-
-            T entity(std::forward<Args>(args)...);
-
-            return entity.build(m_registry, c_asset_context);
-        }
-
-        template<typename T>
-        ecs::prefab_id emplace_prefab() {
-            auto& ctx = m_registry.ctx().get<ecs::prefab_manager>();
-
-            return ctx.create<T>();
         }
 
         //! i hate this but it'll do for now

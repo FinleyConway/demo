@@ -11,6 +11,12 @@
 #include "resources/asset_context.hpp"
 
 namespace demo::ecs {
+    template<typename T>
+    concept json_serializable = requires(nlohmann::json& j, const nlohmann::json& cj, T& value, const T& cvalue) {
+        to_json(j, cvalue);
+        from_json(cj, value);
+    };
+
     class entity_loader {
     private:
         using instruction = std::function<void(entt::registry&, entt::entity)>;
@@ -26,23 +32,28 @@ namespace demo::ecs {
 
         template<typename T>
         void register_component() {
-            constexpr std::string_view name = entt::type_name<T>::value();
+            constexpr std::string_view name = get_component_name<T>();
 
             m_components.try_emplace(
                 name, 
                 [](const nlohmann::json& json, const asset_context&) {
-                    T component = json.get<T>();
-
-                    return [component = std::move(component)](entt::registry& r, entt::entity e) {
-                        r.emplace<T>(e, component);
-                    };
+                    if constexpr (json_serializable<T>) {
+                        return [component = json.get<T>()](entt::registry& r, entt::entity e) {
+                            r.emplace<T>(e, component);
+                        };
+                    } 
+                    else {
+                        return [](entt::registry& r, entt::entity e) {
+                            r.emplace<T>(e);
+                        };
+                    }
                 }
             );
         }
 
         template<typename T, typename Fn>
         void register_component(Fn&& deserialise) {
-            constexpr std::string_view name = entt::type_name<T>::value();
+            constexpr std::string_view name = get_component_name<T>();
 
             m_components.try_emplace(
                 name, 
@@ -95,6 +106,17 @@ namespace demo::ecs {
 
             // create and return a prefab handle
             return m_prefab_manager.create(std::move(instructions));
+        }
+
+    private:
+        template<typename T>
+        consteval std::string_view get_component_name() {
+            constexpr std::string_view name = entt::type_name<T>::value();
+            constexpr std::string_view prefix = "demo::ecs::";
+
+            return name.starts_with(prefix)
+                ? name.substr(prefix.size())
+                : name;
         }
 
     private:

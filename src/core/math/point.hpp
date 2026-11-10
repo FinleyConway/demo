@@ -3,6 +3,8 @@
 #include <cmath>
 #include <algorithm>
 
+#include <nlohmann/json.hpp>
+
 namespace demo {
     struct point {
         float x = 0.0f;
@@ -32,5 +34,7 @@ namespace demo {
                 .y = y - other.y
             };
         }
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(point, x, y);
     };
 }

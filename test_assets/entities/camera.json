@@ -1,0 +1,12 @@
+{
+    "components": {
+        "camera_bounds_init": {},
+        "camera_bounds": {},
+        "camera_drag": {},
+        "camera_zoom": {
+            "increments": 0.35,
+            "min": 1.0,
+            "max": 4.0
+        }
+    }
+}

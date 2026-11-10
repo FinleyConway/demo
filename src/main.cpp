@@ -4,28 +4,13 @@
 #include <nlohmann/json.hpp>
 
 #include "ecs/core/prefab_manager.hpp"
+#include "ecs/features/camera/components/camera_bounds.hpp"
+#include "ecs/features/camera/components/camera_drag.hpp"
+#include "ecs/features/camera/components/camera_zoom.hpp"
 #include "resources/asset_context.hpp"
 #include "ecs/core/entity_loader.hpp"
 
-struct position {
-    float x = 0;
-    float y = 0;
-
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(position, x, y);
-};
-
-struct rotation {
-    float angle = 0;
-
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(rotation, angle);
-};
-
-struct scale {
-    float x = 0;
-    float y = 0;
-
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(scale, x, y);
-};
+#include "ecs/features/camera/camera.hpp"
 
 int main() {
     entt::registry registry;
@@ -34,19 +19,19 @@ int main() {
     demo::ecs::prefab_manager pre(registry);
     demo::ecs::entity_loader reg(registry, pre, context);
 
-    reg.register_component<position>();
-    reg.register_component<rotation>();
-    reg.register_component<scale>();
+    demo::ecs::camera_feature::regiseter_components(reg);
 
-    auto prefab = reg.prefab_from_file("/var/home/finley/Projects/Git/demo/test_assets/entities/test_entity.json");
+    auto entity = reg.entity_from_file("/var/home/finley/Projects/Git/demo/test_assets/entities/camera.json");
 
-    auto e = pre.instantiate(prefab);
+    std::cout << registry.all_of<
+        demo::ecs::camera_bounds_init,
+        demo::ecs::camera_bounds,
+        demo::ecs::camera_drag
+    >(entity) << std::endl;
 
-    auto& p = registry.get<position>(e);
-    auto& r = registry.get<rotation>(e);
-    auto& s = registry.get<scale>(e);
+    auto& zoom = registry.get<demo::ecs::camera_zoom>(entity);
 
-    std::cout << p.x << " " << p.y << std::endl;
-    std::cout << r.angle << std::endl;
-    std::cout << s.x << " " << s.y << std::endl;
+    std::cout << zoom.increments << std::endl;
+    std::cout << zoom.min << std::endl;
+    std::cout << zoom.max << std::endl;
 }
