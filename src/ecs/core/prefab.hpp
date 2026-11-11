@@ -8,14 +8,18 @@ namespace demo::ecs {
         using instruction = std::function<void(entt::registry&, entt::entity)>;
     
     public:
+        prefab(entt::registry& registry, entt::registry& prefab_registry) :
+            m_registry(registry),
+            m_prefab_registry(prefab_registry)
+        {
+        } 
+
         prefab(entt::registry& registry, entt::registry& prefab_registry, std::vector<instruction>&& instructions) :
             m_registry(registry),
             m_prefab_registry(prefab_registry),
             m_instructions(std::move(instructions))
         {
-            m_prefab = m_prefab_registry.create();
-
-            setup_prefab(m_prefab_registry, m_prefab);
+            update(std::move(instructions));
         } 
 
     public:
@@ -32,6 +36,12 @@ namespace demo::ecs {
             return entity;
         }
 
+        void update(std::vector<instruction>&& instructions) {
+            m_prefab = m_prefab_registry.create();
+
+            setup_prefab(m_prefab_registry, m_prefab);
+        }
+
     private:
         void setup_prefab(entt::registry& registry, entt::entity e) const {
             for (const auto& instruction : m_instructions) {
@@ -42,7 +52,6 @@ namespace demo::ecs {
     private:
         friend class prefab_manager;
 
-    private:
         entt::registry& m_registry;
         entt::registry& m_prefab_registry;
 

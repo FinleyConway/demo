@@ -1,12 +1,16 @@
 #pragma once
 
+#include <string>
 #include <fstream>
 #include <functional>
+#include <string_view>
+#include <unordered_map>
 
 #include <entt/entt.hpp>
 #include <nlohmann/json.hpp>
 
 #include "core/debugging.hpp"
+#include "ecs/core/prefab.hpp"
 #include "ecs/core/prefab_manager.hpp"
 #include "resources/asset_context.hpp"
 
@@ -15,6 +19,32 @@ namespace demo::ecs {
     concept json_serializable = requires(nlohmann::json& j, const nlohmann::json& cj, T& value, const T& cvalue) {
         to_json(j, cvalue);
         from_json(cj, value);
+    };
+
+    class prefab_finder {
+    public:
+        explicit prefab_finder(prefab_manager& prefab_manager) :
+            m_prefab_manager(prefab_manager)
+        {
+        }
+
+        std::pair<prefab_id, bool> get(const std::string& name) {
+            const auto it = m_prefab_lookup.find(name);
+            
+            if (it == m_prefab_lookup.end()) {
+                const prefab_id id = m_prefab_manager.reserve_prefab();
+
+                m_prefab_lookup.emplace(name, id);
+
+                return { id, true };
+            }
+
+            return { it->second, false };
+        }
+
+    private:
+        prefab_manager& m_prefab_manager;
+        std::unordered_map<std::string, prefab_id> m_prefab_lookup;
     };
 
     class entity_loader {
@@ -26,7 +56,8 @@ namespace demo::ecs {
         entity_loader(entt::registry& registry, prefab_manager& prefab_manager, const asset_context& context) :
             m_registry(registry),
             m_prefab_manager(prefab_manager),
-            c_context(context)
+            c_context(context),
+            m_prefab_finder(m_prefab_manager)
         {
         }    
 
@@ -88,8 +119,10 @@ namespace demo::ecs {
             return entity;
         }
 
-        prefab_id prefab_from_file(std::string_view file) const {
+        prefab_id prefab_from_file(std::string_view file) {
             const auto json = nlohmann::json::parse(std::ifstream(file.data()));
+
+            const auto prefab_name = json["name"];
             const auto components = json["components"];
 
             std::vector<instruction> instructions;
@@ -104,8 +137,16 @@ namespace demo::ecs {
                 instructions.emplace_back(info(data, c_context));
             }
 
-            // create and return a prefab handle
-            return m_prefab_manager.create(std::move(instructions));
+            // get id
+            auto [id, created] = m_prefab_finder.get(prefab_name);
+
+            // has 
+            if (!created) {
+                m_prefab_manager.update_reserved(id, std::move(instructions));
+            }
+            
+            // return a prefab handle
+            return id;
         }
 
     private:
@@ -124,6 +165,7 @@ namespace demo::ecs {
         prefab_manager& m_prefab_manager;
         const asset_context& c_context;
 
+        prefab_finder m_prefab_finder;
         std::unordered_map<std::string_view, component_info> m_components;
     };
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <unordered_map>
+#include <vector>
 
 #include <entt/entt.hpp>
 
@@ -8,7 +8,7 @@
 #include "ecs/core/prefab.hpp"
 
 namespace demo::ecs {
-    using prefab_id = uint32_t;
+    using prefab_id = size_t;
 
     class prefab_manager {
     public:
@@ -20,45 +20,50 @@ namespace demo::ecs {
     public:
         template<typename T>
         const T* peek(prefab_id id) const {
-            const auto it = m_prefabs.find(id);
+            ASSERT(id <= m_prefabs.size(), "Recieved a invalid prefab_id!");
 
-            ASSERT(it != m_prefabs.end(), "Recieved a invalid prefab_id!");
-
-            return it->second.peek<T>();
+            return m_prefabs[id].peek<T>();
         }
 
         entt::entity instantiate(prefab_id id) const {
-            const auto it = m_prefabs.find(id);
+            ASSERT(id <= m_prefabs.size(), "Recieved a invalid prefab_id!");
 
-            ASSERT(it != m_prefabs.end(), "Recieved a invalid prefab_id!");
-
-            return it->second.instantiate();
+            return m_prefabs[id].instantiate();
         }
 
     private:
         prefab_id create(std::vector<prefab::instruction>&& instructions) {
-            const prefab_id id = m_next_id++;
-
-            auto [it, inserted] = m_prefabs.try_emplace(
-                id,
-                m_registry,
-                m_prefab_registry,
+            m_prefabs.emplace_back(
+                m_registry, 
+                m_prefab_registry, 
                 std::move(instructions)
             );
 
-            ASSERT(inserted);
+            return m_prefabs.size() - 1;
+        }
 
-            return id;
+        prefab_id reserve_prefab() {
+            m_prefabs.emplace_back(
+                m_registry, 
+                m_prefab_registry
+            );
+
+            return m_prefabs.size() - 1;
+        }
+
+        void update_reserved(prefab_id id, std::vector<prefab::instruction>&& instructions) {
+            ASSERT(id <= m_prefabs.size(), "Recieved a invalid prefab_id!");
+
+            m_prefabs[id].update(std::move(instructions));
         }
 
     private:
         friend class entity_loader;
+        friend class prefab_finder;
 
-    private:
         entt::registry m_prefab_registry;
         entt::registry& m_registry;
 
-        prefab_id m_next_id = 1;
-        std::unordered_map<prefab_id, prefab> m_prefabs;
+        std::vector<prefab> m_prefabs;
     };
 }
