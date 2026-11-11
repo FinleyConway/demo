@@ -9,21 +9,19 @@
 #include "ecs/features/camera/systems/setup_camera_bounds.hpp"
 
 #include "world/world.hpp"
-#include "ecs/core/entity_loader.hpp"
 
 namespace demo::ecs {
     struct camera_feature {
-        static void register_systems(world& world) {
-            world.add_system<setup_camera_bounds>();
-            world.add_system<camera_zooming>();
-            world.add_system<camera_dragging>();
-        }
+        static void register_to(world& world) {
+            world.register_component<camera_bounds_init>();
+            world.register_component<camera_bounds>();
+            world.register_component<camera_drag>();
+            world.register_component<camera_zoom>();
 
-        static void register_components(entity_loader& loader) {
-            loader.register_component<camera_bounds_init>();
-            loader.register_component<camera_bounds>();
-            loader.register_component<camera_drag>();
-            loader.register_component<camera_zoom>();
+            
+            world.register_system<setup_camera_bounds>();
+            world.register_system<camera_zooming>();
+            world.register_system<camera_dragging>();
         }
     };
 }

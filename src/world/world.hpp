@@ -2,6 +2,7 @@
 
 #include <entt/entt.hpp>
 
+#include "ecs/core/entity_loader.hpp"
 #include "ecs/core/prefab.hpp"
 #include "ecs/core/system_base.hpp"
 #include "ecs/core/prefab_manager.hpp"
@@ -14,21 +15,26 @@
 namespace demo {
     class world {
     public:
-        world() {
+        world() :
+            m_loader(
+                m_registry, 
+                add_context<ecs::prefab_manager>(m_registry), // dont like this
+                c_asset_context
+            )
+        {
             add_context<camera>();
-            add_context<ecs::prefab_manager>(m_registry);
         }
 
     public:
         template<typename T, typename... Args>
-        void add_context(Args&&... args) {
-            m_registry.ctx().emplace<T>(
+        T& add_context(Args&&... args) {
+            return m_registry.ctx().emplace<T>(
                 std::forward<Args>(args)...
             );
         }
 
         template<typename T, typename... Args>
-        void add_system(Args&&... args) {
+        void register_system(Args&&... args) {
             m_systems.emplace_back(
                 std::move(std::make_unique<T>(
                     m_registry, m_dispatcher,
@@ -37,12 +43,26 @@ namespace demo {
             );
         }
 
+        template<typename T>
+        void register_component() {
+            m_loader.register_component<T>();
+        }
+
+        template<typename T, typename Fn>
+        void register_component(Fn&& fn) {
+            m_loader.register_component<T>(fn);
+        }
+
         //! i hate this but it'll do for now
         spatial_render_grid& spatial_grid() {
             return m_spatial_grid;
         }
 
     public:
+        void load(std::string_view prefab_dir_path, std::string_view entity_dir_path) {
+            m_loader.load(prefab_dir_path, entity_dir_path);
+        }
+
         void on_hooks() {
             for (auto& system : m_systems) {
                 system->on_hook();
@@ -62,8 +82,10 @@ namespace demo {
     private:
         entt::registry m_registry;
         entt::dispatcher m_dispatcher;
-
         std::vector<std::unique_ptr<ecs::system_base>> m_systems;
+
+    private:
+        ecs::entity_loader m_loader;
 
         spatial_render_grid m_spatial_grid;
         input m_input_manager;

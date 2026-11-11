@@ -11,21 +11,19 @@
 #include "ecs/features/navigation/systems/request_navigation_path.hpp"
 
 #include "world/world.hpp"
-#include "ecs/core/entity_loader.hpp"
 
 namespace demo::ecs {
     struct navigation_feature {
-        static void register_components(entity_loader& loader) {
-            loader.register_component<navigation_motion>();
-            loader.register_component<navigation_path>();
-            loader.register_component<navigation_request_state>();
-            loader.register_component<navigation_profile>();
-        }
+        static void register_to(world& world) {
+            world.register_component<navigation_motion>();
+            world.register_component<navigation_path>();
+            world.register_component<navigation_request_state>();
+            world.register_component<navigation_profile>();
 
-        static void register_systems(world& world) {
-            world.add_system<request_navigation_path>();
-            world.add_system<get_navigation_results>();
-            world.add_system<follow_navigation_path>();
+
+            world.register_system<request_navigation_path>();
+            world.register_system<get_navigation_results>();
+            world.register_system<follow_navigation_path>();
         }
     };
 }

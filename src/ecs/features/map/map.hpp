@@ -5,17 +5,14 @@
 #include "ecs/features/map/systems/setup_map.hpp"
 
 #include "world/world.hpp"
-#include "ecs/core/entity_loader.hpp"
 
 namespace demo::ecs {
     struct map_feature {
-        static void register_components(entity_loader& loader) {
-            loader.register_component<map_init>();
-            loader.register_component<map>();
-        }
+        static void register_to(world& world) {
+            world.register_component<map_init>();
+            world.register_component<map>();
 
-        static void register_systems(world& world) {
-            world.add_system<setup_map>();
+            world.register_system<setup_map>();
         }
     };
 }
