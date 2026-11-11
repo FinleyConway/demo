@@ -20,20 +20,20 @@ namespace demo::ecs {
     public:
         template<typename T>
         const T* peek(prefab_id id) const {
-            ASSERT(id <= m_prefabs.size(), "Recieved a invalid prefab_id!");
+            ASSERT(id < m_prefabs.size(), "Recieved a invalid prefab_id!");
 
             return m_prefabs[id].peek<T>();
         }
 
         entt::entity instantiate(prefab_id id) const {
-            ASSERT(id <= m_prefabs.size(), "Recieved a invalid prefab_id!");
+            ASSERT(id < m_prefabs.size(), "Recieved a invalid prefab_id!");
 
             return m_prefabs[id].instantiate();
         }
 
     private:
         void create(prefab_id id, std::vector<prefab::instruction>&& instructions) {
-            ASSERT(id <= m_prefabs.size(), "Recieved a invalid prefab_id!");
+            ASSERT(id < m_prefabs.size(), "Recieved a invalid prefab_id!");
 
             m_prefabs[id].update(std::move(instructions));
         }
