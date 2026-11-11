@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <functional>
+#include <filesystem>
 #include <string_view>
 #include <unordered_map>
 
@@ -109,12 +110,27 @@ namespace demo::ecs {
             );
         }
 
-        entt::entity entity_from_file(std::string_view file) {
-            LOG_INFO("ENTITY: loading %s", file.data());
+        void load(std::string_view prefab_dir_path, std::string_view entity_dir_path) {
+            using namespace std::filesystem;
+
+            // load prefabs first
+            for (const auto& dir_entry : recursive_directory_iterator(prefab_dir_path)) {
+                prefab_from_file(dir_entry);
+            }
+
+            // then load entities
+            for (const auto& dir_entry : recursive_directory_iterator(entity_dir_path)) {
+                entity_from_file(dir_entry);
+            }
+        }
+
+    private:
+        void entity_from_file(const std::filesystem::path& path) {
+            LOG_INFO("ENTITY: loading %s", path.c_str());
 
             const auto entity = m_registry.create();
 
-            const auto json = nlohmann::json::parse(std::ifstream(file.data()));
+            const auto json = nlohmann::json::parse(std::ifstream(path));
             const auto components = json["components"];
 
             // get all components described in json
@@ -129,14 +145,12 @@ namespace demo::ecs {
                 // use instructions to add component
                 instruction(m_registry, entity);
             }
-
-            return entity;
         }
 
-        prefab_id prefab_from_file(std::string_view file) {
-            LOG_INFO("PREFAB: loading %s", file.data());
+        void prefab_from_file(const std::filesystem::path& path) {
+            LOG_INFO("PREFAB: loading %s", path.c_str());
 
-            const auto json = nlohmann::json::parse(std::ifstream(file.data()));
+            const auto json = nlohmann::json::parse(std::ifstream(path));
 
             const auto prefab_name = json["name"];
             const auto components = json["components"];
@@ -155,16 +169,13 @@ namespace demo::ecs {
             }
 
             // get or create id from prefab name
-            const prefab_id id = m_prefab_finder.get(prefab_name);
-
             // create prefab with allocated id
-            m_prefab_manager.create(id, std::move(instructions));
-            
-            // return a prefab handle
-            return id;
+            m_prefab_manager.create(
+                m_prefab_finder.get(prefab_name), 
+                std::move(instructions)
+            );
         }
 
-    private:
         template<typename T>
         consteval std::string_view get_component_name() {
             constexpr std::string_view name = entt::type_name<T>::value();

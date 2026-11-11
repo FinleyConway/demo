@@ -31,15 +31,8 @@ int main() {
     demo::ecs::positioning_feature::register_components(reg);
     demo::ecs::settlement_feature::register_components(reg);
 
-    reg.prefab_from_file("/var/home/finley/Projects/Git/demo/test_assets/prefabs/core.json");
-    reg.prefab_from_file("/var/home/finley/Projects/Git/demo/test_assets/prefabs/test_turret.json");
-    reg.prefab_from_file("/var/home/finley/Projects/Git/demo/test_assets/prefabs/wall.json");
-
-    reg.entity_from_file("/var/home/finley/Projects/Git/demo/test_assets/entities/camera.json");
-    auto e = reg.entity_from_file("/var/home/finley/Projects/Git/demo/test_assets/entities/map_controller.json");
-
-    auto& s = registry.get<demo::ecs::structures>(e);
-
-    auto wall = pre.instantiate(s.wall_prefab);
-    auto& p = registry.get<demo::ecs::position>(wall);
+    reg.load(
+        "/var/home/finley/Projects/Git/demo/test_assets/prefabs/", 
+        "/var/home/finley/Projects/Git/demo/test_assets/entities/"
+    );
 }
