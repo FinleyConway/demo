@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "core/math/rect.hpp"
+#include "resources/resource_base.hpp"
 
 namespace demo {
     struct animation_frame {
@@ -26,9 +27,10 @@ namespace demo {
         repeat
     };
 
-    class animation_clip {
+    class animation_clip : public resource_base {
     public:
         constexpr animation_clip(std::vector<animation_frame>&& frames, loop_mode loop) :
+            resource_base(resource_type::animation_clip),
             m_frames(std::move(frames)),
             m_loop(loop)
         {

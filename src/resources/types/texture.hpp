@@ -5,13 +5,13 @@
 
 #include <raylib.h>
 
-#include "resources/types/resource.hpp"
+#include "resources/resource_base.hpp"
 
 namespace demo {
-    class texture final : public resource<Texture2D> {
+    class texture final : public resource_base {
     public:
         explicit texture(std::string_view path) :
-            resource(resource_type::texture),
+            resource_base(resource_type::texture),
             m_resource(LoadTexture(path.data()))
         {
         }
@@ -35,7 +35,7 @@ namespace demo {
         }
 
     private:
-        const Texture2D& handle() const override {
+        const Texture2D& handle() const {
             return m_resource;
         }
 

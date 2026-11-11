@@ -3,22 +3,20 @@
 namespace demo {
     enum class resource_type {
         none,
-        texture
+        texture,
+        animation_clip
     };
-    
-    template<typename T>
-    class resource {
+
+    class resource_base {
     public:
-        explicit resource(resource_type type) :
+        explicit resource_base(resource_type type) :
             m_resource_type(type)
         {
         } 
 
-        virtual ~resource() = default;
+        virtual ~resource_base() = default;
     
     public:
-        virtual const T& handle() const = 0;
-
         resource_type type() const {
             return m_resource_type;
         }
