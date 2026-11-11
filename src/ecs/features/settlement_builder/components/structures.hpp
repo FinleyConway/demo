@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ecs/core/prefab.hpp"
+#include "ecs/core/prefab_manager.hpp"
 
 namespace demo::ecs {
     struct structures {

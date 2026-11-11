@@ -19,6 +19,11 @@ namespace demo::ecs {
         );
     };
 
+    NLOHMANN_JSON_SERIALIZE_ENUM(attack_preference::type, {
+        {attack_preference::type::enemies, "enemies"},
+        {attack_preference::type::structures, "structures"},
+    });
+
     struct attack_cooldown {
         float duration = 1.0f;
         float remaining = 0.0f;

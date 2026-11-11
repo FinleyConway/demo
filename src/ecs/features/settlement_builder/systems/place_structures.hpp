@@ -33,7 +33,7 @@ namespace demo::ecs {
             auto& grid = context<world_grid>();
             const auto& prefabs = context<prefab_manager>();
 
-            const auto* size = prefabs.peak<structure_size>(structures.turret_prefab);
+            const auto* size = prefabs.peek<structure_size>(structures.turret_prefab);
 
             ASSERT(size != nullptr, "Structure prefab does not have grid_size component");
 

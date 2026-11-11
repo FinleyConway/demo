@@ -30,6 +30,7 @@ namespace demo::ecs {
 
         void update(std::vector<instruction>&& instructions) {
             m_prefab = m_prefab_registry.create();
+            m_instructions = std::move(instructions);
 
             setup_prefab(m_prefab_registry, m_prefab);
         }

@@ -19,7 +19,7 @@ namespace demo::ecs {
             world.add_system<camera_dragging>();
         }
 
-        static void regiseter_components(entity_loader& loader) {
+        static void register_components(entity_loader& loader) {
             loader.register_component<camera_bounds_init>();
             loader.register_component<camera_bounds>();
             loader.register_component<camera_drag>();

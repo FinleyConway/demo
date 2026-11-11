@@ -3,7 +3,7 @@
 #include "ecs/core/system_base.hpp"
 
 #include "ecs/features/positioning/components/position.hpp"
-#include "ecs/features/positioning/components/static_entity.hpp"
+#include "ecs/features/positioning/components/is_static.hpp"
 #include "ecs/features/positioning/components/dirty_position.hpp"
 
 #include "core/debugging.hpp"

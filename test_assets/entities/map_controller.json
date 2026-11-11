@@ -2,11 +2,20 @@
     "components": {
         "is_static": {},
         "position": {
-            "x": 0.0,
-            "y": 0.0
+            "value": {
+                "x": 0.0,
+                "y": 0.0
+            }
         },
 
+
         "map_init": {},
-        "map": {}
+        "map": {},
+
+
+        "structures": {
+            "wall_prefab": "wall",
+            "turret_prefab": "test_turret"
+        }
     }
 }

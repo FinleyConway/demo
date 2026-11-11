@@ -8,6 +8,15 @@
             }
         },
 
+
+        "structure_size": {
+            "value": {
+                "x": 1,
+                "y": 1
+            }
+        },
+
+
         "attack_area_init": {},
         "attack_area": {},
         "attack_pattern": {
@@ -23,6 +32,7 @@
             "duration": 1.0
         },
         "instant_attack": {},
+
 
         "health": {
             "current": 100.0,

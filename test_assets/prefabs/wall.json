@@ -2,9 +2,20 @@
     "name": "wall",
     "components": {
         "position": {
-            "x": 0.0,
-            "y": 0.0
+            "value": {
+                "x": 0.0,
+                "y": 0.0
+            }
         },
+
+
+        "structure_size": {
+            "value": {
+                "x": 1,
+                "y": 1
+            }
+        },
+
 
         "health": {
             "current": 100.0,

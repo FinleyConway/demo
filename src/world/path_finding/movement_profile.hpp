@@ -27,5 +27,7 @@ namespace demo {
         static constexpr uint32_t minimum_cost() {
             return 1;
         }
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(movement_cost, turret, wall);
     };
 }

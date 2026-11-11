@@ -2,10 +2,20 @@
     "name": "core",
     "components": {
         "position": {
-            "x": 0,
-            "y": 0
+            "value": {
+                "x": 0,
+                "y": 0
+            }
         },
 
+        "settlement_core_init": {},
+        "settlement_core": {},
         
+        "structure_size": {
+            "value": {
+                "x": 1,
+                "y": 1
+            }
+        }
     }
 }

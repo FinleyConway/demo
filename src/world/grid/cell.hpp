@@ -21,7 +21,9 @@ namespace demo {
                 .x = x - other.x,
                 .y = y - other.y
             };
-        }       
+        }      
+        
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(cell, x, y);
     };
 }
 

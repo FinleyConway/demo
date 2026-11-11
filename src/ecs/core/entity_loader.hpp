@@ -100,7 +100,7 @@ namespace demo::ecs {
                 name, 
                 [fn = std::forward<Fn>(deserialise)]
                 (const nlohmann::json& json, const asset_context& context, prefab_finder& finder) {
-                    T component = std::forward<Fn>(fn)(json, context, finder);
+                    T component = fn(json, context, finder);
 
                     return [component = std::move(component)](entt::registry& r, entt::entity e) {
                         r.emplace<T>(e, component);
@@ -110,6 +110,8 @@ namespace demo::ecs {
         }
 
         entt::entity entity_from_file(std::string_view file) {
+            LOG_INFO("ENTITY: loading %s", file.data());
+
             const auto entity = m_registry.create();
 
             const auto json = nlohmann::json::parse(std::ifstream(file.data()));
@@ -117,6 +119,7 @@ namespace demo::ecs {
 
             // get all components described in json
             for (const auto& [name, data] : components.items()) {
+                LOG_INFO("ENTITY: reading %s", name.c_str());
                 ASSERT(m_components.contains(name), "Json component not found!");
 
                 // get component instruction
@@ -131,6 +134,8 @@ namespace demo::ecs {
         }
 
         prefab_id prefab_from_file(std::string_view file) {
+            LOG_INFO("PREFAB: loading %s", file.data());
+
             const auto json = nlohmann::json::parse(std::ifstream(file.data()));
 
             const auto prefab_name = json["name"];
@@ -140,6 +145,7 @@ namespace demo::ecs {
 
             // get all components described in json
             for (const auto& [name, data] : components.items()) {
+                LOG_INFO("PREFAB: reading %s", name.c_str());
                 ASSERT(m_components.contains(name), "Json component not found!");
 
                 const auto& info = m_components.at(name);
