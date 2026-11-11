@@ -14,14 +14,6 @@ namespace demo::ecs {
         {
         } 
 
-        prefab(entt::registry& registry, entt::registry& prefab_registry, std::vector<instruction>&& instructions) :
-            m_registry(registry),
-            m_prefab_registry(prefab_registry),
-            m_instructions(std::move(instructions))
-        {
-            update(std::move(instructions));
-        } 
-
     public:
         template<typename T>
         const T* peek() const {

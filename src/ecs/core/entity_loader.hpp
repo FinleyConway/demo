@@ -28,18 +28,22 @@ namespace demo::ecs {
         {
         }
 
-        std::pair<prefab_id, bool> get(const std::string& name) {
+        prefab_id get(const std::string& name) {
             const auto it = m_prefab_lookup.find(name);
-            
+
+            // if the prefab hasn't been created yet
             if (it == m_prefab_lookup.end()) {
+                // reserve a spot for this perfab
                 const prefab_id id = m_prefab_manager.reserve_prefab();
 
+                // create a lookup for the table with the name
                 m_prefab_lookup.emplace(name, id);
 
-                return { id, true };
+                return id;
             }
 
-            return { it->second, false };
+            // return already reserved prefab
+            return it->second;
         }
 
     private:
@@ -50,7 +54,10 @@ namespace demo::ecs {
     class entity_loader {
     private:
         using instruction = std::function<void(entt::registry&, entt::entity)>;
-        using component_info = std::function<instruction(const nlohmann::json&, const asset_context&)>;
+
+        using component_info = std::function<
+            instruction(const nlohmann::json&, const asset_context&, prefab_finder&)
+        >;
 
     public:
         entity_loader(entt::registry& registry, prefab_manager& prefab_manager, const asset_context& context) :
@@ -67,12 +74,15 @@ namespace demo::ecs {
 
             m_components.try_emplace(
                 name, 
-                [](const nlohmann::json& json, const asset_context&) {
+                [](const nlohmann::json& json, const asset_context&, prefab_finder&) {
+                    // if the component has adl json functions
                     if constexpr (json_serializable<T>) {
+                        // create an instruction copying the json data into it
                         return [component = json.get<T>()](entt::registry& r, entt::entity e) {
                             r.emplace<T>(e, component);
                         };
                     } 
+                    // if the component is empty or doesnt need serialisation
                     else {
                         return [](entt::registry& r, entt::entity e) {
                             r.emplace<T>(e);
@@ -88,8 +98,9 @@ namespace demo::ecs {
 
             m_components.try_emplace(
                 name, 
-                [fn = std::forward<Fn>(deserialise)](const nlohmann::json& json, const asset_context& context) {
-                    T component = std::forward<Fn>(fn)(json, context);
+                [fn = std::forward<Fn>(deserialise)]
+                (const nlohmann::json& json, const asset_context& context, prefab_finder& finder) {
+                    T component = std::forward<Fn>(fn)(json, context, finder);
 
                     return [component = std::move(component)](entt::registry& r, entt::entity e) {
                         r.emplace<T>(e, component);
@@ -98,7 +109,7 @@ namespace demo::ecs {
             );
         }
 
-        entt::entity entity_from_file(std::string_view file) const {
+        entt::entity entity_from_file(std::string_view file) {
             const auto entity = m_registry.create();
 
             const auto json = nlohmann::json::parse(std::ifstream(file.data()));
@@ -110,7 +121,7 @@ namespace demo::ecs {
 
                 // get component instruction
                 const auto& info = m_components.at(name);
-                const auto instruction = info(data, c_context);
+                const auto instruction = info(data, c_context, m_prefab_finder);
 
                 // use instructions to add component
                 instruction(m_registry, entity);
@@ -134,16 +145,14 @@ namespace demo::ecs {
                 const auto& info = m_components.at(name);
                 
                 // store instructions for execution later
-                instructions.emplace_back(info(data, c_context));
+                instructions.emplace_back(info(data, c_context, m_prefab_finder));
             }
 
-            // get id
-            auto [id, created] = m_prefab_finder.get(prefab_name);
+            // get or create id from prefab name
+            const prefab_id id = m_prefab_finder.get(prefab_name);
 
-            // has 
-            if (!created) {
-                m_prefab_manager.update_reserved(id, std::move(instructions));
-            }
+            // create prefab with allocated id
+            m_prefab_manager.create(id, std::move(instructions));
             
             // return a prefab handle
             return id;
