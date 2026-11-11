@@ -2,10 +2,11 @@
 
 #include <entt/entt.hpp>
 
-#include "ecs/core/entity_loader.hpp"
 #include "ecs/core/prefab.hpp"
 #include "ecs/core/system_base.hpp"
 #include "ecs/core/prefab_manager.hpp"
+#include "ecs/core/serialisation/entity_loader.hpp"
+#include "ecs/core/serialisation/component_registry.hpp"
 
 #include "core/input/input.hpp"
 #include "rendering/camera.hpp"
@@ -15,13 +16,8 @@
 namespace demo {
     class world {
     public:
-        world() :
-            m_loader(
-                m_registry, 
-                add_context<ecs::prefab_manager>(m_registry), // dont like this
-                c_asset_context
-            )
-        {
+        world() {
+            add_context<ecs::prefab_manager>(m_registry);
             add_context<camera>();
         }
 
@@ -45,12 +41,12 @@ namespace demo {
 
         template<typename T>
         void register_component() {
-            m_loader.register_component<T>();
+            m_component_registry.register_component<T>();
         }
 
         template<typename T, typename Fn>
         void register_component(Fn&& fn) {
-            m_loader.register_component<T>(fn);
+            m_component_registry.register_component<T>(fn);
         }
 
         //! i hate this but it'll do for now
@@ -60,7 +56,15 @@ namespace demo {
 
     public:
         void load(std::string_view prefab_dir_path, std::string_view entity_dir_path) {
-            m_loader.load(prefab_dir_path, entity_dir_path);
+           ecs::entity_loader_spec spec {
+                m_registry,
+                m_registry.ctx().get<ecs::prefab_manager>(),
+                c_asset_context,
+                m_component_registry
+            };
+            ecs::entity_loader loader(spec);
+
+            loader.load(prefab_dir_path, entity_dir_path);
         }
 
         void on_hooks() {
@@ -83,10 +87,9 @@ namespace demo {
         entt::registry m_registry;
         entt::dispatcher m_dispatcher;
         std::vector<std::unique_ptr<ecs::system_base>> m_systems;
+        ecs::component_registry m_component_registry;
 
     private:
-        ecs::entity_loader m_loader;
-
         spatial_render_grid m_spatial_grid;
         input m_input_manager;
         const asset_context c_asset_context;
