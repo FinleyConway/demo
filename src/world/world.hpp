@@ -17,6 +17,7 @@ namespace demo {
     class world {
     public:
         world() {
+            add_context<asset_context>();
             add_context<ecs::prefab_manager>(m_registry);
             add_context<camera>();
         }
@@ -56,12 +57,14 @@ namespace demo {
 
     public:
         void load(std::string_view asset_dir, std::string_view prefab_dir, std::string_view entity_dir) {
-            m_asset_context.load_from_dir(asset_dir);
+            auto& assets = m_registry.ctx().get<asset_context>();
+            
+            assets.load_from_dir(asset_dir);
 
             ecs::entity_loader_spec spec {
                 m_registry,
                 m_registry.ctx().get<ecs::prefab_manager>(),
-                m_asset_context,
+                assets,
                 m_component_registry
             };
             ecs::entity_loader loader(spec);
@@ -93,7 +96,6 @@ namespace demo {
 
     private:
         input m_input_manager;
-        asset_context m_asset_context;
         spatial_render_grid m_spatial_grid;
     };
 }
