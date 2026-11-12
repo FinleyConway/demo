@@ -1,6 +1,5 @@
 #pragma once
 
-#include "core/debugging.hpp"
 #include "ecs/core/system_base.hpp"
 
 #include "ecs/features/positioning/components/position.hpp"
