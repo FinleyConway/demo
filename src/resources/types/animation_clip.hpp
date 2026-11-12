@@ -1,31 +1,55 @@
 #pragma once
 
-#include <bits/chrono.h>
 #include <chrono>
 #include <cassert>
 #include <vector>
 
+#include <nlohmann/json.hpp>
+
 #include "core/math/rect.hpp"
 #include "resources/resource_base.hpp"
+
+namespace nlohmann {
+    template<>
+    struct adl_serializer<std::chrono::milliseconds> {
+        static void to_json(json& j, const std::chrono::milliseconds& value) {
+            j = value.count();
+        }
+
+        static void from_json(const json& j, std::chrono::milliseconds& value) {
+            value = std::chrono::milliseconds(j.get<int64_t>());
+        }
+    };
+}
 
 namespace demo {
     struct animation_frame {
         rect_int source;
         std::chrono::milliseconds duration;
 
-        animation_frame(const rect_int source, std::chrono::milliseconds duration) :
+        animation_frame(const rect_int& source, std::chrono::milliseconds duration) :
             source(source),
             duration(duration)
         {
             assert(duration > std::chrono::milliseconds(0) &&
                 "Frame is 0 or less duration");
         }
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(animation_frame,
+            source,
+            duration
+        );
     };
     
     enum class loop_mode {
         once,
         repeat
     };
+
+    NLOHMANN_JSON_SERIALIZE_ENUM(loop_mode, {
+        {loop_mode::once, "once"},
+        {loop_mode::repeat, "repeat"},
+    });
 
     class animation_clip : public resource_base {
     public:

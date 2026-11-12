@@ -1,0 +1,13 @@
+{
+    "name": "zombie_animation",
+    "resource_type": "animation_clip",
+    "loop_mode": "repeat",
+    "frame_count": 6,
+    "source": {
+        "x": 0,
+        "y": 0,
+        "w": 32,
+        "h": 32
+    },
+    "duration_ms": 100
+}

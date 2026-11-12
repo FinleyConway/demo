@@ -55,16 +55,18 @@ namespace demo {
         }
 
     public:
-        void load(std::string_view prefab_dir_path, std::string_view entity_dir_path) {
-           ecs::entity_loader_spec spec {
+        void load(std::string_view asset_dir, std::string_view prefab_dir, std::string_view entity_dir) {
+            m_asset_context.load_from_dir(asset_dir);
+
+            ecs::entity_loader_spec spec {
                 m_registry,
                 m_registry.ctx().get<ecs::prefab_manager>(),
-                c_asset_context,
+                m_asset_context,
                 m_component_registry
             };
             ecs::entity_loader loader(spec);
 
-            loader.load(prefab_dir_path, entity_dir_path);
+            loader.load(prefab_dir, entity_dir);
         }
 
         void on_hooks() {
@@ -90,8 +92,8 @@ namespace demo {
         ecs::component_registry m_component_registry;
 
     private:
-        spatial_render_grid m_spatial_grid;
         input m_input_manager;
-        const asset_context c_asset_context;
+        asset_context m_asset_context;
+        spatial_render_grid m_spatial_grid;
     };
 }

@@ -20,6 +20,7 @@ int main() {
     demo::ecs::settlement_feature::register_to(world);
 
     world.load(
+        "/var/home/finley/Projects/Git/demo/test_assets/assets/", 
         "/var/home/finley/Projects/Git/demo/test_assets/prefabs/", 
         "/var/home/finley/Projects/Git/demo/test_assets/entities/"
     );

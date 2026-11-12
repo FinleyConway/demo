@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include <nlohmann/json.hpp>
+
 #include "core/math/point.hpp"
 
 namespace demo {
@@ -18,6 +20,10 @@ namespace demo {
                    p.x <  x + w &&
                    p.y <  y + h;
         }
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(rect_generic,
+            x, y, w, h
+        );
     };
 
     using rect = rect_generic<float>;
