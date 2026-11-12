@@ -7,6 +7,7 @@
 #include "ecs/features/rendering/components/sprite_renderer.hpp"
 #include "ecs/features/ui/components/ui_sprite.hpp"
 
+#include "resources/asset_context.hpp"
 #include "world/grid/aabb.hpp"
 #include "rendering/camera.hpp"
 #include "rendering/renderer.hpp"
@@ -68,12 +69,18 @@ namespace demo::ecs {
 
             if (!tiles.visible) return;
 
+            const texture* tex = nullptr;
+
+            if (tiles.texture != invalid_asset_id) {
+                tex = &context<asset_context>().get<texture>(tiles.texture);
+            }
+
             for (const auto& tile : tiles.tiles) {
                 const point tile_position = tiles_position.value + grid.cell_to_point(tile.cell_position);
 
                 renderer::draw_sprite(
                     tile_position, 
-                    tiles.tex, 
+                    tex, 
                     tile.source,
                     tile.tint
                 );
@@ -86,9 +93,15 @@ namespace demo::ecs {
 
             if (!sprite.visible) return;
 
+            const texture* tex = nullptr;
+
+            if (sprite.texture != invalid_asset_id) {
+                tex = &context<asset_context>().get<texture>(sprite.texture);
+            }
+
             renderer::draw_sprite(
                 sprite_position.value, 
-                sprite.tex, 
+                tex, 
                 sprite.source,
                 sprite.tint
             );

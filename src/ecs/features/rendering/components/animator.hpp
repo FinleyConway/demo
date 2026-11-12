@@ -3,11 +3,11 @@
 #include <chrono>
 #include <cstddef>
 
-#include "resources/types/animation_clip.hpp"
+#include "resources/asset_context.hpp"
 
 namespace demo::ecs {
     struct animator {
-        const animation_clip* clip = nullptr;
+        asset_id clip = invalid_asset_id;
 
         size_t current_frame = 0;
         

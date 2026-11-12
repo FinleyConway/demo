@@ -6,6 +6,8 @@
 
 #include "ecs/features/rendering/components/animator.hpp"
 #include "ecs/features/rendering/components/sprite_renderer.hpp"
+#include "resources/asset_context.hpp"
+#include "resources/types/animation_clip.hpp"
 
 namespace demo::ecs {
     class animate_entities : public system_base {
@@ -24,9 +26,9 @@ namespace demo::ecs {
 
     private:
         void update_animation(animator& anim, sprite_renderer& sprite, std::chrono::duration<float> dt) {
-            if (anim.clip == nullptr) return;
+            if (anim.clip == invalid_asset_id) return;
 
-            const auto& clip = *anim.clip;
+            const auto& clip = context<asset_context>().get<animation_clip>(anim.clip);
 
             if (anim.current_frame >= clip.size()) {
                 anim.current_frame = 0;

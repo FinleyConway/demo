@@ -1,6 +1,7 @@
 #pragma once
 
 #include <chrono>
+#include <limits>
 #include <memory>
 #include <vector>
 #include <cstddef>
@@ -14,6 +15,7 @@
 
 namespace demo {
     using asset_id = size_t;
+    static constexpr asset_id invalid_asset_id = std::numeric_limits<asset_id>::max();
 
     template<typename T>
     struct resource_traits;
@@ -29,6 +31,15 @@ namespace demo {
     };
 
     class asset_context {
+    public:
+        asset_context() = default;
+
+        asset_context(const asset_context&) = delete;
+        asset_context& operator=(const asset_context&) = delete;
+
+        asset_context(asset_context&&) noexcept = default;
+        asset_context& operator=(asset_context&&) noexcept = default;
+    
     public:
         void load_from_dir(std::string_view path) {
             using namespace std::filesystem;

@@ -4,7 +4,7 @@
 
 #include "ecs/features/positioning/components/position.hpp"
 #include "ecs/features/rendering/components/tile_renderer.hpp"
-#include "ecs/features/positioning/components/static_entity.hpp"
+#include "ecs/features/positioning/components/is_static.hpp"
 #include "ecs/features/rendering/components/sprite_renderer.hpp"
 #include "ecs/features/positioning/components/dirty_position.hpp"
 

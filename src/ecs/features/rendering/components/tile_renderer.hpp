@@ -7,7 +7,7 @@
 #include "world/grid/aabb.hpp"
 #include "world/grid/cell.hpp"
 #include "rendering/colour.hpp"
-#include "resources/types/texture.hpp"
+#include "resources/asset_context.hpp"
 #include "world/world_grid/world_grid.hpp"
 
 namespace demo::ecs {
@@ -22,7 +22,7 @@ namespace demo::ecs {
             colour tint = colour::white;
         };
 
-        const texture* tex = nullptr;
+        asset_id texture = invalid_asset_id;
         std::vector<tile> tiles;
         bool visible = true;
 

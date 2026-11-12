@@ -9,6 +9,19 @@
         },
 
 
+        "sprite_renderer": {
+            "source": {
+                "x": 0,
+                "y": 0,
+                "w": 32,
+                "h": 32
+            }
+        },
+        "tile_renderer": {
+            "texture": "floor_tileset"
+        },
+
+
         "structure_size": {
             "value": {
                 "x": 1,
