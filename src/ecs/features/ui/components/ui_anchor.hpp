@@ -16,15 +16,16 @@ namespace demo::ecs {
 
         anchor position = anchor::top_left;
 
-        NLOHMANN_JSON_SERIALIZE_ENUM(anchor, {
-            {anchor::top_left, "top_left"},
-            {anchor::top_right, "top_right"},
-            {anchor::bottom_left, "bottom_left"},
-            {anchor::bottom_right, "bottom_right"},
-            {anchor::centre, "centre"},
-        });
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(ui_anchor_point, position);
     };
+
+    NLOHMANN_JSON_SERIALIZE_ENUM(ui_anchor_point::anchor, {
+        {ui_anchor_point::anchor::top_left, "top_left"},
+        {ui_anchor_point::anchor::top_right, "top_right"},
+        {ui_anchor_point::anchor::bottom_left, "bottom_left"},
+        {ui_anchor_point::anchor::bottom_right, "bottom_right"},
+        {ui_anchor_point::anchor::centre, "centre"},
+    });
 
     struct ui_anchor_padding {
         point padding;

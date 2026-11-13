@@ -14,14 +14,15 @@ namespace demo::ecs {
 
         type value = type::enemies;
 
-        NLOHMANN_JSON_SERIALIZE_ENUM(type, {
-            {type::enemies, "enemies"},
-            {type::structures, "structures"},
-        });
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(attack_preference,
             value
         );
     };
+
+    NLOHMANN_JSON_SERIALIZE_ENUM(attack_preference::type, {
+        {attack_preference::type::enemies, "enemies"},
+        {attack_preference::type::structures, "structures"},
+    });
 
     struct attack_cooldown {
         float duration = 1.0f;
