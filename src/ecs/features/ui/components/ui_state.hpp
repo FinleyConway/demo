@@ -1,5 +1,7 @@
 #pragma once
 
+#include <nlohmann/json.hpp>
+
 #include "core/math/rect.hpp"
 
 namespace demo::ecs {
@@ -7,6 +9,12 @@ namespace demo::ecs {
         rect_int idle_source;
         rect_int hover_source;
         rect_int pressed_source;
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(ui_sprite_states, 
+            idle_source,
+            hover_source,
+            pressed_source
+        );
     };
 
     struct ui_pointer_capture {};

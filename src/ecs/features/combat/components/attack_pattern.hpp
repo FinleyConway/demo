@@ -17,6 +17,11 @@ namespace demo::ecs {
         uint16_t angle = 0; // sector direction in degrees
         uint16_t width = 0; // sector width in degrees
 
+        NLOHMANN_JSON_SERIALIZE_ENUM(shape, {
+            {shape::none, "none"},
+            {shape::circle, "circle"},
+            {shape::sector, "sector"},
+        });
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(attack_pattern,
             attack_shape,
             radius,
@@ -24,10 +29,4 @@ namespace demo::ecs {
             width
         );
     };
-
-    NLOHMANN_JSON_SERIALIZE_ENUM(attack_pattern::shape, {
-        {attack_pattern::shape::none, "none"},
-        {attack_pattern::shape::circle, "circle"},
-        {attack_pattern::shape::sector, "sector"},
-    });
 }

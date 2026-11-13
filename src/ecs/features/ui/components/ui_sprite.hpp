@@ -1,12 +1,14 @@
 #pragma once
 
+#include <nlohmann/json.hpp>
+
 #include "core/math/rect.hpp"
 #include "rendering/colour.hpp"
-#include "resources/types/texture.hpp"
+#include "resources/asset_context.hpp"
 
 namespace demo::ecs {
     struct ui_sprite {
-        const texture* tex = nullptr;
+        asset_id texture = invalid_asset_id;
         rect_int source;
         colour tint = colour::white;
     };

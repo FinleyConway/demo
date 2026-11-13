@@ -53,9 +53,15 @@ namespace demo::ecs {
             auto view = registry().view<position, ui_sprite>();
 
             for (auto [e, pos, sprite] : view.each()) {
+                const texture* tex = nullptr;
+
+                if (sprite.texture != invalid_asset_id) {
+                    tex = &context<asset_context>().get<texture>(sprite.texture);
+                }
+
                 renderer::draw_sprite(
                     pos.value, 
-                    sprite.tex, 
+                    tex, 
                     sprite.source,
                     sprite.tint
                 );
