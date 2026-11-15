@@ -22,6 +22,8 @@
             "core_prefab": "core",
             "wall_prefab": "wall",
             "turret_prefab": "test_turret"
-        }
+        },
+
+        "builder_state": {}
     }
 }
