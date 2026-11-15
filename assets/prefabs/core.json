@@ -1,4 +1,5 @@
 {
+    "name": "core",
     "components": {
         "position": {
             "value": {
@@ -16,7 +17,6 @@
             }
         },
 
-        "settlement_core_init": {},
         "settlement_core": {},
         
         "structure_size": {

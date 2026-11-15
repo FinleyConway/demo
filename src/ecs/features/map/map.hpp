@@ -2,6 +2,7 @@
 
 #include "ecs/features/map/components/map.hpp"
 
+#include "ecs/features/map/systems/create_map_visuals.hpp"
 #include "ecs/features/map/systems/setup_map.hpp"
 
 #include "world/world.hpp"
@@ -13,6 +14,7 @@ namespace demo::ecs {
             world.register_component<map>();
 
             world.register_system<setup_map>();
+            world.register_system<create_map_visuals>();
         }
     };
 }

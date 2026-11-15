@@ -8,6 +8,8 @@
             }
         },
 
+
+        "tile_renderer_init": {},
         "tile_renderer": {
             "texture": "floor_tileset"
         },
@@ -17,6 +19,7 @@
 
         "settlement_zone": {},
         "structures": {
+            "core_prefab": "core",
             "wall_prefab": "wall",
             "turret_prefab": "test_turret"
         }
