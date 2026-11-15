@@ -46,6 +46,8 @@ namespace demo {
 
             // load prefabs first
             for (const auto& dir_entry : recursive_directory_iterator(path)) {
+                if (!dir_entry.is_regular_file()) continue;
+
                 asset_from_file(dir_entry);
             }
         }

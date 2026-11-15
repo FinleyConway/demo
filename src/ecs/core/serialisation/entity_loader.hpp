@@ -38,11 +38,15 @@ namespace demo::ecs {
 
             // load prefabs first
             for (const auto& dir_entry : recursive_directory_iterator(prefab_dir_path)) {
+                if (!dir_entry.is_regular_file()) continue;
+
                 prefab_from_file(dir_entry);
             }
 
             // then load entities
             for (const auto& dir_entry : recursive_directory_iterator(entity_dir_path)) {
+                if (!dir_entry.is_regular_file()) continue;
+                
                 entity_from_file(dir_entry);
             }
         }

@@ -1,0 +1,20 @@
+{
+    "components": {
+        "is_static": {},
+        "position": {
+            "value": {
+                "x": 0.0,
+                "y": 0.0
+            }
+        },
+
+        "ui_canvas": {},
+        "ui_size": {
+            "value": {
+                "x": 1920,
+                "y": 1080
+            }
+        },
+        "ui_canvas_capture": {}
+    }
+}

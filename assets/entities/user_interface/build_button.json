@@ -1,0 +1,47 @@
+{
+    "components": {
+        "position": {
+            "value": {
+                "x": 0, "y": 0
+            }
+        },
+        
+        "ui_element": {},
+        "ui_size": {
+            "value": {
+                "x": 32, "y": 32
+            }
+        },
+
+        "ui_sprite": {
+            "texture": "floor_tileset",
+            "source": {
+                "x": 64, "y": 0, "w": 32, "h": 32
+            }
+        },
+        "ui_sprite_states": {
+            "idle_source": {
+                "x": 64, "y": 0, "w": 32, "h": 32
+            },
+            "hover_source": {
+                "x": 64, "y": 0, "w": 32, "h": 32
+            },
+            "pressed_source": {
+                "x": 64, "y": 0, "w": 32, "h": 32
+            }
+        },
+
+        "ui_anchor_point": {
+            "position": "bottom_right"
+        },
+        "ui_anchor_padding": {
+            "padding": {
+                "x": -128, "y": -128
+            }
+        },     
+
+        "ui_interactable": {},
+        "ui_interaction_state": {},
+        "ui_state_changed": {}
+    }
+}

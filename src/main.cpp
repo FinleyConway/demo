@@ -9,12 +9,14 @@
 #include "ecs/features/rendering/rendering.hpp"
 #include "ecs/features/settlement_builder/settlement_builder.hpp"
 
+#include "ecs/features/ui/ui.hpp"
 #include "world/world.hpp"
 
 int main() {
     demo::world world;
 
     demo::ecs::positioning_feature::register_to(world); // internal, dont really like this feature systems
+    demo::ecs::ui_feature::register_input_to(world);
 
     demo::ecs::camera_feature::register_to(world);
     demo::ecs::combat_feature::register_to(world);
@@ -23,7 +25,9 @@ int main() {
     demo::ecs::navigation_feature::register_to(world);
     demo::ecs::settlement_feature::register_to(world);
     
-    demo::ecs::rendering_feature::register_to(world); // internal
+    // internal
+    demo::ecs::ui_feature::register_to(world);
+    demo::ecs::rendering_feature::register_to(world); 
 
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(800, 450, "Grid Pathfinding");

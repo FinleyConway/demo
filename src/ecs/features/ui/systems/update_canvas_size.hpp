@@ -15,7 +15,7 @@ namespace demo::ecs {
         void update(float dt) {
             auto view = registry().view<ui_canvas, ui_size>();
 
-            for (auto [e, _, size] : view.each()) {
+            for (auto [e, size] : view.each()) {
                 size.value = {
                     .x = static_cast<float>(GetScreenWidth()),
                     .y = static_cast<float>(GetScreenHeight())

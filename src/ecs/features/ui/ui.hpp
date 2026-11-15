@@ -16,15 +16,25 @@
 
 namespace demo::ecs {
     struct ui_feature {
+        static void register_input_to(world& world) {
+            world.register_system<ui_hover>();
+            world.register_system<ui_click>();
+        }
+
         static void register_to(world& world) {
             world.register_component<ui_anchor_point>();
             world.register_component<ui_anchor_padding>();
 
             // ui_canvas
+            world.register_component<ui_element>();
+            world.register_component<ui_canvas>();
+            world.register_component<ui_canvas_capture>();
 
             world.register_component<ui_size>();
             world.register_component<ui_sprite_states>();
             world.register_component<ui_interactable>();
+            world.register_component<ui_interaction_state>();
+            world.register_component<ui_state_changed>();
             world.register_component<ui_sprite>(
                 [](const nlohmann::json& json, const asset_context& context, prefab_finder& finder){
                     ui_sprite s;
@@ -37,16 +47,13 @@ namespace demo::ecs {
 
                     return s;
                 }
-            )
+            );
             
 
             world.register_system<ui_visual_state>();
             
             world.register_system<update_canvas_size>();
             world.register_system<update_ui_position>();
-
-            world.register_system<ui_hover>();
-            world.register_system<ui_click>();
         }
     };
 }
