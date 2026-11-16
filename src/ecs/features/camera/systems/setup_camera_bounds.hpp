@@ -17,9 +17,9 @@ namespace demo::ecs {
 
             for (auto [e, control] : view.each()) {
                 setup_camera(control);
-
-                registry().remove<camera_bounds_init>(e);
             }
+
+            registry().clear<camera_bounds_init>();
         }
 
     private:
