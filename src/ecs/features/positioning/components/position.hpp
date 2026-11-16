@@ -12,8 +12,4 @@ namespace demo::ecs {
             value
         )
     };
-
-    struct set_position {
-        point value;
-    };
 }

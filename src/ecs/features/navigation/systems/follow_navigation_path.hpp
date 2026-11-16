@@ -56,7 +56,10 @@ namespace demo::ecs {
                 );
 
                 motion.elapsed += dt;
-                registry().emplace_or_replace<set_position>(e, new_position);
+
+                registry().patch<position>(e, [&](auto& pos) {
+                    pos.value = new_position;
+                });
 
                 return;
             }
@@ -68,7 +71,9 @@ namespace demo::ecs {
             grid.at(previous_cell).remove_entity(e);
             grid.at(next_cell).add_entity(e);
 
-            registry().emplace_or_replace<set_position>(e, next_world_pos);
+            registry().patch<position>(e, [&](auto& pos) {
+                pos.value = next_world_pos;
+            });
 
             motion.start_position = next_world_pos;
             motion.elapsed = 0.0f;

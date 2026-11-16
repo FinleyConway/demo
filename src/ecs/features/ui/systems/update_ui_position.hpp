@@ -34,7 +34,9 @@ namespace demo::ecs {
                 anchor_positon.x += anchor_pad.padding.x;
                 anchor_positon.y += anchor_pad.padding.y;
 
-                registry().emplace_or_replace<set_position>(e, anchor_positon);
+                registry().patch<position>(e, [&](auto& pos) {
+                    pos.value = anchor_positon;
+                });
             }
         }
 

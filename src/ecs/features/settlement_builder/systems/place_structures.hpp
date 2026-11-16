@@ -55,7 +55,9 @@ namespace demo::ecs {
             });
 
             // set entity position based on grid position
-            registry().emplace_or_replace<set_position>(entity, grid.cell_to_point(cell_pos));
+            registry().patch<position>(entity, [&](auto& pos) {
+                pos.value = grid.cell_to_point(cell_pos);
+            });
         }
 
         bool can_place(const world_grid& grid, const cell& position, const cell& size) {

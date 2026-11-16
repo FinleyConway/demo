@@ -52,7 +52,9 @@ namespace demo::ecs {
                 grid.at(cell).set_structure(core);
             });
 
-            registry().emplace_or_replace<set_position>(core, world_position);
+            registry().patch<position>(core, [&](auto& pos) {
+                pos.value = world_position;
+            });
         }
     };
 }

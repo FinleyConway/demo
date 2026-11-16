@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ecs/features/settlement_builder/components/builder_state.hpp"
 #include "ecs/features/settlement_builder/components/settlement_core.hpp"
 #include "ecs/features/settlement_builder/components/settlement_zone.hpp"
 #include "ecs/features/settlement_builder/components/structure_size.hpp"
@@ -22,6 +23,7 @@ namespace demo::ecs {
             world.register_component<settlement_zone>();
             world.register_component<settlement_core>();
             world.register_component<structure_size>();
+            world.register_component<builder_state>();
 
 
             world.register_system<place_structures>();
