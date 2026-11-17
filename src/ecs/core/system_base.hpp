@@ -8,6 +8,8 @@
 #include "ecs/features/entity_init/components/entity_spawned.hpp"
 
 namespace demo::ecs {
+    enum class phase { start, input, update, render };
+
     class system_base {
     public:
         explicit system_base(entt::registry& registry) :

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+
 #include <entt/entt.hpp>
 
 #include "ecs/core/prefab.hpp"
@@ -15,6 +17,18 @@
 #include "world/world_grid/world_grid.hpp"
 
 namespace demo::ecs {
+    struct system_entry {
+        phase update_phase;
+        std::unique_ptr<system_base> system;
+
+        template<typename T>
+        static constexpr phase phase_of() {
+            // opt in way of controlling order of systems
+            if constexpr (requires { T::phase_v; }) return T::phase_v;
+            else return phase::update;   // default
+        }
+    };
+
     class world {
     public:
         world() {
@@ -33,13 +47,16 @@ namespace demo::ecs {
             );
         }
 
+        template<typename... Fs>
+        void register_features() {
+            (register_feature<Fs>(), ...);
+        }
+
         template<typename T, typename... Args>
         void register_system(Args&&... args) {
             m_systems.emplace_back(
-                std::move(std::make_unique<T>(
-                    m_registry, m_dispatcher,
-                    std::forward<Args>(args)...
-                ))
+                system_entry::phase_of<T>(),
+                std::make_unique<T>(m_registry, std::forward<Args>(args)...)
             );
         }
 
@@ -76,8 +93,15 @@ namespace demo::ecs {
         }
 
         void on_hooks() {
-            for (auto& system : m_systems) {
-                system->on_hook();
+            // sort system based on phase while maintaining the order i created during setup
+            std::stable_sort(m_systems.begin(), m_systems.end(),
+                [](const auto& a, const auto& b) { 
+                    return a.update_phase < b.update_phase; 
+                }
+            );
+
+            for (auto& entry : m_systems) {
+                entry.system->on_hook();
             }
         }
 
@@ -86,8 +110,8 @@ namespace demo::ecs {
             m_input_manager.begin_frame();
 
             // update entities
-            for (auto& system : m_systems) {
-                system->update(dt);
+            for (auto& entry : m_systems) {
+                entry.system->update(dt);
             }
 
             // cleanup component events
@@ -95,9 +119,37 @@ namespace demo::ecs {
         }
 
     private:
+        template<typename F>
+        void register_feature() {
+            if constexpr (requires { typename F::components; })
+                register_component_list(typename F::components{});
+            if constexpr (requires { typename F::events; })
+                register_event_list(typename F::events{});
+            if constexpr (requires { typename F::systems; })
+                register_system_list(typename F::systems{});
+            if constexpr (requires(world& w) { F::configure(w); })
+                F::configure(*this); // for special cases like sprite_renderer serialisation
+        }
+
+        template<typename... Ts>
+        void register_component_list(entt::type_list<Ts...>) {
+            (register_component<Ts>(), ...);
+        }
+
+        template<typename... Ts>
+        void register_event_list(entt::type_list<Ts...>) {
+            m_registry.ctx().get<event_cleanup>().template track<Ts...>();
+        }
+
+        template<typename... Ts>
+        void register_system_list(entt::type_list<Ts...>) {
+            (register_system<Ts>(), ...);   
+        }
+
+    private:
         entt::registry m_registry;
         entt::dispatcher m_dispatcher;
-        std::vector<std::unique_ptr<system_base>> m_systems;
+        std::vector<system_entry> m_systems;
         component_registry m_component_registry;
 
     private:
