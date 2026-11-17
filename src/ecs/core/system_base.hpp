@@ -5,6 +5,8 @@
 #include "ecs/core/event_cleanup.hpp"
 #include "ecs/core/prefab_manager.hpp"
 
+#include "ecs/features/entity_init/components/entity_spawned.hpp"
+
 namespace demo::ecs {
     class system_base {
     public:
@@ -46,7 +48,13 @@ namespace demo::ecs {
         }
 
         entt::entity prefab_instantiate(prefab_id prefab) {
-            return m_registry.ctx().get<prefab_manager>().instantiate(prefab);
+            // create prefab
+            auto e = m_registry.ctx().get<prefab_manager>().instantiate(prefab);
+
+            // emit spawn event
+            emit<entity_spawned>(e);
+
+            return e;
         }
 
         template<typename T>
