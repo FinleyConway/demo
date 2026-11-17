@@ -4,6 +4,7 @@
 
 #include "ecs/core/prefab.hpp"
 #include "ecs/core/system_base.hpp"
+#include "ecs/core/event_cleanup.hpp"
 #include "ecs/core/prefab_manager.hpp"
 #include "ecs/core/serialisation/entity_loader.hpp"
 #include "ecs/core/serialisation/component_registry.hpp"
@@ -17,8 +18,10 @@ namespace demo {
     class world {
     public:
         world() {
-            add_context<asset_context>();
             add_context<ecs::prefab_manager>(m_registry);
+            add_context<ecs::event_cleanup>();
+
+            add_context<asset_context>();
             add_context<camera>();
         }
 
@@ -86,6 +89,9 @@ namespace demo {
             for (auto& system : m_systems) {
                 system->update(dt);
             }
+
+            // cleanup component events
+            m_registry.ctx().get<ecs::event_cleanup>().run(m_registry);
         }
 
     private:
