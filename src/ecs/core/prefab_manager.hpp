@@ -25,7 +25,7 @@ namespace demo::ecs {
             return m_prefabs[id].peek<T>();
         }
 
-        entt::entity instantiate(prefab_id id) const {
+        entt::entity instantiate(prefab_id id) {
             ASSERT(id < m_prefabs.size(), "Recieved a invalid prefab_id!");
 
             return m_prefabs[id].instantiate();

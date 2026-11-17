@@ -3,6 +3,7 @@
 #include <entt/entt.hpp>
 
 #include "ecs/core/event_cleanup.hpp"
+#include "ecs/core/prefab_manager.hpp"
 
 namespace demo::ecs {
     class system_base {
@@ -42,6 +43,15 @@ namespace demo::ecs {
         void emit(entt::entity e, Args&&... args) {
             m_registry.ctx().get<event_cleanup>().track<T>();
             m_registry.emplace_or_replace<T>(e, std::forward<Args>(args)...);
+        }
+
+        entt::entity prefab_instantiate(prefab_id prefab) {
+            return m_registry.ctx().get<prefab_manager>().instantiate(prefab);
+        }
+
+        template<typename T>
+        const T* prefab_try_get(prefab_id prefab) const {
+            return m_registry.ctx().get<prefab_manager>().peek<T>(prefab);
         }
 
     private:

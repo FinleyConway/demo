@@ -20,7 +20,7 @@ namespace demo::ecs {
             return m_prefab_registry.try_get<T>(m_prefab);
         }
 
-        entt::entity instantiate() const {
+        entt::entity instantiate() {
             auto entity = m_registry.create();
 
             setup_prefab(m_registry, entity);
