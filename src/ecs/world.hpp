@@ -14,12 +14,12 @@
 #include "resources/asset_context.hpp"
 #include "world/world_grid/world_grid.hpp"
 
-namespace demo {
+namespace demo::ecs {
     class world {
     public:
         world() {
-            add_context<ecs::prefab_manager>(m_registry);
-            add_context<ecs::event_cleanup>();
+            add_context<prefab_manager>(m_registry);
+            add_context<event_cleanup>();
 
             add_context<asset_context>();
             add_context<camera>();
@@ -64,13 +64,13 @@ namespace demo {
             
             assets.load_from_dir(asset_dir);
 
-            ecs::entity_loader_spec spec {
+            entity_loader_spec spec {
                 m_registry,
-                m_registry.ctx().get<ecs::prefab_manager>(),
+                m_registry.ctx().get<prefab_manager>(),
                 assets,
                 m_component_registry
             };
-            ecs::entity_loader loader(spec);
+            entity_loader loader(spec);
 
             loader.load(prefab_dir, entity_dir);
         }
@@ -91,14 +91,14 @@ namespace demo {
             }
 
             // cleanup component events
-            m_registry.ctx().get<ecs::event_cleanup>().run(m_registry);
+            m_registry.ctx().get<event_cleanup>().run(m_registry);
         }
 
     private:
         entt::registry m_registry;
         entt::dispatcher m_dispatcher;
-        std::vector<std::unique_ptr<ecs::system_base>> m_systems;
-        ecs::component_registry m_component_registry;
+        std::vector<std::unique_ptr<system_base>> m_systems;
+        component_registry m_component_registry;
 
     private:
         input m_input_manager;
