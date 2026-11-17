@@ -1,7 +1,7 @@
 #pragma once
 
 namespace demo::ecs {
-    struct on_building_enable {};
+    struct builder_button {};
 
     struct builder_state {
         enum class states {
@@ -9,6 +9,6 @@ namespace demo::ecs {
             building
         };
 
-        states state;
+        states state = states::viewing;
     };
 }

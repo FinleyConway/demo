@@ -29,7 +29,9 @@ namespace demo::ecs {
             ui_state_changed
         >;
 
-        //using events = entt::type_list<>;
+        using events = entt::type_list<
+            ui_clicked
+        >;
         
         using systems = entt::type_list<
             ui_hover,

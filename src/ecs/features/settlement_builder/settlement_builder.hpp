@@ -7,6 +7,7 @@
 #include "ecs/features/settlement_builder/components/structures.hpp"
 
 #include "ecs/features/settlement_builder/systems/place_structures.hpp"
+#include "ecs/features/settlement_builder/systems/toggle_building_ui.hpp"
 
 #include "ecs/world.hpp"
 
@@ -16,12 +17,14 @@ namespace demo::ecs {
             settlement_zone,
             settlement_core,
             structure_size,
-            builder_state
+            builder_state,
+            builder_button
         >;
 
         //using events = entt::type_list<>;
         
         using systems = entt::type_list<
+            toggle_building_ui,
             place_structures
         >;
 

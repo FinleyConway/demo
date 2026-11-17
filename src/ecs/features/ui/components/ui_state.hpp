@@ -23,6 +23,8 @@ namespace demo::ecs {
 
     struct ui_interactable {};
 
+    struct ui_clicked {};
+
     struct ui_interaction_state {
         enum class state {
             idle,

@@ -3,6 +3,7 @@
 #include "ecs/core/system_base.hpp"
 
 #include "ecs/features/positioning/components/position.hpp"
+#include "ecs/features/settlement_builder/components/builder_state.hpp"
 #include "ecs/features/settlement_builder/components/structures.hpp"
 #include "ecs/features/settlement_builder/components/structure_size.hpp"
 #include "ecs/features/settlement_builder/components/settlement_zone.hpp"
@@ -17,9 +18,15 @@ namespace demo::ecs {
         using system_base::system_base;
 
     void update(float dt) override {
-        auto view = registry().view<structures, settlement_zone>();
+        auto view = registry().view<
+            builder_state,
+            structures, 
+            settlement_zone
+        >();
 
-        for (auto [e, placer, zone] : view.each()) {
+        for (auto [e, builder, placer, zone] : view.each()) {
+            if (builder.state != builder_state::states::building) return;
+
             if (input::mouse_button_pressed(input::mouse::left)) {
                 place_structure(placer);
             }

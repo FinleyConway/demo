@@ -42,6 +42,8 @@
 
         "ui_interactable": {},
         "ui_interaction_state": {},
-        "ui_state_changed": {}
+        "ui_state_changed": {},
+
+        "builder_button": {}
     }
 }

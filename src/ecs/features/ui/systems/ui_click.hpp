@@ -56,6 +56,8 @@ namespace demo::ecs {
                 capture.entity = entt::null;
 
                 set_state(e, state, ui_interaction_state::state::hover);
+
+                emit<ui_clicked>(e);
             }
         }
 
