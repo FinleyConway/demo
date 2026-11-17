@@ -4,18 +4,26 @@
 #include "ecs/features/health/components/heal.hpp"
 #include "ecs/features/health/components/health.hpp"
 
-#include "ecs/features/health/systems/manipulate_health.hpp"
-
-#include "world/world.hpp"
+#include "ecs/features/health/systems/apply_damage.hpp"
+#include "ecs/features/health/systems/apply_healing.hpp"
 
 namespace demo::ecs {
     struct health_feature {
-        static void register_to(world& world) {
-            world.register_component<health>();
-            world.register_component<damage>();
-            world.register_component<heal>();
+        using components = entt::type_list<
+            health,
+            heal_providing,
+            damage_dealing
+        >;
 
-            world.register_system<manipulate_health>();
-        }
+        using events = entt::type_list<
+            heal,
+            take_damage,
+            killed
+        >;
+        
+        using systems = entt::type_list<
+            apply_healing,
+            apply_damage
+        >;
     };
 }

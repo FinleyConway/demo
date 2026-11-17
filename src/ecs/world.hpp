@@ -10,6 +10,7 @@
 #include "ecs/core/prefab_manager.hpp"
 #include "ecs/core/serialisation/entity_loader.hpp"
 #include "ecs/core/serialisation/component_registry.hpp"
+#include "ecs/features/entity_init/components/entity_spawned.hpp"
 
 #include "core/input/input.hpp"
 #include "rendering/camera.hpp"
@@ -37,6 +38,7 @@ namespace demo::ecs {
 
             add_context<asset_context>();
             add_context<camera>();
+            add_context<spatial_render_grid>();
         }
 
     public:
@@ -68,11 +70,6 @@ namespace demo::ecs {
         template<typename T, typename Fn>
         void register_component(Fn&& fn) {
             m_component_registry.register_component<T>(fn);
-        }
-
-        //! i hate this but it'll do for now
-        spatial_render_grid& spatial_grid() {
-            return m_spatial_grid;
         }
 
     public:
@@ -110,7 +107,15 @@ namespace demo::ecs {
             m_input_manager.begin_frame();
 
             // update entities
+            bool start_phase_done = false;
+
             for (auto& entry : m_systems) {
+                // clear all newly created entity flag
+                if (!start_phase_done && entry.update_phase != phase::start) {
+                    m_registry.clear<entity_spawned>();
+                    start_phase_done = true;
+                }
+
                 entry.system->update(dt);
             }
 
@@ -138,7 +143,7 @@ namespace demo::ecs {
 
         template<typename... Ts>
         void register_event_list(entt::type_list<Ts...>) {
-            m_registry.ctx().get<event_cleanup>().template track<Ts...>();
+            (m_registry.ctx().get<event_cleanup>().template track<Ts>(), ...);
         }
 
         template<typename... Ts>
@@ -148,12 +153,10 @@ namespace demo::ecs {
 
     private:
         entt::registry m_registry;
-        entt::dispatcher m_dispatcher;
         std::vector<system_entry> m_systems;
         component_registry m_component_registry;
 
     private:
         input m_input_manager;
-        spatial_render_grid m_spatial_grid;
     };
 }

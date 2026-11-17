@@ -11,20 +11,15 @@
 namespace demo::ecs {
     class update_dynamic_renderables : public system_base {
     public:
-        update_dynamic_renderables(entt::registry& registry, entt::dispatcher& dispatcher, spatial_render_grid& spatial_grid) :
-            system_base(registry, dispatcher),
-            m_spatial_grid(spatial_grid)
-        {
-        }
+        using system_base::system_base;
 
+        static constexpr phase phase_v = phase::render;
+
+    public:
         void update(float dt) override {
             update_sprite_positions();
 
             update_tile_positions();
-
-            //? maybe a seperate system to handle this in the feature?
-            //? maybe inside positioning
-            registry().clear<dirty_position>();
         }
 
     private:
@@ -36,7 +31,7 @@ namespace demo::ecs {
             >(entt::exclude_t<is_static>());
 
             for (auto [e, pos, sprite] : view.each()) {
-                m_spatial_grid.relocate(
+                context<spatial_render_grid>().relocate(
                     { e, typeid(sprite_renderer) }, 
                     sprite.make_bounds(pos.value)
                 );
@@ -51,14 +46,11 @@ namespace demo::ecs {
             >(entt::exclude_t<is_static>());
 
             for (auto [e, pos, tile] : tile_view.each()) {
-                m_spatial_grid.relocate(
+                context<spatial_render_grid>().relocate(
                     { e, typeid(tile_renderer) }, 
                     tile.make_bounds(pos.value, context<world_grid>())
                 );
             }
         }
-
-    private:
-        spatial_render_grid& m_spatial_grid;
     };
 }

@@ -8,11 +8,24 @@
 
 #include "ecs/features/settlement_builder/systems/place_structures.hpp"
 
-#include "world/world.hpp"
+#include "ecs/world.hpp"
 
 namespace demo::ecs {
     struct settlement_feature {
-        static void register_to(world& world) {
+        using components = entt::type_list<
+            settlement_zone,
+            settlement_core,
+            structure_size,
+            builder_state
+        >;
+
+        //using events = entt::type_list<>;
+        
+        using systems = entt::type_list<
+            place_structures
+        >;
+
+        static void configure(world& world) {
             world.register_component<structures>([](const nlohmann::json& j, const asset_context&, prefab_finder& p) {
                 return structures {
                     .core_prefab = p.get(j["core_prefab"].get<std::string>()),
@@ -20,13 +33,6 @@ namespace demo::ecs {
                     .turret_prefab = p.get(j["turret_prefab"].get<std::string>()),
                 };
             });
-            world.register_component<settlement_zone>();
-            world.register_component<settlement_core>();
-            world.register_component<structure_size>();
-            world.register_component<builder_state>();
-
-
-            world.register_system<place_structures>();
         }
     };
 }

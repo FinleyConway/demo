@@ -9,12 +9,10 @@
         },
 
 
-        "tile_renderer_init": {},
         "tile_renderer": {
             "texture": "floor_tileset"
         },
 
-        "map_init": {},
         "map": {},
 
         "settlement_zone": {},

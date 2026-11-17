@@ -13,6 +13,7 @@
 #include "ecs/core/prefab_manager.hpp"
 #include "ecs/core/serialisation/prefab_finder.hpp"
 #include "ecs/core/serialisation/component_registry.hpp"
+#include "ecs/features/entity_init/components/entity_spawned.hpp"
 
 #include "resources/asset_context.hpp"
 
@@ -60,6 +61,9 @@ namespace demo::ecs {
             const auto json = nlohmann::json::parse(std::ifstream(path));
             const auto components = json["components"];
 
+            // add initialisation component
+            m_spec.registry.emplace<entity_spawned>(entity);
+
             // get all components described in json
             for (const auto& [name, data] : components.items()) {
                 LOG_INFO("ENTITY: reading %s", name.c_str());
@@ -86,6 +90,10 @@ namespace demo::ecs {
             const auto components = json["components"];
 
             std::vector<component_registry::instruction> instructions;
+
+            instructions.emplace_back([](entt::registry& r, entt::entity e) {
+                r.emplace<entity_spawned>(e);
+            });
 
             // get all components described in json
             for (const auto& [name, data] : components.items()) {

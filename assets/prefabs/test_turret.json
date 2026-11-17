@@ -30,7 +30,6 @@
         },
 
 
-        "attack_area_init": {},
         "attack_area": {},
         "attack_pattern": {
             "attack_shape": "circle",
@@ -51,7 +50,7 @@
             "current": 100.0,
             "max": 100.0
         },
-        "damage": {
+        "damage_dealing": {
             "amount": 20.0
         }
     }

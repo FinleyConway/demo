@@ -12,29 +12,36 @@
 #include "ecs/features/ui/systems/update_canvas_size.hpp"
 #include "ecs/features/ui/systems/update_ui_position.hpp"
 
-#include "world/world.hpp"
+#include "ecs/world.hpp"
 
 namespace demo::ecs {
     struct ui_feature {
-        static void register_input_to(world& world) {
-            world.register_system<ui_hover>();
-            world.register_system<ui_click>();
-        }
+        using components = entt::type_list<
+            ui_anchor_point,
+            ui_anchor_padding,
+            ui_element,
+            ui_canvas,
+            ui_canvas_capture,
+            ui_size,
+            ui_sprite_states,
+            ui_interactable,
+            ui_interaction_state,
+            ui_state_changed
+        >;
 
-        static void register_to(world& world) {
-            world.register_component<ui_anchor_point>();
-            world.register_component<ui_anchor_padding>();
+        //using events = entt::type_list<>;
+        
+        using systems = entt::type_list<
+            ui_hover,
+            ui_click,
 
-            // ui_canvas
-            world.register_component<ui_element>();
-            world.register_component<ui_canvas>();
-            world.register_component<ui_canvas_capture>();
+            ui_visual_state,
 
-            world.register_component<ui_size>();
-            world.register_component<ui_sprite_states>();
-            world.register_component<ui_interactable>();
-            world.register_component<ui_interaction_state>();
-            world.register_component<ui_state_changed>();
+            update_canvas_size,
+            update_ui_position
+        >;
+
+        static void configure(world& world) {
             world.register_component<ui_sprite>(
                 [](const nlohmann::json& json, const asset_context& context, prefab_finder& finder){
                     ui_sprite s;
@@ -48,12 +55,6 @@ namespace demo::ecs {
                     return s;
                 }
             );
-            
-
-            world.register_system<ui_visual_state>();
-            
-            world.register_system<update_canvas_size>();
-            world.register_system<update_ui_position>();
         }
     };
 }

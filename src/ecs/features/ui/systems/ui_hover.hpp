@@ -14,6 +14,9 @@ namespace demo::ecs {
     public:
         using system_base::system_base;
     
+        static constexpr phase phase_v = phase::input;
+
+    public:
         void update(float dt) {
             auto view = registry().view<ui_canvas_capture>();
 

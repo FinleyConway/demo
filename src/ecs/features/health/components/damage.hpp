@@ -1,17 +1,15 @@
 #pragma once
 
-#include <entt/entt.hpp>
 #include <nlohmann/json.hpp>
 
 namespace demo::ecs {
-    struct damage_event {
-        entt::entity entity;
+    struct damage_dealing {
         float amount = 0.0f;
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(damage_dealing, amount);
     };
 
-    struct damage {
+    struct take_damage {
         float amount = 0.0f;
-
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(damage, amount);
     };
 }

@@ -5,16 +5,17 @@
 #include "ecs/features/map/systems/create_map_visuals.hpp"
 #include "ecs/features/map/systems/setup_map.hpp"
 
-#include "world/world.hpp"
-
 namespace demo::ecs {
     struct map_feature {
-        static void register_to(world& world) {
-            world.register_component<map_init>();
-            world.register_component<map>();
+        using components = entt::type_list<
+            map
+        >;
 
-            world.register_system<setup_map>();
-            world.register_system<create_map_visuals>();
-        }
+        //using events = entt::type_list<>;
+        
+        using systems = entt::type_list<
+            setup_map,
+            create_map_visuals
+        >;
     };
 }

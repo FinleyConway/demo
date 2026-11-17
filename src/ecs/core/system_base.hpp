@@ -5,8 +5,6 @@
 #include "ecs/core/event_cleanup.hpp"
 #include "ecs/core/prefab_manager.hpp"
 
-#include "ecs/features/entity_init/components/entity_spawned.hpp"
-
 namespace demo::ecs {
     enum class phase { start, input, update, render };
 
@@ -45,18 +43,16 @@ namespace demo::ecs {
 
         template<typename T, typename... Args>
         void emit(entt::entity e, Args&&... args) {
-            m_registry.ctx().get<event_cleanup>().track<T>();
+            ASSERT(
+                (m_registry.ctx().get<event_cleanup>().is_tracked<T>()),
+                "Event not registered in the feature's events list"
+            );
+
             m_registry.emplace_or_replace<T>(e, std::forward<Args>(args)...);
         }
 
         entt::entity prefab_instantiate(prefab_id prefab) {
-            // create prefab
-            auto e = m_registry.ctx().get<prefab_manager>().instantiate(prefab);
-
-            // emit spawn event
-            emit<entity_spawned>(e);
-
-            return e;
+            return m_registry.ctx().get<prefab_manager>().instantiate(prefab);
         }
 
         template<typename T>

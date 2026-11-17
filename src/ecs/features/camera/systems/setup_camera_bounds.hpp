@@ -12,14 +12,15 @@ namespace demo::ecs {
     public:
         using system_base::system_base;
 
+        static constexpr phase phase_v = phase::start;
+    
+    public:
         void update(float dt) override {
-            auto view = registry().view<camera_bounds, camera_bounds_init>();
+            auto view = registry().view<entity_spawned, camera_bounds>();
 
             for (auto [e, control] : view.each()) {
                 setup_camera(control);
             }
-
-            registry().clear<camera_bounds_init>();
         }
 
     private:

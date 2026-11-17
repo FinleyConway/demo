@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ecs/features/combat/components/area_attack.hpp"
+#include "ecs/features/combat/components/attack_area.hpp"
 #include "ecs/features/combat/components/attack_capabilities.hpp"
 #include "ecs/features/combat/components/attack_pattern.hpp"
 #include "ecs/features/combat/components/attack_target.hpp"
@@ -13,30 +13,29 @@
 #include "ecs/features/combat/systems/generate_attack_area.hpp"
 #include "ecs/features/combat/systems/perform_instant_attack.hpp"
 
-#include "world/world.hpp"
-
 namespace demo::ecs {
-    struct combat_feature {
-        static void register_to(world& world) {
-            world.register_component<attack_area_init>();
-            world.register_component<attack_area>();
-            world.register_component<attack_pattern>();
-            world.register_component<attack_preference>();
-            world.register_component<attack_cooldown>();
-            world.register_component<instant_attack>();
+    struct combat_future {
+        using components = entt::type_list<
+            attack_area,
+            attack_pattern,
+            attack_preference,
+            attack_cooldown,
+            instant_attack
+        >;
 
-            
-            world.register_system<generate_attack_area>();
+        using events = entt::type_list<
+            attack
+        >;
+        
+        using systems = entt::type_list<
+            generate_attack_area,
 
-            // init attacks
-            world.register_system<acquire_attack_target>();
-            world.register_system<attack_obstruction>();
+            acquire_attack_target,
+            attack_obstruction,
 
-            // attack cooldowns
-            world.register_system<execute_attack>();
+            execute_attack,
 
-            // attack types
-            world.register_system<perform_instant_attack>();
-        }
+            perform_instant_attack
+        >;
     };
 }

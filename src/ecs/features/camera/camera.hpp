@@ -10,8 +10,18 @@
 
 namespace demo::ecs {
     struct camera_future {
-        using components = entt::type_list<camera_bounds, camera_drag, camera_zoom>;
-        //using events   = entt::type_list<>;
-        using systems    = entt::type_list<setup_camera_bounds, camera_zooming, camera_dragging>;
+        using components = entt::type_list<
+            camera_bounds, 
+            camera_drag, 
+            camera_zoom
+        >;
+
+        //using events = entt::type_list<>;
+        
+        using systems = entt::type_list<
+            setup_camera_bounds, 
+            camera_zooming, 
+            camera_dragging
+        >;
     };
 }

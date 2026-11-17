@@ -9,6 +9,11 @@ namespace demo::ecs {
     class event_cleanup {
     public:
         template<typename T>
+        bool is_tracked() const {
+            return m_seen.contains(entt::type_hash<T>::value());
+        }
+
+        template<typename T>
         void track() {
             // is T been registed as a cleanup component event?
             if (m_seen.insert(entt::type_hash<T>::value()).second) {

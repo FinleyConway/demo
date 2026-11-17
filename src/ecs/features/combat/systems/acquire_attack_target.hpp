@@ -2,7 +2,7 @@
 
 #include "ecs/core/system_base.hpp"
 
-#include "ecs/features/combat/components/area_attack.hpp"
+#include "ecs/features/combat/components/attack_area.hpp"
 #include "ecs/features/combat/components/attack_target.hpp"
 #include "ecs/features/positioning/components/position.hpp"
 

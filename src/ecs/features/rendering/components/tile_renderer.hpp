@@ -11,8 +11,6 @@
 #include "world/world_grid/world_grid.hpp"
 
 namespace demo::ecs {
-    struct tile_renderer_init {};
-
     struct tile_renderer_changed {};
 
     struct tile_renderer {
@@ -44,9 +42,5 @@ namespace demo::ecs {
 
             return { min, max };
         }
-    };
-
-    struct add_renderer_tiles {
-        std::vector<tile_renderer::tile> values;
     };
 }

@@ -9,7 +9,6 @@
 
 #include "core/input/input.hpp"
 #include "rendering/camera.hpp"
-#include "ecs/core/prefab_manager.hpp"
 #include "world/world_grid/world_grid.hpp"
 
 namespace demo::ecs {
@@ -31,9 +30,8 @@ namespace demo::ecs {
         void place_structure(structures& structures) {
             auto& main_camera = context<camera>();
             auto& grid = context<world_grid>();
-            const auto& prefabs = context<prefab_manager>();
 
-            const auto* size = prefabs.peek<structure_size>(structures.turret_prefab);
+            const auto* size = prefab_try_get<structure_size>(structures.turret_prefab);
 
             ASSERT(size != nullptr, "Structure prefab does not have grid_size component");
 
@@ -46,7 +44,7 @@ namespace demo::ecs {
                 return;
             }; 
 
-            auto entity = prefabs.instantiate(structures.turret_prefab);
+            auto entity = prefab_instantiate(structures.turret_prefab);
 
             // place instantied entity on grid
             grid.for_each_cell(cell_pos, size->value, [&](cell current) {

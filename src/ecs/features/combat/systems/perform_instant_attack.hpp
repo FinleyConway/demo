@@ -16,14 +16,13 @@ namespace demo::ecs {
             auto view = registry().view<
                 instant_attack, 
                 attack,
-                damage
+                damage_dealing
             >();
 
             for (auto [e, atk, damage] : view.each()) {
                 if (!registry().all_of<health>(atk.target)) continue;
 
-                dispatcher().trigger<damage_event>(damage_event {
-                    .entity = atk.target,
+                emit<take_damage>(e, take_damage {
                     .amount = damage.amount
                 });
             }

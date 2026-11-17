@@ -7,21 +7,21 @@
 #include "ecs/features/rendering/components/sprite_renderer.hpp"
 #include "ecs/features/ui/components/ui_sprite.hpp"
 
-#include "resources/asset_context.hpp"
 #include "world/grid/aabb.hpp"
 #include "rendering/camera.hpp"
 #include "rendering/renderer.hpp"
 #include "rendering/spatial_id.hpp"
+#include "resources/asset_context.hpp"
+#include "world/world_grid/world_grid.hpp"
 
 namespace demo::ecs {
     class render_entities : public system_base {
     public:
-        render_entities(entt::registry& registry, entt::dispatcher& dispatcher, spatial_render_grid& spatial_grid) :
-            system_base(registry, dispatcher),
-            m_spatial_grid(spatial_grid)
-        {
-        }
+        using system_base::system_base;
 
+        static constexpr phase phase_v = phase::render;
+
+    public:
         void update(float dt) override {
             camera& main_camera = context<camera>();
 
@@ -34,7 +34,9 @@ namespace demo::ecs {
 
             // draw objects in world space
             renderer::draw_in_camera(main_camera, camera_offset, [&]() {
-                m_spatial_grid.query(camera_bounds, [&](spatial_id id) {
+                auto& spatial_grid = context<spatial_render_grid>();
+
+                spatial_grid.query(camera_bounds, [&](spatial_id id) {
                     if (id.type == typeid(sprite_renderer)) {
                         draw_sprite(id.entity);
                     }
@@ -112,8 +114,5 @@ namespace demo::ecs {
                 sprite.tint
             );
         }
-
-    private:
-        spatial_render_grid& m_spatial_grid;
     };
 }

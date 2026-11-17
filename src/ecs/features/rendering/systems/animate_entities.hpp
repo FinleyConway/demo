@@ -14,6 +14,9 @@ namespace demo::ecs {
     public:
         using system_base::system_base;
     
+        static constexpr phase phase_v = phase::render;
+
+    public:
         void update(float dt) {
             std::chrono::duration<float> anim_dt(dt);
 

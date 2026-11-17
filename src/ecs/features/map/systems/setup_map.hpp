@@ -1,12 +1,12 @@
 #pragma once
 
-#include "ecs/core/prefab_manager.hpp"
 #include "ecs/core/system_base.hpp"
 
 #include "ecs/features/map/components/map.hpp"
 #include "ecs/features/positioning/components/position.hpp"
 #include "ecs/features/settlement_builder/components/structure_size.hpp"
 #include "ecs/features/settlement_builder/components/structures.hpp"
+
 #include "world/world_grid/world_grid.hpp"
 
 namespace demo::ecs {
@@ -14,17 +14,18 @@ namespace demo::ecs {
     public:
         using system_base::system_base;
 
+        static constexpr phase phase_v = phase::start;
+
+    public:
         void update(float dt) override {
             auto view = registry().view<
-                map_init, 
+                entity_spawned, 
                 map,
                 structures
             >();
 
             for (auto [e, structures] : view.each()) {
                 place_settlement_core(structures);
-
-                registry().remove<map_init>(e);
             }
         }
 

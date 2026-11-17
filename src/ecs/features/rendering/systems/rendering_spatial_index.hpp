@@ -11,11 +11,7 @@
 namespace demo::ecs {
     class rendering_spatial_index : public system_base {
     public:
-        rendering_spatial_index(entt::registry& registry, entt::dispatcher& dispatcher, spatial_render_grid& spatial_grid) :
-            system_base(registry, dispatcher),
-            m_spatial_grid(spatial_grid)
-        {
-        }
+        using system_base::system_base;
 
         void on_hook() override {
             // handle added components
@@ -31,7 +27,7 @@ namespace demo::ecs {
                 .connect<&rendering_spatial_index::on_tile_remove>(*this);
 
             // handle component changes
-            registry().on_construct<tile_renderer_changed>()
+            registry().on_update<tile_renderer>()
                 .connect<&rendering_spatial_index::on_tile_changed>(*this);
         }
 
@@ -45,14 +41,14 @@ namespace demo::ecs {
             const auto& sprite_position = registry.get<position>(entity);
             const auto& sprite = registry.get<sprite_renderer>(entity);
             
-            m_spatial_grid.insert(
+            context<spatial_render_grid>().insert(
                 { entity, typeid(sprite_renderer) }, 
                 sprite.make_bounds(sprite_position.value)
             );
         }
 
         void on_sprite_remove(entt::registry& registry, entt::entity entity) {
-            m_spatial_grid.remove({ entity, typeid(sprite_renderer) });
+            context<spatial_render_grid>().remove({ entity, typeid(sprite_renderer) });
         }
 
         void on_tile_added(entt::registry& registry, entt::entity entity) {
@@ -64,7 +60,7 @@ namespace demo::ecs {
             const auto& tiles_position = registry.get<position>(entity);
             const auto& tiles = registry.get<tile_renderer>(entity);
             
-            m_spatial_grid.insert(
+            context<spatial_render_grid>().insert(
                 { entity, typeid(tile_renderer) }, 
                 tiles.make_bounds(tiles_position.value, context<world_grid>())
             );
@@ -74,17 +70,14 @@ namespace demo::ecs {
             const auto& tiles_position = registry.get<position>(entity);
             const auto& tiles = registry.get<tile_renderer>(entity);
             
-            m_spatial_grid.relocate(
+            context<spatial_render_grid>().relocate(
                 { entity, typeid(tile_renderer) }, 
                 tiles.make_bounds(tiles_position.value, context<world_grid>())
             );
         }
 
         void on_tile_remove(entt::registry& registry, entt::entity entity) {
-            m_spatial_grid.remove({ entity, typeid(tile_renderer) });
+            context<spatial_render_grid>().remove({ entity, typeid(tile_renderer) });
         }
-
-    private:
-        spatial_render_grid& m_spatial_grid;
     };
 }

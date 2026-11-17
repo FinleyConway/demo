@@ -11,8 +11,6 @@ namespace demo::ecs {
         using system_base::system_base;
 
         void on_hook() override {
-            dispatcher().sink<on_building_enable>()
-                .connect<&toggle_building::on_enable_build_state>();
         }
 
         void update(float dt) override {

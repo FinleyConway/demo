@@ -2,8 +2,9 @@
 
 #include "ecs/core/system_base.hpp"
 
-#include "ecs/features/combat/components/area_attack.hpp"
+#include "ecs/features/combat/components/attack_area.hpp"
 #include "ecs/features/combat/components/attack_pattern.hpp"
+#include "ecs/features/entity_init/components/entity_spawned.hpp"
 #include "ecs/features/positioning/components/position.hpp"
 #include "ecs/features/rendering/components/tile_renderer.hpp"
 
@@ -15,10 +16,13 @@ namespace demo::ecs {
     public:
         using system_base::system_base;
 
+        static constexpr phase phase_v = phase::start;
+
+    public:
         void update(float dt) override {
             auto view = registry().view<
+                entity_spawned,
                 position,
-                attack_area_init,
                 attack_pattern,
                 attack_area
             >();
@@ -30,8 +34,6 @@ namespace demo::ecs {
                 try_add_visuals(e, pos, cells);
 
                 area.cells = std::move(cells);
-
-                registry().remove<attack_area_init>(e);
             }
         }
 
@@ -39,23 +41,17 @@ namespace demo::ecs {
         void try_add_visuals(entt::entity e, const position& pos, const std::vector<cell>& cells) {
             if (!registry().all_of<tile_renderer>(e)) return;
             
-            const auto& grid = context<world_grid>();
-            const cell grid_pos = grid.point_to_cell(pos.value);
-
-            std::vector<tile_renderer::tile> tiles;
-            tiles.reserve(cells.size());
-
-            for (const auto& cell : cells) {
-                // add tile for each cell
-                tiles.emplace_back(tile_renderer::tile {
-                    .cell_position = cell,
-                    .source = { 64, 0, 32, 32 },
-                    .tint = { 255, 255, 255, 128 }
-                });
-            }
-
-            registry().emplace_or_replace<add_renderer_tiles>(e, add_renderer_tiles{
-                .values = std::move(tiles)
+            registry().patch<tile_renderer>(e, [&](auto& renderer) {
+                renderer.tiles.reserve(cells.size());
+                
+                for (const auto& cell : cells) {
+                    // add tile for each cell
+                    renderer.tiles.emplace_back(tile_renderer::tile {
+                        .cell_position = cell,
+                        .source = { 64, 0, 32, 32 },
+                        .tint = { 255, 255, 255, 128 }
+                    });
+                }
             });
         }
 
