@@ -1,12 +1,13 @@
 #pragma once
 
-#include "core/debugging.hpp"
 #include "ecs/core/system_base.hpp"
 
 #include "ecs/features/map/components/map.hpp"
 #include "ecs/features/ui/components/ui_canvas.hpp"
 #include "ecs/features/ui/components/ui_state.hpp"
 #include "ecs/features/settlement_builder/components/builder_state.hpp"
+
+#include "core/debugging.hpp"
 
 namespace demo::ecs {
     class toggle_building_ui : public system_base {
@@ -25,8 +26,6 @@ namespace demo::ecs {
                 auto view = registry().view<map, builder_state>();
 
                 for (auto [e, builder] : view.each()) {
-                    LOG_INFO("hello");
-
                     on_enable_build_state(builder);
                 }
             }
@@ -36,9 +35,13 @@ namespace demo::ecs {
         void on_enable_build_state(builder_state& builder) {
             if (builder.state == builder_state::states::viewing) {
                 builder.state = builder_state::states::building;
+
+                LOG_INFO("In building mode");
             }
             else {
                 builder.state = builder_state::states::viewing;
+
+                LOG_INFO("In viewing mode");
             }
         }
     };

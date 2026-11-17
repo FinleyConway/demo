@@ -49,6 +49,7 @@ namespace demo::ecs {
                     }
 
                     s.source = json["source"];
+                    s.visible = json["visible"];
 
                     return s;
                 }
@@ -60,6 +61,9 @@ namespace demo::ecs {
                     if (json.contains("texture")) {
                         t.texture = context.find(json["texture"].get<std::string_view>());
                     }
+
+                    t.visible = json["visible"];
+
                     return t;
                 }
             );

@@ -15,10 +15,12 @@
                 "y": 0,
                 "w": 32,
                 "h": 32
-            }
+            },
+            "visible": true
         },
         "tile_renderer": {
-            "texture": "floor_tileset"
+            "texture": "floor_tileset",
+            "visible": false
         },
 
 

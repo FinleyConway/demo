@@ -10,7 +10,8 @@
 
 
         "tile_renderer": {
-            "texture": "floor_tileset"
+            "texture": "floor_tileset",
+            "visible": true
         },
 
         "map": {},
