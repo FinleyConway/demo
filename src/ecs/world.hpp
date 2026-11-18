@@ -155,8 +155,6 @@ namespace demo::ecs {
         entt::registry m_registry;
         std::vector<system_entry> m_systems;
         component_registry m_component_registry;
-
-    private:
         input m_input_manager;
     };
 }

@@ -3,9 +3,11 @@
 #include "ecs/features/settlement_builder/components/builder_state.hpp"
 #include "ecs/features/settlement_builder/components/settlement_core.hpp"
 #include "ecs/features/settlement_builder/components/settlement_zone.hpp"
+#include "ecs/features/settlement_builder/components/structure.hpp"
 #include "ecs/features/settlement_builder/components/structure_size.hpp"
 #include "ecs/features/settlement_builder/components/structures.hpp"
 
+#include "ecs/features/settlement_builder/systems/defence_attack_view.hpp"
 #include "ecs/features/settlement_builder/systems/place_structures.hpp"
 #include "ecs/features/settlement_builder/systems/toggle_building_ui.hpp"
 
@@ -14,6 +16,7 @@
 namespace demo::ecs {
     struct settlement_feature {
         using components = entt::type_list<
+            structure,
             settlement_zone,
             settlement_core,
             structure_size,
@@ -25,6 +28,7 @@ namespace demo::ecs {
         
         using systems = entt::type_list<
             toggle_building_ui,
+            defence_attack_view,
             place_structures
         >;
 

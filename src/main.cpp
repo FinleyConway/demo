@@ -10,6 +10,7 @@
 #include "ecs/features/map/map.hpp"
 #include "ecs/features/rendering/rendering.hpp"
 #include "ecs/features/settlement_builder/settlement_builder.hpp"
+#include "ecs/features/interactable/interactable.hpp"
 #include "ecs/features/ui/ui.hpp"
 
 using namespace demo;
@@ -21,6 +22,7 @@ int main() {
         ecs::positioning_feature,
 
         ecs::camera_future,
+        ecs::interactable_feature,
         ecs::settlement_feature,
         ecs::map_feature,
         ecs::combat_future,

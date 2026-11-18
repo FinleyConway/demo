@@ -23,7 +23,10 @@
             "visible": false
         },
 
+        
+        "interactable": {},
 
+        "structure": {},
         "structure_size": {
             "value": {
                 "x": 1,

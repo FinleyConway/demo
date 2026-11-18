@@ -16,6 +16,11 @@
 
         "map": {},
 
+
+        "interactor": {},
+        "interactor_selection": {},
+
+        
         "settlement_zone": {},
         "structures": {
             "core_prefab": "core",
