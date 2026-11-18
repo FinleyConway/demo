@@ -38,11 +38,11 @@ namespace demo::ecs {
         void drag_camera(const camera_bounds& bounds, camera_drag& drag) {
             const point mouse_posiiton = input::mouse_position();
 
-            if (input::mouse_button_pressed(input::mouse::left)) {
+            if (input::mouse_button_pressed(input::mouse::middle)) {
                 drag.last_mouse_position = mouse_posiiton;
             }
 
-            if (input::mouse_button_held(input::mouse::left)) {
+            if (input::mouse_button_held(input::mouse::middle)) {
                 camera& main_camera = context<camera>();     
 
                 const point delta = mouse_posiiton - drag.last_mouse_position;
