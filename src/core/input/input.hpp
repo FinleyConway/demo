@@ -18,61 +18,27 @@ namespace demo {
         };
 
     public:
-        void begin_frame() {
-            s_consumed.reset();
-            s_scroll_consumed = false;
-        }
+        void begin_frame();
 
     public:
-        static bool mouse_button_pressed(mouse button) {
-            return !is_consumed(button)
-                && IsMouseButtonPressed(to_raylib(button));
-        }
+        static bool mouse_button_pressed(mouse button);
 
-        static bool mouse_button_held(mouse button) {
-            return !is_consumed(button)
-                && IsMouseButtonDown(to_raylib(button));
-        }
+        static bool mouse_button_held(mouse button);
 
-        static bool mouse_button_release(mouse button) {
-            return !is_consumed(button)
-                && IsMouseButtonUp(to_raylib(button));
-        }
+        static bool mouse_button_release(mouse button);
 
-        static float mouse_scroll_delta() {
-            return s_scroll_consumed
-                ? 0.0f
-                : GetMouseWheelMove();
-        }
+        static float mouse_scroll_delta();
 
-        static point mouse_position() {
-            const Vector2 p = GetMousePosition();
-
-            return { p.x, p.y };
-        }
+        static point mouse_position();
 
     private:
-        static MouseButton to_raylib(mouse button) {
-            switch (button) {
-                case mouse::left:   return MOUSE_BUTTON_LEFT;
-                case mouse::middle: return MOUSE_BUTTON_MIDDLE;
-                case mouse::right:  return MOUSE_BUTTON_RIGHT;
-            }
+        static MouseButton to_raylib(mouse button);
 
-            return MOUSE_BUTTON_LEFT;
-        }
+        static bool is_consumed(mouse button);
 
-        static bool is_consumed(mouse button) {
-            return s_consumed.test(static_cast<size_t>(button));
-        }
+        static void consume_mouse_button(mouse button);
 
-        static void consume_mouse_button(mouse button) {
-            s_consumed.set(static_cast<size_t>(button));
-        }
-
-        static void consume_mouse_scroll() {
-            s_scroll_consumed = true;
-        }
+        static void consume_mouse_scroll();
 
     private:
         friend class ui_input;

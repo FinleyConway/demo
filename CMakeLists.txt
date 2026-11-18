@@ -26,6 +26,13 @@ add_subdirectory(vendors/json)
 
 add_executable(demo
     src/main.cpp
+    src/ecs/core/prefab.cpp
+    src/ecs/core/prefab_manager.cpp
+    src/ecs/core/serialisation/entity_loader.cpp
+    src/ecs/core/serialisation/prefab_finder.cpp
+    src/core/input/input.cpp
+    src/core/input/ui_input.cpp
+    src/core/threading/worker_pool.cpp
 )
 
 if (MSVC)

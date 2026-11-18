@@ -1,6 +1,9 @@
 #pragma once 
 
-#include <entt/entt.hpp>
+#include <vector>
+#include <functional>
+
+#include <entt/fwd.hpp>
 
 namespace demo::ecs {
     class prefab {
@@ -8,11 +11,7 @@ namespace demo::ecs {
         using instruction = std::function<void(entt::registry&, entt::entity)>;
     
     public:
-        prefab(entt::registry& registry, entt::registry& prefab_registry) :
-            m_registry(registry),
-            m_prefab_registry(prefab_registry)
-        {
-        } 
+        prefab(entt::registry& registry, entt::registry& prefab_registry);
 
     public:
         template<typename T>
@@ -20,27 +19,12 @@ namespace demo::ecs {
             return m_prefab_registry.try_get<T>(m_prefab);
         }
 
-        entt::entity instantiate() {
-            auto entity = m_registry.create();
+        entt::entity instantiate();
 
-            setup_prefab(m_registry, entity);
-
-            return entity;
-        }
-
-        void update(std::vector<instruction>&& instructions) {
-            m_prefab = m_prefab_registry.create();
-            m_instructions = std::move(instructions);
-
-            setup_prefab(m_prefab_registry, m_prefab);
-        }
+        void update(std::vector<instruction>&& instructions);
 
     private:
-        void setup_prefab(entt::registry& registry, entt::entity e) const {
-            for (const auto& instruction : m_instructions) {
-                instruction(registry, e);
-            }
-        }
+        void setup_prefab(entt::registry& registry, entt::entity e) const;
 
     private:
         friend class prefab_manager;

@@ -2,8 +2,6 @@
 
 #include <vector>
 
-#include <entt/entt.hpp>
-
 #include "core/debugging.hpp"
 #include "ecs/core/prefab.hpp"
 
@@ -12,10 +10,7 @@ namespace demo::ecs {
 
     class prefab_manager {
     public:
-        explicit prefab_manager(entt::registry& registry) :
-            m_registry(registry)
-        {
-        }
+        explicit prefab_manager(entt::registry& registry);
 
     public:
         template<typename T>
@@ -25,27 +20,12 @@ namespace demo::ecs {
             return m_prefabs[id].peek<T>();
         }
 
-        entt::entity instantiate(prefab_id id) {
-            ASSERT(id < m_prefabs.size(), "Recieved a invalid prefab_id!");
-
-            return m_prefabs[id].instantiate();
-        }
+        entt::entity instantiate(prefab_id id);
 
     private:
-        void create(prefab_id id, std::vector<prefab::instruction>&& instructions) {
-            ASSERT(id < m_prefabs.size(), "Recieved a invalid prefab_id!");
+        void create(prefab_id id, std::vector<prefab::instruction>&& instructions);
 
-            m_prefabs[id].update(std::move(instructions));
-        }
-
-        prefab_id reserve_prefab() {
-            m_prefabs.emplace_back(
-                m_registry, 
-                m_prefab_registry
-            );
-
-            return m_prefabs.size() - 1;
-        }
+        prefab_id reserve_prefab();
 
     private:
         friend class entity_loader;
