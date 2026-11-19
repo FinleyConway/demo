@@ -1,13 +1,19 @@
 #pragma once
 
-#include <vector>
+#include <array>
 
 #include <entt/entt.hpp>
 
+#include "entt/entity/entity.hpp"
 #include "world/path_finding/movement_profile.hpp"
 
 namespace demo {
     struct tile {
+    public:
+        tile() {
+            m_entities.fill(entt::null);
+        }
+    
     public:
         void set_structure(entt::entity entity) {
             m_structure_entity = entity;
@@ -29,18 +35,21 @@ namespace demo {
             return m_navigation_type;
         }
 
-        const std::vector<entt::entity>& entities_in_cell() const {
+        const std::array<entt::entity, 4>& entities_in_cell() const {
             return m_entities;
         }
 
-        void add_entity(entt::entity entity) {
+        void add_entity(size_t quadrant, entt::entity entity) {
+            if (quadrant >= m_entities.size()) return;
             if (has_entity(entity)) return;
 
-            m_entities.emplace_back(entity);
+            m_entities[quadrant] = entity;
         }
 
-        void remove_entity(entt::entity entity) {
-            std::erase(m_entities, entity);
+        void remove_entity(size_t quadrant) {
+            if (quadrant >= m_entities.size()) return;
+
+            m_entities[quadrant] = entt::null;
         }
 
         bool has_entity(entt::entity entity) const {
@@ -49,7 +58,7 @@ namespace demo {
 
     private:
         entt::entity m_structure_entity = entt::null;
-        std::vector<entt::entity> m_entities;
+        std::array<entt::entity, 4> m_entities{};
 
         navigation_type m_navigation_type = navigation_type::none;
     };

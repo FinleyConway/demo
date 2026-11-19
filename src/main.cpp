@@ -1,5 +1,6 @@
 #include <raylib.h>
 
+#include "ecs/features/spawner/spawner.hpp"
 #include "ecs/world.hpp"
 #include "world/path_finding/path_finder.hpp"
 
@@ -22,6 +23,7 @@ int main() {
         ecs::positioning_feature,
 
         ecs::camera_future,
+        ecs::spawner_feature,
         ecs::interactable_feature,
         ecs::settlement_feature,
         ecs::map_feature,

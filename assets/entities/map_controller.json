@@ -21,6 +21,11 @@
         "interactor_selection": {},
 
         
+        "enemies": {
+            "horder": "horder"
+        },
+
+
         "settlement_zone": {},
         "structures": {
             "core_prefab": "core",
