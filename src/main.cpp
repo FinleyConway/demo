@@ -1,5 +1,6 @@
 #include <raylib.h>
 
+#include "ecs/features/navigation/navigation.hpp"
 #include "ecs/features/spawner/spawner.hpp"
 #include "ecs/world.hpp"
 #include "world/path_finding/path_finder.hpp"
@@ -29,7 +30,7 @@ int main() {
         ecs::map_feature,
         ecs::combat_future,
         ecs::health_feature,
-        //ecs::navigation_future,
+        ecs::navigation_feature,
         
         ecs::ui_feature,
         ecs::rendering_feature

@@ -34,6 +34,8 @@ add_executable(demo
     src/core/input/ui_input.cpp
     src/core/threading/worker_pool.cpp
     src/world/path_finding/path_finder.cpp
+    src/ecs/features/navigation/systems/requesting/get_navigation_results.cpp
+    src/ecs/features/navigation/systems/requesting/request_navigation_path.cpp
 )
 
 if (MSVC)

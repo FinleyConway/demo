@@ -1,6 +1,15 @@
 {
     "name": "horde_controller",
     "components": {
+        "navigation_profile": {
+            "costs": {
+                "turret": 1,
+                "wall": 10
+            }
+        },
+        "navigation_request_state": {},
+
+
         "horde_info": {},
         "horde_count": {}
     }

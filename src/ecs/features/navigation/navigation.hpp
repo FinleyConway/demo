@@ -1,29 +1,28 @@
 #pragma once
 
-#include "ecs/features/navigation/components/navigation_motion.hpp"
-#include "ecs/features/navigation/components/navigation_obstruction.hpp"
-#include "ecs/features/navigation/components/navigation_path.hpp"
-#include "ecs/features/navigation/components/navigation_weight.hpp"
-#include "ecs/features/navigation/components/navigation.hpp"
+#include <entt/core/type_traits.hpp>
 
-#include "ecs/features/navigation/systems/follow_navigation_path.hpp"
-#include "ecs/features/navigation/systems/get_navigation_results.hpp"
-#include "ecs/features/navigation/systems/request_navigation_path.hpp"
+#include "ecs/features/navigation/components/requesting/navigation_state.hpp"
+#include "ecs/features/navigation/components/requesting/navigation_request.hpp"
 
-#include "world/world.hpp"
+#include "ecs/features/navigation/systems/requesting/get_navigation_results.hpp"
+#include "ecs/features/navigation/systems/requesting/request_navigation_path.hpp"
 
 namespace demo::ecs {
     struct navigation_feature {
-        static void register_to(world& world) {
-            world.register_component<navigation_motion>();
-            world.register_component<navigation_path>();
-            world.register_component<navigation_request_state>();
-            world.register_component<navigation_profile>();
+        using components = entt::type_list<
+            navigation_profile,
+            navigation_request_state
+        >;
 
+        using events = entt::type_list<
+            navigation_target,
+            navigation_failed
+        >;
 
-            world.register_system<request_navigation_path>();
-            world.register_system<get_navigation_results>();
-            world.register_system<follow_navigation_path>();
-        }
+        using systems = entt::type_list<
+            request_navigation_path,
+            get_navigation_results
+        >;
     };
 }
