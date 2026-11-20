@@ -14,25 +14,18 @@
             "visible": true
         },
 
+        
         "map": {},
 
 
         "interactor": {},
         "interactor_selection": {},
-
-        
-        "enemies": {
-            "horder": "horder"
-        },
-
-
         "settlement_zone": {},
         "structures": {
             "core_prefab": "core",
             "wall_prefab": "wall",
             "turret_prefab": "test_turret"
         },
-
         "builder_state": {}
     }
 }

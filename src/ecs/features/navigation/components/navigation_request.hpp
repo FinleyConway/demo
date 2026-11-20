@@ -7,7 +7,8 @@
 
 namespace demo::ecs {
     struct navigation_target {
-        cell value;
+        cell start;
+        cell end;
     };
 
     struct navigation_profile {
@@ -15,6 +16,4 @@ namespace demo::ecs {
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(navigation_profile, costs);
     };
-
-    struct navigation_wait {};
 }

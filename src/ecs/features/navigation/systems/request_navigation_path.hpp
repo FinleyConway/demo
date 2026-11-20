@@ -2,9 +2,8 @@
 
 #include "ecs/core/system_base.hpp"
 
-#include "ecs/features/positioning/components/position.hpp"
-#include "ecs/features/navigation/components/navigation.hpp"
-#include "ecs/features/navigation/components/navigation_path.hpp"
+#include "ecs/features/navigation/components/navigation_request.hpp"
+#include "ecs/features/navigation/components/navigation_state.hpp"
 
 #include "world/world_grid/world_grid.hpp"
 #include "world/path_finding/path_finder.hpp"
@@ -15,37 +14,35 @@ namespace demo::ecs {
         using system_base::system_base;
 
         void on_hook() override {
-            context<path_finder>().add_grid_context(context<world_grid>());
-        }
+            registry().on_construct<navigation_target>()
+                .connect<&request_navigation_path::on_request_path>(*this);
+        }   
 
-        void update(float dt) override {
-            auto view = registry().view<
-                position,
-                navigation_target,
-                navigation_profile,
-                navigation_request_state
-            >();
+    private:
+        void on_request_path(entt::registry& registry, entt::entity entity) {
+            ASSERT(
+                (registry.all_of<
+                    navigation_target, navigation_profile, navigation_request_state
+                >(entity)),
+                "Entity doesn't have required components to request a path!"
+            );
 
-            // this only happens if navigation_target is added
-            for (auto [e, pos, target, profile, request_state] : view.each()) {
-                const world_grid& grid = context<world_grid>();
-                path_finder& finder = context<path_finder>();
+            const world_grid& grid = context<world_grid>();
+            path_finder& finder = context<path_finder>();
 
-                // request a path from starting position to target position
-                const cell start_position = grid.point_to_cell(pos.value);
+            auto [target, profile, request_state] = registry.get<
+                navigation_target, navigation_profile, navigation_request_state
+            >(entity);
 
-                request_state.request = finder.request(
-                    start_position,
-                    target.value,
-                    profile.costs
-                );
-
-                // remove target request
-                registry().remove<navigation_target>(e);
-
-                // tell it to start query for results
-                registry().emplace_or_replace<navigation_wait>(e);
-            }
+            // send off a worker to generate a path
+            request_state.request = finder.request(
+                target.start,
+                target.end,
+                profile.costs
+            );
+            
+            // tag to tell the entity to now wait for the request to generate
+            registry.emplace_or_replace<navigation_wait>(entity);
         }
     };
 }

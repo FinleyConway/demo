@@ -45,8 +45,8 @@ int main() {
         "/var/home/finley/Projects/Git/demo/assets/entities"
     );
 
-    world.add_context<world_grid>();
-    world.add_context<path_finder>();
+    const auto& grid = world.add_context<world_grid>();
+    world.add_context<path_finder>(grid);
 
     world.on_hooks();
 

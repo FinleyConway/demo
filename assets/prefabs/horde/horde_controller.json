@@ -1,0 +1,7 @@
+{
+    "name": "horde_controller",
+    "components": {
+        "horde_info": {},
+        "horde_count": {}
+    }
+}

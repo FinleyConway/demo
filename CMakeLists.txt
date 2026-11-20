@@ -33,6 +33,7 @@ add_executable(demo
     src/core/input/input.cpp
     src/core/input/ui_input.cpp
     src/core/threading/worker_pool.cpp
+    src/world/path_finding/path_finder.cpp
 )
 
 if (MSVC)

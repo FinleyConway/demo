@@ -2,10 +2,8 @@
 
 #include "ecs/core/system_base.hpp"
 
-#include "ecs/features/positioning/components/position.hpp"
-#include "ecs/features/navigation/components/navigation.hpp"
 #include "ecs/features/navigation/components/navigation_path.hpp"
-#include "ecs/features/navigation/components/navigation_motion.hpp"
+#include "ecs/features/navigation/components/navigation_state.hpp"
 
 #include "world/path_finding/path_finder.hpp"
 
@@ -16,22 +14,23 @@ namespace demo::ecs {
 
         void update(float dt) override {
             auto view = registry().view<
-                position,
                 navigation_wait,
-                navigation_path,
-                navigation_request_state,
-                navigation_motion
+                navigation_request_state
             >();
+            
+            path_finder& finder = context<path_finder>();
 
             // queries every frame for a generated path when having navigation_wait
-            for (auto [entity, pos, path, request_state, motion] : view.each()) {
-                path_finder& finder = context<path_finder>();
+            for (auto [e, request_state] : view.each()) {
+                auto result = finder.try_get_result(request_state.request);
+                
+                // still searching this frame
+                if (!result.has_value()) continue;
 
-                if (finder.try_get_result(request_state.request, path.cells)) {
-                    // reset motion for new path
-                    motion.elapsed = 0.0f;
-                    motion.start_position = pos.value;
-                }
+                registry().remove<navigation_wait>(e);
+
+                if (result->empty()) registry().emplace<navigation_failed>(e);
+                else registry().emplace_or_replace<navigation_path>(e, std::move(*result));
             }
         }
     };
