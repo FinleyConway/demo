@@ -23,7 +23,7 @@ namespace demo {
             return m_structure_entity;
         }
 
-        bool has_structure(entt::registry& registry) const {
+        bool has_structure(const entt::registry& registry) const {
             return registry.valid(m_structure_entity);
         }
     
