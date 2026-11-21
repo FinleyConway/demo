@@ -4,6 +4,6 @@
 
 namespace demo::ecs {
     struct enemies {
-        prefab_id horder;
+        prefab horder;
     };
 }

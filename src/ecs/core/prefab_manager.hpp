@@ -3,10 +3,10 @@
 #include <vector>
 
 #include "core/debugging.hpp"
-#include "ecs/core/prefab.hpp"
+#include "ecs/core/prefab_blueprint.hpp"
 
 namespace demo::ecs {
-    using prefab_id = size_t;
+    enum class prefab : size_t {};
 
     class prefab_manager {
     public:
@@ -14,18 +14,20 @@ namespace demo::ecs {
 
     public:
         template<typename T>
-        const T* peek(prefab_id id) const {
-            ASSERT(id < m_prefabs.size(), "Recieved a invalid prefab_id!");
+        const T* peek(prefab prefab) const {
+            const auto index = static_cast<size_t>(prefab);
 
-            return m_prefabs[id].peek<T>();
+            ASSERT(index < m_prefabs.size(), "Recieved a invalid prefab_id!");
+
+            return m_prefabs[index].peek<T>();
         }
 
-        entt::entity instantiate(prefab_id id);
+        entt::entity instantiate(prefab prefab);
 
     private:
-        void create(prefab_id id, std::vector<prefab::instruction>&& instructions);
+        void create(prefab prefab, std::vector<prefab_blueprint::instruction>&& instructions);
 
-        prefab_id reserve_prefab();
+        prefab reserve_prefab();
 
     private:
         friend class entity_loader;
@@ -34,6 +36,6 @@ namespace demo::ecs {
         entt::registry m_prefab_registry;
         entt::registry& m_registry;
 
-        std::vector<prefab> m_prefabs;
+        std::vector<prefab_blueprint> m_prefabs;
     };
 }

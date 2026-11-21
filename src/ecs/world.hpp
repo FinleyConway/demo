@@ -4,7 +4,6 @@
 
 #include <entt/entt.hpp>
 
-#include "ecs/core/prefab.hpp"
 #include "ecs/core/system_base.hpp"
 #include "ecs/core/event_cleanup.hpp"
 #include "ecs/core/prefab_manager.hpp"

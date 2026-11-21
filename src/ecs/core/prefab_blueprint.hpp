@@ -6,12 +6,12 @@
 #include <entt/fwd.hpp>
 
 namespace demo::ecs {
-    class prefab {
+    class prefab_blueprint {
     private:
         using instruction = std::function<void(entt::registry&, entt::entity)>;
     
     public:
-        prefab(entt::registry& registry, entt::registry& prefab_registry);
+        prefab_blueprint(entt::registry& registry, entt::registry& prefab_registry);
 
     public:
         template<typename T>
