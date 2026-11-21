@@ -20,7 +20,7 @@ namespace demo::ecs {
             colour tint = colour::white;
         };
 
-        asset_id texture = invalid_asset_id;
+        asset texture = asset::null;
         std::vector<tile> tiles;
         bool visible = true;
 

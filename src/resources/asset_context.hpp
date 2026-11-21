@@ -14,8 +14,9 @@
 #include "resources/types/animation_clip.hpp"
 
 namespace demo {
-    using asset_id = size_t;
-    static constexpr asset_id invalid_asset_id = std::numeric_limits<asset_id>::max();
+    enum class asset : size_t {
+        null = std::numeric_limits<std::size_t>::max()
+    };
 
     template<typename T>
     struct resource_traits;
@@ -52,7 +53,7 @@ namespace demo {
             }
         }
 
-        asset_id find(std::string_view name) const {
+        asset find(std::string_view name) const {
             auto it = m_lookup.find(std::string(name));
 
             ASSERT(it != m_lookup.end(), "Asset not found!");
@@ -61,10 +62,12 @@ namespace demo {
         }
 
         template<typename T>
-        const T& get(asset_id id) const {
-            ASSERT(id < m_resources.size(), "Invalid asset_id!");
+        const T& get(asset asset) const {
+            const auto index = static_cast<size_t>(asset);
 
-            const auto& resource = m_resources[id];
+            ASSERT(index < m_resources.size(), "Invalid asset_id!");
+
+            const auto& resource = m_resources[index];
 
             ASSERT(
                 resource->type() == resource_traits<T>::type,
@@ -124,16 +127,16 @@ namespace demo {
 
         template<typename T, typename... Args>
         void add(std::string&& name, Args... args) {
-            const asset_id id = m_resources.size();
+            const asset asset{ m_resources.size() }; 
 
             m_resources.emplace_back(
                 std::make_unique<T>(std::forward<Args>(args)...)
             );
-            m_lookup.emplace(std::move(name), id);
+            m_lookup.emplace(std::move(name), asset);
         }
 
     private:
-        std::unordered_map<std::string, asset_id> m_lookup;
+        std::unordered_map<std::string, asset> m_lookup;
         std::vector<std::unique_ptr<resource_base>> m_resources;
     };
 }
