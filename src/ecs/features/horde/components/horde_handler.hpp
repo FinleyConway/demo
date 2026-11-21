@@ -11,7 +11,7 @@ namespace demo::ecs {
     };
 
     struct horde_info {
-        prefab_id horde_enemy;
+        prefab horde_enemy = prefab::null;
         uint32_t enemy_count = 0;
 
         cell spawn_tile;

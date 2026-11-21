@@ -1,12 +1,15 @@
 #pragma once
 
 #include <vector>
+#include <limits>
 
 #include "core/debugging.hpp"
 #include "ecs/core/prefab_blueprint.hpp"
 
 namespace demo::ecs {
-    enum class prefab : size_t {};
+    enum class prefab : size_t {
+        null = std::numeric_limits<std::size_t>::max()
+    };
 
     class prefab_manager {
     public:
