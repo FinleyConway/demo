@@ -48,24 +48,18 @@ namespace demo::ecs {
 
         bool is_spawnable(const cell& target, const world_grid& grid) const {
             // don't place enemies on structures or out of bounds
-            return grid.in_bounds(target) && !grid.get(target).has_structure(registry());
+            const auto& cell = grid.get(target);
+            
+            return 
+                grid.in_bounds(target) && 
+                !cell.has_entity(registry()) &&
+                !cell.has_structure(registry());
         }
 
         void populate_cell(entt::entity controller, const cell& target, const horde_info& info, world_grid& grid) {
-            const auto& slots = grid.at(target).entities_in_cell();
+            // random chance makes spawning feel more natural
+            if (!random::chance(info.spawn_chance)) return;
 
-            for (size_t quadrant = 0; quadrant < slots.size(); quadrant++) {
-                // there's already an enemy in this quadrant
-                if (registry().valid(slots[quadrant])) continue;
-
-                // random chance makes spawning feel more natural
-                if (!random::chance(info.spawn_chance)) continue;
-
-                create_horde_member(controller, quadrant, target, info, grid);
-            }
-        }
-
-        void create_horde_member(entt::entity controller, size_t quadrant, const cell& target, const horde_info& info, world_grid& grid) {
             const auto enemy = prefab_instantiate(info.horde_enemy);
 
             // give horde member a reference to the controller to get path
@@ -74,23 +68,10 @@ namespace demo::ecs {
             });
 
             registry().patch<position>(enemy, [&](auto& pos) {
-                pos.value = quadrant_position(quadrant, target, grid);
+                pos.value = grid.cell_to_point(target);
             });
 
-            grid.at(target).add_entity(quadrant, enemy);
-        }
-
-        static point quadrant_position(size_t quadrant, const cell& target, const world_grid& grid) {
-            //! give tile from world a static quadrant size
-            ASSERT(quadrant < 4, "Received an out of bounds quadrant position!");
-
-            const auto half_cell = grid.cell_size() / 2;
-            const point origin = grid.cell_to_point(target);
-
-            return {
-                .x = origin.x + half_cell * (static_cast<int32_t>(quadrant % 2)),
-                .y = origin.y + half_cell * (static_cast<int32_t>(quadrant / 2))
-            };
+            grid.at(target).entity = enemy;
         }
     };
 }
