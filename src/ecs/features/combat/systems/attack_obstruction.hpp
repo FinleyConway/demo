@@ -22,7 +22,7 @@ namespace demo::ecs {
             for (auto [e, obstruction] : view.each()) {
                 const auto target = context<world_grid>()
                     .get(obstruction.tile)
-                    .get_structure();
+                    .structure;
 
                 if (target == entt::null || !registry().valid(target)) {
                     registry().remove<attack_target>(e);

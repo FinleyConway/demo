@@ -100,7 +100,7 @@ namespace demo {
                 if (next_node.closed) continue;
 
                 const uint32_t movement_cost = c_movement_cost.cost_for(
-                    c_world_grid.get(*neighbour).get_navigation_type()
+                    c_world_grid.get(*neighbour).nav_type
                 );
 
                 if (current_g > std::numeric_limits<uint64_t>::max() - movement_cost) {

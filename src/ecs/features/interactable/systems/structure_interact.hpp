@@ -38,7 +38,7 @@ namespace demo::ecs {
             entt::entity target = entt::null;
 
             if (grid.in_bounds(grid_position)) {
-                auto entity = grid.at(grid_position).get_structure();
+                auto entity = grid.at(grid_position).structure;
 
                 if (registry().valid(entity) && registry().all_of<interactable>(entity)) {
                     target = entity;

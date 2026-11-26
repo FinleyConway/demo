@@ -4,6 +4,7 @@
 
 #include "ecs/features/map/components/map.hpp"
 #include "ecs/features/positioning/components/position.hpp"
+#include "ecs/features/entity_init/components/entity_spawned.hpp"
 #include "ecs/features/settlement_builder/components/structure_size.hpp"
 #include "ecs/features/settlement_builder/components/structures.hpp"
 
@@ -50,7 +51,7 @@ namespace demo::ecs {
             const auto& core_size = registry().get<structure_size>(core);
 
             grid.for_each_cell(centre_position, core_size.value, [core, &grid](cell cell) {
-                grid.at(cell).set_structure(core);
+                grid.at(cell).structure = core;
             });
 
             registry().patch<position>(core, [&](auto& pos) {

@@ -6,7 +6,7 @@
 
 namespace demo {
     struct tile {
-        navigation_type navigation_type = navigation_type::none;
+        navigation_type nav_type = navigation_type::none;
         entt::entity structure = entt::null;
         entt::entity entity = entt::null;
 

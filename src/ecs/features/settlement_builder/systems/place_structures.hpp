@@ -10,6 +10,7 @@
 
 #include "core/input/input.hpp"
 #include "rendering/camera.hpp"
+#include "world/path_finding/movement_profile.hpp"
 #include "world/world_grid/world_grid.hpp"
 
 namespace demo::ecs {
@@ -55,8 +56,10 @@ namespace demo::ecs {
 
             // place instantied entity on grid
             grid.for_each_cell(cell_pos, size->value, [&](cell current) {
-                grid.at(current).set_structure(entity);
-                grid.at(current).set_navigation_type(navigation_type::wall);
+                auto& cell = grid.at(current);
+
+                cell.structure = entity;
+                cell.nav_type = navigation_type::wall;
             });
 
             // set entity position based on grid position

@@ -72,20 +72,12 @@ namespace demo::ecs {
                 const auto& tile = grid.get(target_cell);
 
                 if (pref.value == attack_preference::type::enemies) {
-                    for (const auto entity : tile.entities_in_cell()) {
-                        if (entity == attacker) continue;
-                        if (!registry().valid(entity)) continue;
-
-                        return { entity, target_cell };
-                    }
+                    return { tile.entity, target_cell };
                 }
                 else {
-                    const auto entity = tile.get_structure();
+                    if (tile.has_structure(registry())) continue;
 
-                    if (entity == entt::null) continue;
-                    if (!registry().valid(entity)) continue;
-
-                    return { entity, target_cell };
+                    return { tile.structure, target_cell };
                 }
             }
 

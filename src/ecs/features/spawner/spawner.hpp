@@ -3,7 +3,6 @@
 #include <entt/entt.hpp>
 
 #include "ecs/features/spawner/components/enemies.hpp"
-#include "ecs/features/spawner/systems/horde_spawner.hpp"
 #include "ecs/world.hpp"
 
 namespace demo::ecs {
@@ -12,9 +11,7 @@ namespace demo::ecs {
 
         //using events = entt::type_list<>;
 
-        using systems = entt::type_list<
-            horde_spawner
-        >;
+        //using systems = entt::type_list<>;
 
         static void configure(world& world) {
             world.register_component<enemies>(
