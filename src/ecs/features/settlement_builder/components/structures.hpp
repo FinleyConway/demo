@@ -4,8 +4,8 @@
 
 namespace demo::ecs {
     struct structures {
-        prefab_id core_prefab;
-        prefab_id wall_prefab;
-        prefab_id turret_prefab;
+        prefab core_prefab = prefab::null;
+        prefab wall_prefab = prefab::null;
+        prefab turret_prefab = prefab::null;
     };
 }

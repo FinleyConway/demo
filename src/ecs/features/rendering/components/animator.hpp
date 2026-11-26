@@ -7,7 +7,7 @@
 
 namespace demo::ecs {
     struct animator {
-        asset_id clip = invalid_asset_id;
+        asset clip = asset::null;
 
         size_t current_frame = 0;
         

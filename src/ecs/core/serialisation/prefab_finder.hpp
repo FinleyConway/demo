@@ -10,10 +10,10 @@ namespace demo::ecs {
     public:
         explicit prefab_finder(prefab_manager& prefab_manager);
 
-        prefab_id get(const std::string& name);
+        prefab get(const std::string& name);
 
     private:
         prefab_manager& m_prefab_manager;
-        std::unordered_map<std::string, prefab_id> m_prefab_lookup;
+        std::unordered_map<std::string, prefab> m_prefab_lookup;
     };
 }

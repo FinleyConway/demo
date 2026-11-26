@@ -29,7 +29,7 @@ namespace demo::ecs {
 
     private:
         void update_animation(animator& anim, sprite_renderer& sprite, std::chrono::duration<float> dt) {
-            if (anim.clip == invalid_asset_id) return;
+            if (anim.clip == asset::null) return;
 
             const auto& clip = context<asset_context>().get<animation_clip>(anim.clip);
 

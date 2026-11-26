@@ -6,7 +6,6 @@
 #include <nlohmann/json.hpp>
 
 #include "core/debugging.hpp"
-#include "ecs/core/prefab.hpp"
 #include "ecs/core/prefab_manager.hpp"
 #include "ecs/core/serialisation/component_registry.hpp"
 #include "ecs/features/entity_init/components/entity_spawned.hpp"

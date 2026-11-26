@@ -7,21 +7,25 @@ namespace demo::ecs {
     {
     }
 
-    entt::entity prefab_manager::instantiate(prefab_id id) {
-        ASSERT(id < m_prefabs.size(), "Recieved a invalid prefab_id!");
+    entt::entity prefab_manager::instantiate(prefab prefab) {
+        const auto index = static_cast<size_t>(prefab);
 
-        return m_prefabs[id].instantiate();
+        ASSERT(index < m_prefabs.size(), "Recieved a invalid prefab_id!");
+
+        return m_prefabs[index].instantiate();
     }
 
-    void prefab_manager::create(prefab_id id, std::vector<prefab::instruction>&& instructions) {
-        ASSERT(id < m_prefabs.size(), "Recieved a invalid prefab_id!");
+    void prefab_manager::create(prefab prefab, std::vector<prefab_blueprint::instruction>&& instructions) {
+        const auto index = static_cast<size_t>(prefab);
 
-        m_prefabs[id].update(std::move(instructions));
+        ASSERT(index < m_prefabs.size(), "Recieved a invalid prefab_id!");
+
+        m_prefabs[index].update(std::move(instructions));
     }
 
-    prefab_id prefab_manager::reserve_prefab() {
+    prefab prefab_manager::reserve_prefab() {
         m_prefabs.emplace_back(m_registry, m_prefab_registry);
 
-        return m_prefabs.size() - 1;
+        return prefab{ m_prefabs.size() - 1 };
     }
 } 

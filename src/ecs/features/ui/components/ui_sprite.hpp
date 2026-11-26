@@ -8,7 +8,7 @@
 
 namespace demo::ecs {
     struct ui_sprite {
-        asset_id texture = invalid_asset_id;
+        asset texture = asset::null;
         rect_int source;
         colour tint = colour::white;
     };

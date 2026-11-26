@@ -51,12 +51,12 @@ namespace demo::ecs {
             m_registry.emplace_or_replace<T>(e, std::forward<Args>(args)...);
         }
 
-        entt::entity prefab_instantiate(prefab_id prefab) {
+        entt::entity prefab_instantiate(prefab prefab) {
             return m_registry.ctx().get<prefab_manager>().instantiate(prefab);
         }
 
         template<typename T>
-        const T* prefab_try_get(prefab_id prefab) const {
+        const T* prefab_try_get(prefab prefab) const {
             return m_registry.ctx().get<prefab_manager>().peek<T>(prefab);
         }
 

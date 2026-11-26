@@ -57,7 +57,7 @@ namespace demo::ecs {
             for (auto [e, pos, sprite] : view.each()) {
                 const texture* tex = nullptr;
 
-                if (sprite.texture != invalid_asset_id) {
+                if (sprite.texture != asset::null) {
                     tex = &context<asset_context>().get<texture>(sprite.texture);
                 }
 
@@ -79,7 +79,7 @@ namespace demo::ecs {
 
             const texture* tex = nullptr;
 
-            if (tiles.texture != invalid_asset_id) {
+            if (tiles.texture != asset::null) {
                 tex = &context<asset_context>().get<texture>(tiles.texture);
             }
 
@@ -103,7 +103,7 @@ namespace demo::ecs {
 
             const texture* tex = nullptr;
 
-            if (sprite.texture != invalid_asset_id) {
+            if (sprite.texture != asset::null) {
                 tex = &context<asset_context>().get<texture>(sprite.texture);
             }
 
