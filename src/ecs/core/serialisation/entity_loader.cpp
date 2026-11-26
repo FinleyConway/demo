@@ -39,7 +39,12 @@ namespace demo::ecs {
 
         const auto entity = m_spec.registry.create();
 
-        const auto json = nlohmann::json::parse(std::ifstream(path));
+        const auto json = nlohmann::json::parse(
+            std::ifstream(path),
+            nullptr, // callback 
+            true, // allow exceptions
+            true // allow commonents
+        );
         const auto components = json["components"];
 
         // add initialisation component
@@ -65,8 +70,12 @@ namespace demo::ecs {
     void entity_loader::prefab_from_file(const std::filesystem::path& path) {
         LOG_INFO("PREFAB: loading %s", path.c_str());
 
-        const auto json = nlohmann::json::parse(std::ifstream(path));
-
+        const auto json = nlohmann::json::parse(
+            std::ifstream(path),
+            nullptr, // callback 
+            true, // allow exceptions
+            true // allow commonents
+        );
         const auto prefab_name = json["name"];
         const auto components = json["components"];
 

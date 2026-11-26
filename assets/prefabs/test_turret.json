@@ -8,7 +8,7 @@
             }
         },
 
-
+        // game visuals
         "sprite_renderer": {
             "source": {
                 "x": 0,
@@ -34,7 +34,7 @@
             }
         },
 
-
+        // attacking system
         "attack_area": {},
         "attack_pattern": {
             "attack_shape": "circle",
@@ -50,7 +50,7 @@
         },
         "instant_attack": {},
 
-
+        // health system
         "health": {
             "current": 100.0,
             "max": 100.0
